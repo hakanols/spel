@@ -1,29 +1,31 @@
 <!DOCTYPE html>
 <html>
-<body>
-
-<h2>Spel</h2>
-
-<p>Svart 2-7 ta själv</p>
-<p>Rött 2-7 ge bort</p>
-<p>8 tumkort</p>
-<p>9 kings cup</p>
-<p>10 regel</p>
-<p>Knekt hej knekt</p>
-<p>Dam kategori</p>
-<p>Kung vattenfall</p>
-<p>Ess rimord</p>
-
-<p id="demo"></p>
-
-<script>
-setInterval(myTimer, 1000);
-
-function myTimer() {
-  const d = new Date();
-  document.getElementById("demo").innerHTML = d.toLocaleTimeString();
-}
-</script>
-
-</body>
+	<head>
+		<script type="module">
+		window.onload = function() {
+			setInterval(myTimer, 3*60*1000);
+			let A = document.getElementById("A");
+			let B = document.getElementById("B");
+		}
+		function myTimer() {
+			let C = A.innerHTML;
+			A.innerHTML = B.innerHTML;
+			B.innerHTML = C;
+		}
+		</script>
+	</head>
+	<body>
+		<h2>Ölspelet</h2>
+		<table>
+			<tr><td>Ess</td>				<td>Rimord</td></tr>
+			<tr><td id="A">2-7 Svart</td>	<td>Ta själv</td></tr>
+			<tr><td id="B">2-7 Rött</td>	<td>Ge bort</td></tr>
+			<tr><td>8</td>					<td>Tumkort</td></tr>
+			<tr><td>9</td>					<td>Kings cup</td></tr>
+			<tr><td>10</td>					<td>Regel</td></tr>
+			<tr><td>Knekt</td>				<td>Hej knekt</td></tr>
+			<tr><td>Dam</td>				<td>Kategori</td></tr>
+			<tr><td>Kung</td>				<td>Vattenfall</td></tr>
+		</table>
+	</body>
 </html>
