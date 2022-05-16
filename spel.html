@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<h2>Spel</h2>
+
+<p>Svart 2-7 ta själv</p>
+<p>Rött 2-7 ge bort</p>
+<p>8 tumkort</p>
+<p>9 kings cup</p>
+<p>10 regel</p>
+<p>Knekt hej knekt</p>
+<p>Dam kategori</p>
+<p>Kung vattenfall</p>
+<p>Ess rimord</p>
+
+<p id="demo"></p>
+
+<script>
+setInterval(myTimer, 1000);
+
+function myTimer() {
+  const d = new Date();
+  document.getElementById("demo").innerHTML = d.toLocaleTimeString();
+}
+</script>
+
+</body>
+</html>
