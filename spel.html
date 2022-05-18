@@ -2,15 +2,25 @@
 <html>
 	<head>
 		<script type="module">
+		const updateInterval = 3*60; //sec
 		window.onload = function() {
-			setInterval(myTimer, 3*60*1000);
+			setInterval(updateIfNeaded, 30*1000);
 			let A = document.getElementById("A");
 			let B = document.getElementById("B");
+			updateIfNeaded()
 		}
-		function myTimer() {
-			let C = A.innerHTML;
-			A.innerHTML = B.innerHTML;
-			B.innerHTML = C;
+
+		function updateIfNeaded() {
+			let currentTime = new Date().getTime() / 1000;
+			if (!localStorage.lastChange){
+				localStorage.lastChange = currentTime
+			}
+			if (updateInterval < currentTime-localStorage.lastChange ){
+				localStorage.lastChange = currentTime
+				let C = A.innerHTML;
+				A.innerHTML = B.innerHTML;
+				B.innerHTML = C;
+			}
 		}
 		</script>
 	</head>
