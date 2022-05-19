@@ -5,37 +5,35 @@
 		const updateInterval = 3*60; //sec
 		window.onload = function() {
 			setInterval(updateIfNeaded, 30*1000);
-			let A = document.getElementById("A");
-			let B = document.getElementById("B");
-			updateIfNeaded()
+			updateIfNeaded();
 		}
-
 		function updateIfNeaded() {
 			let currentTime = new Date().getTime() / 1000;
 			if (!localStorage.lastChange){
-				localStorage.lastChange = currentTime
+				localStorage.lastChange = currentTime;
+				localStorage.lastState = "t";
 			}
-			if (updateInterval < currentTime-localStorage.lastChange ){
-				localStorage.lastChange = currentTime
-				let C = A.innerHTML;
-				A.innerHTML = B.innerHTML;
-				B.innerHTML = C;
+			if (updateInterval < currentTime-localStorage.lastChange){
+				localStorage.lastChange = currentTime;
+				localStorage.lastState = localStorage.lastState == "t" ? "f" : "t";
 			}
+			document.getElementById("A").innerHTML = localStorage.lastState == "t" ? '2-7 Svart' : '2-7 Rött';
+			document.getElementById("B").innerHTML = localStorage.lastState == "t" ? '2-7 Rött' : '2-7 Svart';
 		}
 		</script>
 	</head>
 	<body>
 		<h2>Ölspelet</h2>
 		<table>
-			<tr><td>Ess</td>				<td>Rimord</td></tr>
-			<tr><td id="A">2-7 Svart</td>	<td>Ta själv</td></tr>
-			<tr><td id="B">2-7 Rött</td>	<td>Ge bort</td></tr>
-			<tr><td>8</td>					<td>Tumkort</td></tr>
-			<tr><td>9</td>					<td>Kings cup</td></tr>
-			<tr><td>10</td>					<td>Regel</td></tr>
-			<tr><td>Knekt</td>				<td>Hej knekt</td></tr>
-			<tr><td>Dam</td>				<td>Kategori</td></tr>
-			<tr><td>Kung</td>				<td>Vattenfall</td></tr>
+			<tr><td>Ess</td>		<td>Rimord</td></tr>
+			<tr><td id="A"></td>	<td>Ta själv</td></tr>
+			<tr><td id="B"></td>	<td>Ge bort</td></tr>
+			<tr><td>8</td>			<td>Tumkort</td></tr>
+			<tr><td>9</td>			<td>Kings cup</td></tr>
+			<tr><td>10</td>			<td>Regel</td></tr>
+			<tr><td>Knekt</td>		<td>Hej knekt</td></tr>
+			<tr><td>Dam</td>		<td>Kategori</td></tr>
+			<tr><td>Kung</td>		<td>Vattenfall</td></tr>
 		</table>
 	</body>
 </html>
