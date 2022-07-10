@@ -1,5 +1,8 @@
 # spel
 Cheat sheet for a beer game
-hakanols.github.io/spel/beer.html
+
+https://hakanols.github.io/spel/beer.html
+
 Counting game
-hakanols.github.io/spel/count.html
+
+https://hakanols.github.io/spel/count.html
