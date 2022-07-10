@@ -2,29 +2,33 @@
 <html>
 	<head>
 		<script type="module">
-			const number1 = Math.floor(Math.random() * 11)
-			const number2 = Math.floor(Math.random() * 11)
+			const maxNumber = 10;
+			const number1 = Math.floor(Math.random() * (maxNumber+1))
+			const number2 = Math.floor(Math.random() * (maxNumber+1))
+
+			const question = document.getElementById("Question")
+			const buttons = document.getElementById("Buttons")
+			const trophy = document.getElementById("Trophy")
 
 			function handleClick(element, number){
-				if (number == number1+ number2){
+				if (number == number1+number2){
 					element.style.background = "blue";
-					var img = document.createElement("img");
+					let img = document.createElement("img");
 					img.src = "pokal.svg";
-					let buttons = document.getElementById("B")
-					buttons.appendChild(document.createElement("br"))
-					buttons.appendChild(img);
+					img.style = "height:300px;width:280px"
+					trophy.appendChild(document.createElement("br"))
+					trophy.appendChild(img);
 				}
 				else {
 					element.style.background = "red";
 				}
 			}
 
-			document.getElementById("A").innerText = number1+" + "+number2+" = ?"
-
-			let buttons = document.getElementById("B")
-			for (let number of Array(21).keys()){
+			question.innerText = number1+" + "+number2+" = ?"
+			for (let number of Array(maxNumber*2+1).keys()){
 				let btn = document.createElement("button");
 				btn.innerHTML = number;
+				btn.style = "height:40px;width:80px"
 				btn.onclick = function() {
 					handleClick(btn, number)
 				}
@@ -34,14 +38,20 @@
 					buttons.appendChild(document.createElement("br"))
 				}
 			}
-
 		</script>
 	</head>
 	<body>
 		<h1>SPELET KOMMER</h1>
-		<button onclick="location.reload()">Hejduk</button>
-		<h2 id="A"></h2>
-		<div id="B"></div>
+		<table style="width:560px""><tr>
+			<td width="99%">
+				<h1 id="Question"></h1>
+			</td>
+			<td>
+				<button onclick="location.reload()" style="height:40px;width:160px">Hejduk</button>
+			</td>
+		</tr></table>
+		<div id="Buttons"></div>
+		<div id="Trophy"></div>
 		<p>av: Hjalmar och Håkan</p>
 	</body>
 </html>
