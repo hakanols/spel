@@ -2,39 +2,40 @@
 <html>
 	<head>
 		<script type="module">
-		winows.myFunction = function() {
-			console.log('Hej')
-			alert('Hello world!')
-		}
+			const number1 = Math.floor(Math.random() * 11)
+			const number2 = Math.floor(Math.random() * 11)
+
+			function handleClick(element, number){
+				if (number == number1+ number2){
+					element.style.background = "blue";
+				}
+				else {
+					element.style.background = "red";
+				}
+			}
+
+			document.getElementById("A").innerText = number1+" + "+number2+" = ?"
+
+			let buttons = document.getElementById("B")
+			for (let number of Array(21).keys()){
+				let btn = document.createElement("button");
+				btn.innerHTML = number;
+				btn.onclick = function() {
+					handleClick(btn, number)
+				}
+				buttons.appendChild(btn);
+
+				if ((number+1) % 7 == 0) {
+					buttons.appendChild(document.createElement("br"))
+				}
+			}
+
 		</script>
 	</head>
 	<body>
 		<h2>SPELET KOMMER</h2>
-		<p>5 + 7 = ? </p>
-		<button type="button"> 0</button>
-		<button type="button"> 1</button>
-		<button type="button"> 2</button>
-		<button type="button"> 3</button>
-		<button type="button"> 4</button>
-		<button type="button"> 5</button>
-		<button type="button"> 6</button>
-		<br>
-		<button type="button"> 7</button>
-		<button type="button"> 8</button>
-		<button type="button"> 9</button>
-		<button type="button">10</button>
-		<button type="button">11</button>
-		<button type="button">12</button>
-		<button type="button">13</button>
-		<br>
-		<button type="button">14</button>
-		<button type="button">15</button>
-		<button type="button">16</button>
-		<button type="button">17</button>
-		<button type="button">18</button>
-		<button type="button">19</button>
-		<button onclick=windows.myFunction()>20</button>
-		<br>
+		<div id="A"></div>
+		<div id="B"></div>
 		<p>av: Hjalmar och Håkan</p>
 	</body>
 </html>
