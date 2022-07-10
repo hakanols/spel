@@ -8,6 +8,11 @@
 			function handleClick(element, number){
 				if (number == number1+ number2){
 					element.style.background = "blue";
+					var img = document.createElement("img");
+					img.src = "pokal.svg";
+					let buttons = document.getElementById("B")
+					buttons.appendChild(document.createElement("br"))
+					buttons.appendChild(img);
 				}
 				else {
 					element.style.background = "red";
@@ -33,8 +38,9 @@
 		</script>
 	</head>
 	<body>
-		<h2>SPELET KOMMER</h2>
-		<div id="A"></div>
+		<h1>SPELET KOMMER</h1>
+		<button onclick="location.reload()">Hejduk</button>
+		<h2 id="A"></h2>
 		<div id="B"></div>
 		<p>av: Hjalmar och Håkan</p>
 	</body>
