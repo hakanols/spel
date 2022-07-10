@@ -6,3 +6,4 @@ https://hakanols.github.io/spel/beer.html
 Counting game
 
 https://hakanols.github.io/spel/count.html
+https://hakanols.github.io/spel/count.html?count=31

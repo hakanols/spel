@@ -1,8 +1,14 @@
 <!DOCTYPE html>
 <html>
 	<head>
+		<title>SPELET KOMMER</title>
 		<script type="module">
-			const maxNumber = 10;
+			let maxNumber = 10;
+			const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString)
+            if (urlParams.has('count')){
+                maxNumber = parseInt(urlParams.get('count'),10)
+            }
 			const number1 = Math.floor(Math.random() * (maxNumber+1))
 			const number2 = Math.floor(Math.random() * (maxNumber+1))
 
