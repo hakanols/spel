@@ -7,3 +7,7 @@ Counting game
 
 https://hakanols.github.io/spel/count.html
 https://hakanols.github.io/spel/count.html?count=31
+
+Memory
+
+https://hakanols.github.io/spel/memory.html

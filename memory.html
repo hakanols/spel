@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Taurus Labyrint</title>
+		<script type="module">
+			let lastElement = null
+			let done = 0;
+			const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString)
+            if (urlParams.has('count')){
+                let maxNumber = parseInt(urlParams.get('count'),10)
+            }
+
+			const buttons = document.getElementById("Buttons")
+			const trophy = document.getElementById("Trophy")
+
+			function win(){
+				let img = document.createElement("img");
+				img.src = "pokal.svg";
+				img.style = "height:300px;width:280px"
+				trophy.appendChild(document.createElement("br"))
+				trophy.appendChild(img);
+			}
+
+			function handleClick(element, number){
+				if (element.style.background != ""){
+					console.log("Ignore")
+					return
+				}
+				if (lastElement == null){
+					lastElement = element
+					element.style.background = "blue";
+				}
+				else {
+					if (element.innerHTML == lastElement.innerHTML) {
+						element.style.background = "green";
+						lastElement.style.background = "green";
+						done= done + 1;
+						if (done==8){
+							win()
+						}
+					}
+					else {
+						element.style.background = "";
+						lastElement.style.background = "";
+						
+					}
+					lastElement = null
+				}
+			}
+
+			let items = Array(...Array(8).keys(), ...Array(8).keys() )
+			for (var i = 0; i < 16; i++) {
+				const random = Math.floor(Math.random() * 16)
+				let temp = items[i];
+				items[i] = items[random]
+				items[random] = temp
+			}
+			console.log(items)
+
+			for (var i = 0; i < 16; i++) {
+				let btn = document.createElement("button");
+				btn.innerHTML = items[i]
+				btn.style = "height:40px;width:80px"
+				btn.onclick = function() {
+					handleClick(btn, i)
+				}
+				buttons.appendChild(btn);
+
+				if ((i+1) % 4 == 0) {
+					buttons.appendChild(document.createElement("br"))
+				}
+			}
+		</script>
+	</head>
+	<body>
+		<h1>Taurus Labyrint</h1>
+		<button onclick="location.reload()" style="height:40px;width:320px">Hejduk</button>
+		<div id="Buttons"></div>
+		<div id="Trophy"></div>
+		<p>av: Hjalmar och Håkan</p>
+	</body>
+</html>
