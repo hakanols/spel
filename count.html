@@ -16,7 +16,15 @@
 			const buttons = document.getElementById("Buttons")
 			const trophy = document.getElementById("Trophy")
 
+			window.hello = function(){
+				document.getElementById("myForm").submit();
+			}
+
 			function handleClick(element, number){
+				if (element.style.background != ""){
+					console.log("Ignore")
+					return
+				}
 				if (number == number1+number2){
 					element.style.background = "blue";
 					let img = document.createElement("img");
@@ -33,8 +41,8 @@
 			question.innerText = number1+" + "+number2+" = ?"
 			for (let number of Array(maxNumber*2+1).keys()){
 				let btn = document.createElement("button");
-				btn.innerHTML = number;
-				btn.style = "height:40px;width:80px"
+				btn.innerHTML = "<h1>"+number+"</h1>";
+				btn.style = "height:80px;width:80px"
 				btn.onclick = function() {
 					handleClick(btn, number)
 				}
@@ -48,6 +56,16 @@
 	</head>
 	<body>
 		<h1>SPELET KOMMER</h1>
+		<form id="myForm">
+			<input type="radio" id="easy" name="count" value="3" onclick="hello();">
+			<label for="easy">Easy</label>
+			<input type="radio" id="moderate " name="count" value="10" onclick="hello();">
+			<label for="moderate">Moderate </label>
+			<input type="radio" id="hard" name="count" value="17" onclick="hello();">
+			<label for="hard">Hard</label>
+			<input type="radio" id="super" name="count" value="31" onclick="hello();">
+			<label for="super">Super</label>
+		</form>
 		<table style="width:560px""><tr>
 			<td width="99%">
 				<h1 id="Question"></h1>
