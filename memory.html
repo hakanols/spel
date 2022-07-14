@@ -3,18 +3,16 @@
 	<head>
 		<title>Taurus Labyrint</title>
 		<script type="module">
+			const images = ["D.png", "H.png", "J.png", "L.png", "M.png", "O.png", "P.png", "T.png"]
+			const random = createRandom()
+			const peekTime = 4
+			const graceTime = 2;
 			let lastElement = null
-			let done = 0;
-			const queryString = window.location.search;
-            const urlParams = new URLSearchParams(queryString)
-            if (urlParams.has('count')){
-                let maxNumber = parseInt(urlParams.get('count'),10)
-            }
-
-			const buttons = document.getElementById("Buttons")
-			const trophy = document.getElementById("Trophy")
+			let active = false;
+			let donePaires = 0;
 
 			function win(){
+				const trophy = document.getElementById("Trophy")
 				let img = document.createElement("img");
 				img.src = "pokal.svg";
 				img.style = "height:300px;width:280px"
@@ -22,11 +20,17 @@
 				trophy.appendChild(img);
 			}
 
-			function handleClick(element, number){
+			async function handleClick(element, index){
+				if (!active){
+					console.log("Ignore")
+					return
+				}
 				if (element.style.background != ""){
 					console.log("Ignore")
 					return
 				}
+				console.log(index)
+				element.innerHTML = "<img src="+images[random[index]]+" style=\"height:60px;width:60px\">"
 				if (lastElement == null){
 					lastElement = element
 					element.style.background = "blue";
@@ -35,48 +39,83 @@
 					if (element.innerHTML == lastElement.innerHTML) {
 						element.style.background = "green";
 						lastElement.style.background = "green";
-						done= done + 1;
-						if (done==8){
+						donePaires = donePaires + 1;
+						if (donePaires==8){
 							win()
 						}
 					}
 					else {
+						active = false
+						element.style.background = "blue";
+						await sleep(graceTime*1000)
 						element.style.background = "";
 						lastElement.style.background = "";
-						
+						element.innerHTML = ""
+						lastElement.innerHTML = ""
+						active = true
 					}
 					lastElement = null
 				}
 			}
 
-			let items = Array(...Array(8).keys(), ...Array(8).keys() )
-			for (var i = 0; i < 16; i++) {
-				const random = Math.floor(Math.random() * 16)
-				let temp = items[i];
-				items[i] = items[random]
-				items[random] = temp
+			function sleep(ms) {
+				return new Promise(resolve => setTimeout(resolve, ms));
 			}
-			console.log(items)
 
-			for (var i = 0; i < 16; i++) {
-				let btn = document.createElement("button");
-				btn.innerHTML = "<h1>"+items[i]+"</h1>"
-				btn.style = "height:80px;width:80px"
-				btn.onclick = function() {
-					handleClick(btn, i)
+			function createRandom(){
+				let items = Array(...Array(8).keys(), ...Array(8).keys() )
+				for (var i = 0; i < 16; i++) {
+					const random = Math.floor(Math.random() * 16)
+					let temp = items[i];
+					items[i] = items[random]
+					items[random] = temp
 				}
-				buttons.appendChild(btn);
-
-				if ((i+1) % 4 == 0) {
-					buttons.appendChild(document.createElement("br"))
-				}
+				return items
 			}
+
+			function populate(){
+				const buttons = document.getElementById("Buttons")
+				let elements = []
+				for (let index = 0; index < 16; index++) {
+					let btn = document.createElement("button");
+					btn.innerHTML = "<img src="+images[random[index]]+" style=\"height:60px;width:60px\">"
+					btn.style = "height:80px;width:80px"
+					btn.onclick = function() {
+						handleClick(btn, index)
+					}
+					buttons.appendChild(btn);
+					elements.push(btn)
+
+					if ((index+1) % 4 == 0) {
+						buttons.appendChild(document.createElement("br"))
+					}
+				}
+				return elements
+			}
+
+			async function init(){
+				const time = document.getElementById("Time")
+				const elements = populate()
+				//for (let secLeft = peekTime; secLeft >= 0; secLeft--) {
+				//	await sleep(1000)
+				//}
+				//time.innerText = ''
+				await sleep(peekTime*1000)
+				for (let element of elements){
+					element.innerHTML = ""
+				}
+				active = true
+			}
+			init()
+			.then(()=>console.log('Game on'))
+
 		</script>
 	</head>
 	<body>
 		<h1>Taurus Labyrint</h1>
 		<button onclick="location.reload()" style="height:40px;width:320px">Hejduk</button>
 		<br><br>
+		<div id="Time"></div>
 		<div id="Buttons"></div>
 		<div id="Trophy"></div>
 		<p>av: Hjalmar och Håkan</p>
