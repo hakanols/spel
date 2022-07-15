@@ -50,8 +50,8 @@
 						await sleep(graceTime*1000)
 						element.style.background = "";
 						lastElement.style.background = "";
-						element.innerHTML = ""
-						lastElement.innerHTML = ""
+						element.innerHTML = "<img src=\"Quest.png\" style=\"height:60px;width:60px\">"
+						lastElement.innerHTML = "<img src=\"Quest.png\" style=\"height:60px;width:60px\">"
 						active = true
 					}
 					lastElement = null
@@ -102,7 +102,7 @@
 				//time.innerText = ''
 				await sleep(peekTime*1000)
 				for (let element of elements){
-					element.innerHTML = ""
+					element.innerHTML = "<img src=\"Quest.png\" style=\"height:60px;width:60px\">"
 				}
 				active = true
 			}
