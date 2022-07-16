@@ -11,10 +11,17 @@
 			let active = false;
 			let donePaires = 0;
 
-			function win(){
+			const killLife = popLife(5)
+
+			function done(success){
 				const trophy = document.getElementById("Trophy")
 				let img = document.createElement("img");
-				img.src = "pokal.svg";
+				if (success){
+					img.src = "pokal.svg";
+				}
+				else {
+					img.src = "Slime.png";
+				}
 				img.style = "height:300px;width:280px"
 				trophy.appendChild(document.createElement("br"))
 				trophy.appendChild(img);
@@ -30,7 +37,7 @@
 					return
 				}
 				console.log(index)
-				element.innerHTML = "<img src="+images[random[index]]+" style=\"height:60px;width:60px\">"
+				element.children[0].src = images[random[index]]
 				if (lastElement == null){
 					lastElement = element
 					element.style.background = "blue";
@@ -41,17 +48,21 @@
 						lastElement.style.background = "green";
 						donePaires = donePaires + 1;
 						if (donePaires==8){
-							win()
+							done(true)
 						}
 					}
 					else {
 						active = false
+						if (!killLife()){
+							done(false)
+							return
+						}
 						element.style.background = "blue";
 						await sleep(graceTime*1000)
 						element.style.background = "";
 						lastElement.style.background = "";
-						element.innerHTML = "<img src=\"Quest.png\" style=\"height:60px;width:60px\">"
-						lastElement.innerHTML = "<img src=\"Quest.png\" style=\"height:60px;width:60px\">"
+						element.children[0].src = "Quest.png"
+						lastElement.children[0].src = "Quest.png"
 						active = true
 					}
 					lastElement = null
@@ -73,18 +84,40 @@
 				return items
 			}
 
+			function popLife (number=1){
+				let index = 0
+				let life = document.getElementById("Life")
+				for (let index = 0; index < number; index++) {
+					let img = document.createElement("img");
+					img.src = "Livspuck.jpg";
+					img.style = "height:60px;width:60px"
+					life.appendChild(img);
+				}
+				return function(){
+					if (index >= number){
+						return false
+					}
+					life.children[index].src = "Quest.png"
+					index++;
+					return index < number
+				}
+			}
+
 			function populate(){
 				const buttons = document.getElementById("Buttons")
 				let elements = []
 				for (let index = 0; index < 16; index++) {
 					let btn = document.createElement("button");
-					btn.innerHTML = "<img src="+images[random[index]]+" style=\"height:60px;width:60px\">"
-					btn.style = "height:80px;width:80px"
+					let img = document.createElement("img");
+					img.src = images[random[index]];
+					img.style = "height:80px;width:80px"
+					btn.appendChild(img);
+					elements.push(img)
 					btn.onclick = function() {
 						handleClick(btn, index)
 					}
 					buttons.appendChild(btn);
-					elements.push(btn)
+
 
 					if ((index+1) % 4 == 0) {
 						buttons.appendChild(document.createElement("br"))
@@ -102,19 +135,19 @@
 				//time.innerText = ''
 				await sleep(peekTime*1000)
 				for (let element of elements){
-					element.innerHTML = "<img src=\"Quest.png\" style=\"height:60px;width:60px\">"
+					element.src = "Quest.png"
 				}
 				active = true
+				console.log('Game on')
 			}
 			init()
-			.then(()=>console.log('Game on'))
-
 		</script>
 	</head>
-	<body>
+	<body style="background-color: #21455d">
 		<h1>Taurus Labyrint</h1>
 		<button onclick="location.reload()" style="height:40px;width:320px">Hejduk</button>
 		<br><br>
+		<div id="Life"></div>
 		<div id="Time"></div>
 		<div id="Buttons"></div>
 		<div id="Trophy"></div>
