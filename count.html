@@ -16,8 +16,8 @@
 			const buttons = document.getElementById("Buttons")
 			const trophy = document.getElementById("Trophy")
 
-			window.hello = function(){
-				document.getElementById("myForm").submit();
+			window.updateCount = function(){
+				document.getElementById("countForm").submit();
 			}
 
 			function handleClick(element, number){
@@ -38,32 +38,34 @@
 				}
 			}
 
-			question.innerText = number1+" + "+number2+" = ?"
-			for (let number of Array(maxNumber*2+1).keys()){
-				let btn = document.createElement("button");
-				btn.innerHTML = "<h1>"+number+"</h1>";
-				btn.style = "height:80px;width:80px"
-				btn.onclick = function() {
-					handleClick(btn, number)
-				}
-				buttons.appendChild(btn);
+			window.onload = function() {
+				question.innerText = number1+" + "+number2+" = ?"
+				for (let number of Array(maxNumber*2+1).keys()){
+					let btn = document.createElement("button");
+					btn.innerHTML = "<h1>"+number+"</h1>";
+					btn.style = "height:80px;width:80px"
+					btn.onclick = function() {
+						handleClick(btn, number)
+					}
+					buttons.appendChild(btn);
 
-				if ((number+1) % 7 == 0) {
-					buttons.appendChild(document.createElement("br"))
+					if ((number+1) % 7 == 0) {
+						buttons.appendChild(document.createElement("br"))
+					}
 				}
 			}
 		</script>
 	</head>
 	<body>
 		<h1>SPELET KOMMER</h1>
-		<form id="myForm">
-			<input type="radio" id="easy" name="count" value="3" onclick="hello();">
+		<form id="countForm">
+			<input type="radio" id="easy" name="count" value="3" onclick="updateCount();">
 			<label for="easy">Easy</label>
-			<input type="radio" id="moderate " name="count" value="10" onclick="hello();">
+			<input type="radio" id="moderate " name="count" value="10" onclick="updateCount();">
 			<label for="moderate">Moderate </label>
-			<input type="radio" id="hard" name="count" value="17" onclick="hello();">
+			<input type="radio" id="hard" name="count" value="17" onclick="updateCount();">
 			<label for="hard">Hard</label>
-			<input type="radio" id="super" name="count" value="31" onclick="hello();">
+			<input type="radio" id="super" name="count" value="31" onclick="updateCount();">
 			<label for="super">Super</label>
 		</form>
 		<table style="width:560px""><tr>

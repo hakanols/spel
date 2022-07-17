@@ -3,15 +3,15 @@
 	<head>
 		<title>Taurus Labyrint</title>
 		<script type="module">
-			const images = ["D.png", "H.png", "J.png", "L.png", "M.png", "O.png", "P.png", "T.png"]
+			const images = ["Kugg1.png", "Kugg2.png", "D.png", "H.png", "M.png", "O.png", "P.png", "T.png"]
 			const random = createRandom()
-			const peekTime = 4
+			const peekTime = 10
 			const graceTime = 2;
+			const life = 6
 			let lastElement = null
 			let active = false;
 			let donePaires = 0;
-
-			const killLife = popLife(5)
+			let killLife;
 
 			function done(success){
 				const trophy = document.getElementById("Trophy")
@@ -89,7 +89,7 @@
 				let life = document.getElementById("Life")
 				for (let index = 0; index < number; index++) {
 					let img = document.createElement("img");
-					img.src = "Livspuck.jpg";
+					img.src = "Livspuck.png";
 					img.style = "height:60px;width:60px"
 					life.appendChild(img);
 				}
@@ -97,7 +97,7 @@
 					if (index >= number){
 						return false
 					}
-					life.children[index].src = "Quest.png"
+					life.children[index].src = "Deadpuck.png"
 					index++;
 					return index < number
 				}
@@ -126,21 +126,21 @@
 				return elements
 			}
 
-			async function init(){
-				const time = document.getElementById("Time")
+			window.onload = async function() {
+				killLife = popLife(life)
 				const elements = populate()
-				//for (let secLeft = peekTime; secLeft >= 0; secLeft--) {
-				//	await sleep(1000)
-				//}
-				//time.innerText = ''
-				await sleep(peekTime*1000)
+				const time = document.getElementById("Time")
+				for (let secLeft = peekTime; secLeft >= 0; secLeft--) {
+					time.innerText = secLeft
+					await sleep(1000)
+				}
+				time.innerText = ''
 				for (let element of elements){
 					element.src = "Quest.png"
 				}
 				active = true
 				console.log('Game on')
-			}
-			init()
+			}	
 		</script>
 	</head>
 	<body style="background-color: #21455d">
