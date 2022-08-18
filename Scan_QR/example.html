@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>QR Code from camera stream</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <script type="text/javascript" src="https://unpkg.com/@zxing/library@latest"></script>
+        <script type="module">
+            //import * as gurka from './qr-scan.js';
+            //console.log(gurka)
+            let codeReader;
+
+            function decodeContinuously(codeReader, selectedDeviceId) {
+                codeReader.decodeFromInputVideoDeviceContinuously(selectedDeviceId, 'video', (result, err) => {
+                    if (result) {
+                        // properly decoded qr code
+                        console.log('Found QR code!', result);
+                        const resultDisplay = document.getElementById('result');
+                        resultDisplay.textContent = result.getText()
+                    }
+                    if (err) {
+                        // As long as this error belongs into one of the following categories
+                        // the code reader is going to continue as excepted. Any other error
+                        // will stop the decoding loop.
+                        //
+                        // Excepted Exceptions:
+                        //
+                        //  - NotFoundException
+                        //  - ChecksumException
+                        //  - FormatException
+                        if (err instanceof ZXing.NotFoundException) {
+                            console.log('No QR code found.')
+                        }
+                        if (err instanceof ZXing.ChecksumException) {
+                            console.log('A code was found, but it\'s read value was not valid.')
+                        }
+                        if (err instanceof ZXing.FormatException) {
+                            console.log('A code was found, but it was in a invalid format.')
+                        }
+                    }
+                })
+            }
+
+            async function init() {
+                codeReader = new ZXing.BrowserQRCodeReader();
+                console.log('ZXing code reader initialized');
+                const videoInputDevices = await codeReader.getVideoInputDevices();
+                const sourceSelect = document.getElementById('sourceSelect');
+                if (videoInputDevices.length >= 1) {
+                    videoInputDevices.forEach((videoInputDevice) => {
+                        const sourceOption = document.createElement('option');
+                        sourceOption.text = videoInputDevice.label;
+                        sourceOption.value = videoInputDevice.deviceId;
+                        sourceSelect.appendChild(sourceOption)
+                    });
+                    const sourceSelectPanel = document.getElementById('sourceSelectPanel');
+                    sourceSelectPanel.style.display = 'block'
+                }
+            }
+            init();
+
+            window.start = function(){
+                const selectedDeviceId = document.getElementById('sourceSelect').value;
+                decodeContinuously(codeReader, selectedDeviceId);
+            };
+
+            window.reset = function(){
+                codeReader.reset();
+                document.getElementById('result').textContent = '';
+                console.log('Reset.')
+            }
+
+        </script>
+    </head>
+    <body>
+        <h1 class="title">Scan QR Code from Video Camera</h1>
+
+        <p>This example shows how to scan a QR code with ZXing javascript library from the device video camera. If more
+            than one video input devices are available (for example front and back camera) the example shows how to read
+            them and use a select to change the input device.</p>
+
+        <div>
+            <button type="button" onclick="start()">Start</button>
+            <button type="button" onclick="reset()">Reset</button>
+        </div>
+
+        <div>
+            <video id="video" width="300" height="200" style="border: 1px solid gray"></video>
+        </div>
+
+        <div id="sourceSelectPanel" style="display:none">
+            <label for="sourceSelect">Change video source:</label>
+            <select id="sourceSelect" style="max-width:400px">
+            </select>
+        </div>
+
+        <label>Result:</label>
+        <pre><code id="result"></code></pre>
+    </body>
+</html>

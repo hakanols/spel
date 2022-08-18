@@ -1,0 +1,85 @@
+<html>
+	<header>
+		<title>WiFi QR code</title>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<script type="module">
+			import * as QRCode from './qrcode-lite.js'
+
+			const options = {
+				errorCorrectionLevel: 'H'
+			}
+
+			function getData(){
+				let ssid = localStorage.ssid;
+				if (ssid == null){
+					ssid = "";
+				}
+				let password = localStorage.password;
+				if (password == null){
+					password = "";
+				}
+				return {
+					ssid: ssid,
+					password: password
+				};
+			}
+
+			function setData(data){
+				localStorage.ssid = data.ssid;
+				localStorage.password = data.password;
+			}
+
+			function createWiFiMessage(ssid, security, password){
+				// security = <WPA|WEP|>
+				return "WIFI:S:"+ssid+";T:"+security+";P:"+password+";;";
+			}
+
+			function setTextBoxData(data){
+				document.getElementById("ssid").value = data.ssid;
+				document.getElementById("password").value = data.password;
+			}
+
+			function getTextBoxData(){
+				ssid = document.getElementById("ssid").value;
+				password = document.getElementById("password").value;
+				return {
+					ssid: ssid,
+					password: password
+				};
+			}
+
+			async function setQRcode(data){
+				let qrCodeElement = document.getElementById("qrcode");
+				qrCodeElement.innerHTML = "";
+				let content = createWiFiMessage(data.ssid,"WPA",data.password)
+				await QRCode.toCanvas(qrCodeElement, content, options);
+			}
+
+			window.handleDisplay = async function(){
+				let newData = getTextBoxData();
+				setData(newData);
+				await setQRcode(newData);
+			}
+
+			async function init(){
+				let data = getData();
+				setTextBoxData(data);
+				await setQRcode(data);
+			}
+			init();
+
+		</script>
+	</header>
+	<body background="agave.jpg">
+
+		<p>SSID:<br>
+		<input type="text" size="80" id="ssid" required></p>
+		<p>Password:<br>
+		<input type="text" size="80" id="password" required></p>
+		<button onclick="handleDisplay()">Display</button></p>
+
+		<p>Scan QR-code to join WiFi network</p>
+		<canvas  id="qrcode"></canvas >
+
+	</body>
+</html>
