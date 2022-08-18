@@ -1,15 +1,15 @@
 # spel
 Cheat sheet for a beer game
 
-https://hakanols.github.io/spel/beer/beer.html
+https://hakanols.github.io/spel/Beer/beer.html
 
 Counting game
 
-https://hakanols.github.io/spel/count/count.html
+https://hakanols.github.io/spel/Count/count.html
 
 Memory
 
-https://hakanols.github.io/spel/memory/memory.html
+https://hakanols.github.io/spel/Memory/memory.html
 
 WiFi QR
 
