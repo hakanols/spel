@@ -40,11 +40,9 @@
 			}
 
 			function getTextBoxData(){
-				ssid = document.getElementById("ssid").value;
-				password = document.getElementById("password").value;
 				return {
-					ssid: ssid,
-					password: password
+					ssid: document.getElementById("ssid").value,
+					password: document.getElementById("password").value
 				};
 			}
 
