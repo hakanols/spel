@@ -4,80 +4,59 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<script type="module">
 			import * as QRCode from './qrcode-lite.js'
+			
+			const qrCodeElement = document.getElementById("qrcode");
+			const ssidElement = document.getElementById("ssid");
+			const passwordElement = document.getElementById("password");
+			const urlElement = document.getElementById("url");		
+			const wifiRadioElement = document.getElementById("radioWifi");
+			const urlRadioElement = document.getElementById("radioUrl");
 
 			const options = {
 				errorCorrectionLevel: 'H'
 			}
 
-			function getData(){
-				let ssid = localStorage.ssid;
-				if (ssid == null){
-					ssid = "";
-				}
-				let password = localStorage.password;
-				if (password == null){
-					password = "";
-				}
-				return {
-					ssid: ssid,
-					password: password
-				};
-			}
-
-			function setData(data){
-				localStorage.ssid = data.ssid;
-				localStorage.password = data.password;
-			}
-
-			function createWiFiMessage(ssid, security, password){
-				// security = <WPA|WEP|>
+			function createWiFiMessage(ssid, password){
+				const security = "WPA" // <WPA|WEP|>
 				return "WIFI:S:"+ssid+";T:"+security+";P:"+password+";;";
 			}
 
-			function setTextBoxData(data){
-				document.getElementById("ssid").value = data.ssid;
-				document.getElementById("password").value = data.password;
-			}
-
-			function getTextBoxData(){
-				return {
-					ssid: document.getElementById("ssid").value,
-					password: document.getElementById("password").value
-				};
-			}
-
-			async function setQRcode(data){
-				let qrCodeElement = document.getElementById("qrcode");
+			async function setQRcode(content){
 				qrCodeElement.innerHTML = "";
-				let content = createWiFiMessage(data.ssid,"WPA",data.password)
 				await QRCode.toCanvas(qrCodeElement, content, options);
 			}
 
-			window.handleDisplay = async function(){
-				let newData = getTextBoxData();
-				setData(newData);
-				await setQRcode(newData);
+			window.updateCount = async function(){
+				let content
+				if (wifiRadioElement.checked){
+					content = createWiFiMessage(ssidElement.value, passwordElement.value)
+				}
+				else if (urlRadioElement.checked){
+					content = urlElement.value
+				}
+				console.log(content)
+				if (content == ""){
+					qrCodeElement.innerHTML = "";
+				}
+				else {
+					await setQRcode(content);
+				}
 			}
 
-			async function init(){
-				let data = getData();
-				setTextBoxData(data);
-				await setQRcode(data);
-			}
-			init();
+			window.updateCount();
 
 		</script>
 	</header>
 	<body style="background-image: url('agave.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-size: cover; background-position: center center;">
+		
+		<input type="radio" id="radioWifi" name="qrType" checked="checked" onclick="updateCount();">
+		<p>SSID: <input type="text" size="80" id="ssid"  onclick="updateCount()"></p>
+		<p>Password: <input type="text" size="80" id="password"  onclick="updateCount()"></p>
 
-		<p>SSID:<br>
-		<input type="text" size="80" id="ssid" required></p>
-		<p>Password:<br>
-		<input type="text" size="80" id="password" required></p>
-		<button onclick="handleDisplay()">Display</button></p>
+		<input type="radio" id="radioUrl" name="qrType" onclick="updateCount();">
+		<p>Url or free text: <input type="text" size="80" id="url"  onclick="updateCount()"></p>
 
 		<p>Scan QR-code to join WiFi network</p>
 		<canvas  id="qrcode"></canvas >
-
 	</body>
 </html>
