@@ -4,6 +4,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<script type="module">
 			import * as QRCode from './qrcode-lite.js'
+
+			// String formating found here: https://github.com/zxing/zxing/wiki/Barcode-Contents 
 			
 			const qrCodeElement = document.getElementById("qrcode");
 			const ssidElement = document.getElementById("ssid");
@@ -11,9 +13,13 @@
 			const urlElement = document.getElementById("url");		
 			const wifiRadioElement = document.getElementById("radioWifi");
 			const urlRadioElement = document.getElementById("radioUrl");
+			const correctionElement = document.getElementById("correctionLevel");
+			const dataTypeElement = document.getElementById("dataType");
 
-			const options = {
-				errorCorrectionLevel: 'H'
+			function getCorrectionLevel(){
+				return {
+					errorCorrectionLevel: correctionElement.value
+				}
 			}
 
 			function createWiFiMessage(ssid, password){
@@ -21,9 +27,23 @@
 				return "WIFI:S:"+ssid+";T:"+security+";P:"+password+";;";
 			}
 
-			async function setQRcode(content){
-				qrCodeElement.innerHTML = "";
+			async function setQRcode(content, options){
 				await QRCode.toCanvas(qrCodeElement, content, options);
+			}
+
+			function clearQRcode(){
+				var ctx = qrCodeElement.getContext("2d");
+				ctx.clearRect(0, 0, qrCodeElement.width, qrCodeElement.height);
+				ctx.beginPath();
+			}
+
+			window.checkUrl = async function(){
+				try {
+					dataTypeElement.innerText = (new URL(urlElement.value)).protocol
+				} catch (_) {
+					dataTypeElement.innerText = "Free text"
+				}
+				window.updateCount()
 			}
 
 			window.updateCount = async function(){
@@ -36,27 +56,33 @@
 				}
 				console.log(content)
 				if (content == ""){
-					qrCodeElement.innerHTML = "";
+					clearQRcode()
 				}
 				else {
-					await setQRcode(content);
+					await setQRcode(content, getCorrectionLevel());
 				}
 			}
 
-			window.updateCount();
+			window.checkUrl();
 
 		</script>
 	</header>
 	<body style="background-image: url('agave.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-size: cover; background-position: center center;">
 		
-		<input type="radio" id="radioWifi" name="qrType" checked="checked" onclick="updateCount();">
-		<p>SSID: <input type="text" size="80" id="ssid"  onclick="updateCount()"></p>
-		<p>Password: <input type="text" size="80" id="password"  onclick="updateCount()"></p>
+		<p><input type="radio" id="radioWifi" name="qrType" checked="checked" onclick="updateCount();">
+		SSID: <input type="text" size="80" id="ssid" oninput="updateCount()"><br>
+		Password: <input type="text" size="80" id="password"  oninput="updateCount()"></p>
 
-		<input type="radio" id="radioUrl" name="qrType" onclick="updateCount();">
-		<p>Url or free text: <input type="text" size="80" id="url"  onclick="updateCount()"></p>
+		<p><input type="radio" id="radioUrl" name="qrType" onclick="updateCount();">
+		Url or free text: <input type="text" size="80" id="url"  oninput="checkUrl()"> <label id="dataType"></label></p>
 
-		<p>Scan QR-code to join WiFi network</p>
+		<p>Correction level: 
+		<select id="correctionLevel" onchange="updateCount();">
+			<option value="L">Low</option> 
+			<option value="M">Medium</option>
+			<option value="H">High</option>
+		</select></p>
+		
 		<canvas  id="qrcode"></canvas >
 	</body>
 </html>
