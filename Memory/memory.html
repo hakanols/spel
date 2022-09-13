@@ -3,7 +3,7 @@
 	<head>
 		<title>Taurus Labyrint</title>
 		<script type="module">
-			const images = ["Kugg1.png", "Kugg2.png", "D.png", "H.png", "M.png", "O.png", "P.png", "T.png"]
+			const images = ["Kugg1.svg", "Kugg2.svg", "D.svg", "H.svg", "M.svg", "O.svg", "P.svg", "T.svg"]
 			const random = createRandom()
 			const peekTime = 10
 			const graceTime = 2;
@@ -20,7 +20,7 @@
 					img.src = "pokal.svg";
 				}
 				else {
-					img.src = "Slime.png";
+					img.src = "Slime.svg";
 				}
 				img.style = "height:300px;width:280px"
 				trophy.appendChild(document.createElement("br"))
@@ -61,8 +61,8 @@
 						await sleep(graceTime*1000)
 						element.style.background = "";
 						lastElement.style.background = "";
-						element.children[0].src = "Quest.png"
-						lastElement.children[0].src = "Quest.png"
+						element.children[0].src = "Quest.svg"
+						lastElement.children[0].src = "Quest.svg"
 						active = true
 					}
 					lastElement = null
@@ -89,7 +89,7 @@
 				let life = document.getElementById("Life")
 				for (let index = 0; index < number; index++) {
 					let img = document.createElement("img");
-					img.src = "Livspuck.png";
+					img.src = "Livspuck.svg";
 					img.style = "height:60px;width:60px"
 					life.appendChild(img);
 				}
@@ -97,7 +97,7 @@
 					if (index >= number){
 						return false
 					}
-					life.children[index].src = "Deadpuck.png"
+					life.children[index].src = "Deadpuck.svg"
 					index++;
 					return index < number
 				}
@@ -136,7 +136,7 @@
 				}
 				time.innerText = ''
 				for (let element of elements){
-					element.src = "Quest.png"
+					element.src = "Quest.svg"
 				}
 				active = true
 				console.log('Game on')
