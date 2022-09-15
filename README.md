@@ -15,8 +15,6 @@ Move test
 
 https://hakanols.github.io/spel/MoveIt/index.html
 
-    node browser-quick-start.mjs /MoveIt/index.html
-
 QR Generator
 
 https://hakanols.github.io/spel/QR_Generator/index.html
