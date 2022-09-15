@@ -11,6 +11,18 @@ Memory
 
 https://hakanols.github.io/spel/Memory/memory.html
 
+Move test
+
+https://hakanols.github.io/spel/MoveIt/index.html
+
+    node browser-quick-start.mjs /MoveIt/index.html
+
+Scan QR
+
+https://hakanols.github.io/spel/QR_Scan/index.html
+
+    node browser-quick-start.mjs /QR_Scan/index.html
+
 QR Generator
 
 https://hakanols.github.io/spel/QR_Generator/index.html
