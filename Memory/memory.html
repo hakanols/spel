@@ -3,6 +3,10 @@
 	<head>
 		<title>Taurus Labyrint</title>
 		<script type="module">
+			let imgQuest = new Image()
+			imgQuest.style = "height:80px;width:80px"
+			imgQuest.src = "Quest.svg"
+
 			const images = ["Kugg1.svg", "Kugg2.svg", "D.svg", "H.svg", "M.svg", "O.svg", "P.svg", "T.svg"]
 			const random = createRandom()
 			const peekTime = 10
@@ -112,7 +116,7 @@
 					img.src = images[random[index]];
 					img.style = "height:80px;width:80px"
 					btn.appendChild(img);
-					elements.push(img)
+					elements.push(btn)
 					btn.onclick = function() {
 						handleClick(btn, index)
 					}
@@ -136,7 +140,8 @@
 				}
 				time.innerText = ''
 				for (let element of elements){
-					element.src = "Quest.svg"
+					element.replaceChild(imgQuest.cloneNode(), element.children[0])
+					//element.src = "Quest.svg"
 				}
 				active = true
 				console.log('Game on')
