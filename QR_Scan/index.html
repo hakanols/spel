@@ -30,6 +30,7 @@
     
         const scanner = new QrScanner(video, result => setResult(camQrResult, result), {
             onDecodeError: error => {
+                console.log(error)
                 camQrResult.textContent = error;
                 camQrResult.style.color = 'inherit';
             },
