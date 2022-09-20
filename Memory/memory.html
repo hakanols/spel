@@ -6,6 +6,9 @@
 			let imgQuest = new Image()
 			imgQuest.style = "height:80px;width:80px"
 			imgQuest.src = "Quest.svg"
+			const buttons = document.getElementById("Buttons")
+			const trophy = document.getElementById("Trophy")
+			const header = document.getElementById("Header")
 
 			const images = ["Kugg1.svg", "Kugg2.svg", "D.svg", "H.svg", "M.svg", "O.svg", "P.svg", "T.svg"]
 			const random = createRandom()
@@ -18,7 +21,6 @@
 			let killLife;
 
 			function done(success){
-				const trophy = document.getElementById("Trophy")
 				let img = document.createElement("img");
 				if (success){
 					img.src = "pokal.svg";
@@ -90,12 +92,11 @@
 
 			function popLife (number=1){
 				let index = 0
-				let life = document.getElementById("Life")
 				for (let index = 0; index < number; index++) {
 					let img = document.createElement("img");
 					img.src = "Livspuck.svg";
 					img.style = "height:60px;width:60px"
-					life.appendChild(img);
+					header.appendChild(img);
 				}
 				return function(){
 					if (index >= number){
@@ -107,8 +108,7 @@
 				}
 			}
 
-			function populate(){
-				const buttons = document.getElementById("Buttons")
+			function popButtons(){
 				let elements = []
 				for (let index = 0; index < 16; index++) {
 					let btn = document.createElement("button");
@@ -131,17 +131,16 @@
 			}
 
 			window.onload = async function() {
-				killLife = popLife(life)
-				const elements = populate()
-				const time = document.getElementById("Time")
-				for (let secLeft = peekTime; secLeft >= 0; secLeft--) {
-					time.innerText = secLeft
+				
+				const elements = popButtons()
+				for (let secLeft = peekTime; secLeft > 0; secLeft--) {
+					header.innerHTML = '<lable style=\"font-size:35px;\">'+secLeft+'s</lable>'
 					await sleep(1000)
 				}
-				time.innerText = ''
+				header.innerHTML = ''
+				killLife = popLife(life)
 				for (let element of elements){
 					element.replaceChild(imgQuest.cloneNode(), element.children[0])
-					//element.src = "Quest.svg"
 				}
 				active = true
 				console.log('Game on')
@@ -152,8 +151,7 @@
 		<h1>Taurus Labyrint</h1>
 		<button onclick="location.reload()" style="height:40px;width:320px">Hejduk</button>
 		<br><br>
-		<div id="Life"></div>
-		<div id="Time"></div>
+		<div id="Header" style="height:60px;"></div>
 		<div id="Buttons"></div>
 		<div id="Trophy"></div>
 		<p>av: Hjalmar och Håkan</p>
