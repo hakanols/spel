@@ -17,22 +17,20 @@
         const camQrResultTimestamp = document.getElementById('cam-qr-result-timestamp');
         const fileQrResult = document.getElementById('file-qr-result');
     
-        function setResult(label, result) {
+        function setResult(result) {
             console.log(result.data);
-            label.textContent = result.data;
+            camQrResult.textContent = result.data;
             camQrResultTimestamp.textContent = new Date().toString();
-            label.style.color = 'teal';
-            clearTimeout(label.highlightTimeout);
-            label.highlightTimeout = setTimeout(() => label.style.color = 'inherit', 100);
+            camQrResult.style.color = 'teal';
+            clearTimeout(camQrResult.highlightTimeout);
+            camQrResult.highlightTimeout = setTimeout(() => camQrResult.style.color = 'inherit', 100);
         }
     
         // ####### Web Cam Scanning #######
     
-        const scanner = new QrScanner(video, result => setResult(camQrResult, result), {
+        const scanner = new QrScanner(video, result => setResult(result), {
             onDecodeError: error => {
                 console.log(error)
-                camQrResult.textContent = error;
-                camQrResult.style.color = 'inherit';
             },
             highlightScanRegion: true,
             highlightCodeOutline: true,
@@ -96,52 +94,6 @@
             scanner.stop();
         });
     </script>
-    
-    <style>
-        div {
-            margin-bottom: 16px;
-        }
-    
-        #video-container {
-            line-height: 0;
-        }
-    
-        #video-container.example-style-1 .scan-region-highlight-svg,
-        #video-container.example-style-1 .code-outline-highlight {
-            stroke: #64a2f3 !important;
-        }
-    
-        #video-container.example-style-2 {
-            position: relative;
-            width: max-content;
-            height: max-content;
-            overflow: hidden;
-        }
-        #video-container.example-style-2 .scan-region-highlight {
-            border-radius: 30px;
-            outline: rgba(0, 0, 0, .25) solid 50vmax;
-        }
-        #video-container.example-style-2 .scan-region-highlight-svg {
-            display: none;
-        }
-        #video-container.example-style-2 .code-outline-highlight {
-            stroke: rgba(255, 255, 255, .5) !important;
-            stroke-width: 15 !important;
-            stroke-dasharray: none !important;
-        }
-    
-        #flash-toggle {
-            display: none;
-        }
-    
-        hr {
-            margin-top: 32px;
-        }
-        input[type="file"] {
-            display: block;
-            margin-bottom: 16px;
-        }
-    </style>
 </head>
 <body>
     <h1>Scan from WebCam:</h1>
@@ -194,6 +146,5 @@
     <br>
     <button id="start-button">Start</button>
     <button id="stop-button">Stop</button>
-    <hr>
 </body>
 </html>
