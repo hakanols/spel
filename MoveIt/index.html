@@ -3,8 +3,8 @@
 <head>
     <title>Move test</title>
     <script type="module">
-        const canvasWidth = 10;
-        const canvasHeight = 10;
+        const canvasWidth = 12;
+        const canvasHeight = 8;
         const squarWidth = 50;
         const squarHeight = 50;
         const imageURL = "skuggan.svg"
@@ -14,6 +14,8 @@
             canvas.width = canvasWidth*squarWidth;
             canvas.height = canvasHeight*squarHeight;
             const rect = canvas.getBoundingClientRect();
+            const canvasX = (rect.right-rect.left-canvas.width)/2+rect.left
+            const canvasY = (rect.bottom-rect.top-canvas.height)/2+rect.top
             const context = canvas.getContext("2d");
             context.imageSmoothingEnabled = false;
             const img = new Image();
@@ -25,16 +27,18 @@
             let currentY
 
             const update = function(newX, newY){
-                console.log('X: '+newX+' Y: '+newY)         
-                context.clearRect(currentX*squarWidth, currentY*squarHeight, squarWidth, squarHeight);
-                context.drawImage(img, newX*squarWidth, newY*squarHeight, squarWidth, squarHeight);
-                currentX = newX
-                currentY = newY
+                console.log('X: '+newX+' Y: '+newY)
+                if (0 <= newX && newX < canvasWidth && 0 <= newY && newY < canvasHeight){     
+                    context.clearRect(currentX*squarWidth, currentY*squarHeight, squarWidth, squarHeight);
+                    context.drawImage(img, newX*squarWidth, newY*squarHeight, squarWidth, squarHeight);
+                    currentX = newX
+                    currentY = newY
+                }
             }
 
             function HandleMoveEvent(e){
-                const x = Math.round((e.pageX-rect.left)/squarWidth - 0.5)
-                const y = Math.round((e.pageY-rect.top)/squarHeight - 0.5)
+                const x = Math.round((e.pageX-canvasX)/squarWidth - 0.5)
+                const y = Math.round((e.pageY-canvasY)/squarHeight - 0.5)
                 update(x, y)
             }
             canvas.addEventListener('mousedown', HandleMoveEvent) // 'mouseup'
