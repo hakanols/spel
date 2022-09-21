@@ -3,53 +3,55 @@
 <head>
     <title>Move test</title>
     <script type="module">
-        const canvasWidth = 500;
-        const canvasHeight = 500;
+        const canvasWidth = 10;
+        const canvasHeight = 10;
         const squarWidth = 50;
         const squarHeight = 50;
         const imageURL = "skuggan.svg"
 
         window.startGame = function() {
             const canvas = document.getElementById("canvas");
-            canvas.width = canvasWidth;
-            canvas.height = canvasHeight;
+            canvas.width = canvasWidth*squarWidth;
+            canvas.height = canvasHeight*squarHeight;
             const rect = canvas.getBoundingClientRect();
             const context = canvas.getContext("2d");
             context.imageSmoothingEnabled = false;
             const img = new Image();
             img.onload = function() {
-                update(squarWidth/2 , squarHeight/2)
+                update(0 , 0)
             }
             img.src = imageURL;
-            let x
-            let y
+            let currentX
+            let currentY
 
             const update = function(newX, newY){
-                x = (Math.round(newX/squarWidth - 0.5) + 0.5)*squarWidth
-                y = (Math.round(newY/squarHeight - 0.5) + 0.5)*squarHeight
-                context.clearRect(0, 0, canvas.width, canvas.height);
-                context.drawImage(img, x-squarWidth/2, y-squarHeight/2,squarWidth, squarHeight);
+                console.log('X: '+newX+' Y: '+newY)         
+                context.clearRect(currentX*squarWidth, currentY*squarHeight, squarWidth, squarHeight);
+                context.drawImage(img, newX*squarWidth, newY*squarHeight, squarWidth, squarHeight);
+                currentX = newX
+                currentY = newY
             }
 
-            canvas.addEventListener('mousedown', function (e) { // 'mouseup'
-                update(e.pageX-rect.left, e.pageY-rect.top)
-            })
-            canvas.addEventListener('touchstart', function (e) { // 'touchend'
-                update(e.pageX-rect.left, e.pageY-rect.top)
-            })
+            function HandleMoveEvent(e){
+                const x = Math.round((e.pageX-rect.left)/squarWidth - 0.5)
+                const y = Math.round((e.pageY-rect.top)/squarHeight - 0.5)
+                update(x, y)
+            }
+            canvas.addEventListener('mousedown', HandleMoveEvent) // 'mouseup'
+            canvas.addEventListener('touchstart', HandleMoveEvent) // 'touchend'
             window.addEventListener('keyup', (event) => {
                 switch (event.key) {
                     case 'ArrowLeft':
-                        update(x-squarWidth, y)
+                        update(currentX-1, currentY)
                         break;
                     case 'ArrowRight':
-                        update(x+squarWidth, y)
+                        update(currentX+1, currentY)
                         break;
                     case 'ArrowUp':
-                        update(x, y-squarHeight)
+                        update(currentX, currentY-1)
                         break;
                     case 'ArrowDown':
-                        update(x, y+squarHeight)
+                        update(currentX, currentY+1)
                         break;
                     default:
                         alert("Only Arrow Keys Are Allowed!");
