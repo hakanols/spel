@@ -90,19 +90,19 @@
 				return items
 			}
 
-			function popLife (number=1){
+			function popLife (container, number=1){
 				let index = 0
 				for (let index = 0; index < number; index++) {
 					let img = document.createElement("img");
 					img.src = "Livspuck.svg";
 					img.style = "height:60px;width:60px"
-					header.appendChild(img);
+					container.appendChild(img);
 				}
 				return function(){
 					if (index >= number){
 						return false
 					}
-					life.children[index].src = "Deadpuck.svg"
+					container.children[index].src = "Deadpuck.svg"
 					index++;
 					return index < number
 				}
@@ -138,7 +138,7 @@
 					await sleep(1000)
 				}
 				header.innerHTML = ''
-				killLife = popLife(life)
+				killLife = popLife(header, life)
 				for (let element of elements){
 					element.replaceChild(imgQuest.cloneNode(), element.children[0])
 				}
