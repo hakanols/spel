@@ -3,19 +3,17 @@
 <head>
     <title>Move test</title>
     <script type="module">
-        const canvasWidth = 12;
+        const canvasWidth = 14;
         const canvasHeight = 8;
-        const squarWidth = 50;
-        const squarHeight = 50;
+        const squarWidth = 100;
+        const squarHeight = 100;
         const imageURL = "skuggan.svg"
 
         window.startGame = function() {
             const canvas = document.getElementById("canvas");
             canvas.width = canvasWidth*squarWidth;
             canvas.height = canvasHeight*squarHeight;
-            const rect = canvas.getBoundingClientRect();
-            const canvasX = (rect.right-rect.left-canvas.width)/2+rect.left
-            const canvasY = (rect.bottom-rect.top-canvas.height)/2+rect.top
+
             const context = canvas.getContext("2d");
             context.imageSmoothingEnabled = false;
             const img = new Image();
@@ -37,8 +35,11 @@
             }
 
             function HandleMoveEvent(e){
-                const x = Math.round((e.pageX-canvasX)/squarWidth - 0.5)
-                const y = Math.round((e.pageY-canvasY)/squarHeight - 0.5)
+                const rect = canvas.getBoundingClientRect();
+                const canvasBoxWidth = (rect.right-rect.left)/canvasWidth
+                const canvasBoxHeight = (rect.bottom-rect.top)/canvasHeight
+                const x = Math.floor((e.pageX-rect.left)/canvasBoxWidth)
+                const y = Math.floor((e.pageY-rect.top)/canvasBoxHeight)
                 update(x, y)
             }
             canvas.addEventListener('mousedown', HandleMoveEvent) // 'mouseup'
@@ -65,7 +66,11 @@
     </script>
 </head>
 <body onload="startGame()">
-    <canvas id="canvas" style="border:4px solid #000000;"></canvas>
-    <p>Move Sommarskuggan with your finger, mouse or arrow keys.</p>
+    <div style="width: 100vw; height: 66vw; 
+    max-height: 100vh; max-width: 150vh; margin: auto;
+    position: absolute; top:0;bottom:0; left:0;right:0;">
+        <canvas id="canvas" style="width:100%; aspect-ratio:5/3;border:4px solid #000000;"></canvas>
+        <p>Move Sommarskuggan with your finger, mouse or arrow keys.</p>
+    </div>
 </body>
 </html>
