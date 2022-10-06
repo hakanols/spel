@@ -3,18 +3,36 @@
 	<head>
 		<title>SPELET KOMMER</title>
 		<script type="module">
-			let maxNumber = 10;
-			const queryString = window.location.search;
-            const urlParams = new URLSearchParams(queryString)
-            if (urlParams.has('count')){
-                maxNumber = parseInt(urlParams.get('count'),10)
-            }
-			const number1 = Math.floor(Math.random() * (maxNumber+1))
-			const number2 = Math.floor(Math.random() * (maxNumber+1))
-
+			const diffMap= {
+				"easy": 3,
+				"moderate": 10,
+				"hard": 17,
+				"super": 31
+			}
+			let difficulty; 
+			const diffElements = document.getElementsByName("Difficulty")
 			const question = document.getElementById("Question")
 			const buttons = document.getElementById("Buttons")
 			const trophy = document.getElementById("Trophy")
+
+			const queryString = window.location.search;
+            const urlParams = new URLSearchParams(queryString)
+            if (urlParams.has('Difficulty')){
+                difficulty = urlParams.get('Difficulty')
+            }
+			if (!(difficulty in diffMap)){
+				console.log(difficulty+' not in diffMap')
+				difficulty = "moderate" // Default
+			}
+
+			diffElements.forEach(function(item){
+				if (item.value == difficulty){
+					item.checked=true;
+				}
+			})
+			let maxNumber = diffMap[difficulty]
+			const number1 = Math.floor(Math.random() * (maxNumber+1))
+			const number2 = Math.floor(Math.random() * (maxNumber+1))
 
 			window.updateCount = function(){
 				document.getElementById("countForm").submit();
@@ -29,7 +47,9 @@
 					element.style.background = "blue";
 					let img = document.createElement("img");
 					img.src = "pokal.svg";
-					img.style = "height:300px;width:280px"
+					img.style.height = "300px";
+					img.style.width = "280px";
+					trophy.style.zIndex = 10;
 					trophy.appendChild(document.createElement("br"))
 					trophy.appendChild(img);
 				}
@@ -43,7 +63,8 @@
 				for (let number of Array(maxNumber*2+1).keys()){
 					let btn = document.createElement("button");
 					btn.innerHTML = "<h1>"+number+"</h1>";
-					btn.style = "height:80px;width:80px"
+					btn.style.height = "80px";
+					btn.style.width = "80px"
 					btn.onclick = function() {
 						handleClick(btn, number)
 					}
@@ -59,16 +80,16 @@
 	<body>
 		<h1>SPELET KOMMER</h1>
 		<form id="countForm">
-			<input type="radio" id="easy" name="count" value="3" onclick="updateCount();">
+			<input type="radio" value="easy" name="Difficulty" onclick="updateCount();">
 			<label for="easy">Easy</label>
-			<input type="radio" id="moderate " name="count" value="10" onclick="updateCount();">
+			<input type="radio" value="moderate" name="Difficulty" onclick="updateCount();">
 			<label for="moderate">Moderate </label>
-			<input type="radio" id="hard" name="count" value="17" onclick="updateCount();">
+			<input type="radio" value="hard" name="Difficulty" onclick="updateCount();">
 			<label for="hard">Hard</label>
-			<input type="radio" id="super" name="count" value="31" onclick="updateCount();">
+			<input type="radio" value="super" name="Difficulty" onclick="updateCount();">
 			<label for="super">Super</label>
 		</form>
-		<table style="width:560px""><tr>
+		<table style="width:560px"><tr>
 			<td width="99%">
 				<h1 id="Question"></h1>
 			</td>
@@ -76,8 +97,10 @@
 				<button onclick="location.reload()" style="height:40px;width:160px">Hejduk</button>
 			</td>
 		</tr></table>
-		<div id="Buttons"></div>
-		<div id="Trophy"></div>
+		<div style="width:100%; position:relative;">
+			<div id="Buttons" style="width:100%; height:100%; position:absolute; top:0; left: 0;"></div>
+			<div id="Trophy" style="width:100%; height:100%; position:absolute; top:0; left: 0; z-index:-10;" ></div>
+		</div>
 		<p>av: Hjalmar och Håkan</p>
 	</body>
 </html>
