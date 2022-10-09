@@ -50,13 +50,13 @@
             }
             livspuck.src = "livspuck.svg";
 
-            let currentX
-            let currentY
+            let currentX = 0
+            let currentY = 1
 
             const update = function(newX, newY, img){
                 console.log('X: '+newX+' Y: '+newY)
                 if (0 <= newX && newX < canvasWidth && 0 <= newY && newY < canvasHeight &&
-                    bricks[newY][newX] == 0 ) {  
+                    bricks[newY][newX] == 0 && (Math.abs(currentX - newX)+Math.abs(currentY - newY)) == 1  ) {  
                     context.clearRect(currentX*squarWidth, currentY*squarHeight, squarWidth, squarHeight);
                     context.drawImage(img, newX*squarWidth, newY*squarHeight, squarWidth, squarHeight);
                     currentX = newX
