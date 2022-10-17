@@ -13,7 +13,7 @@ https://hakanols.github.io/spel/Memory/memory.html
 
 Move test
 
-https://hakanols.github.io/spel/MoveIt/index.html
+https://hakanols.github.io/spel/Skuggan/index.html
 
 QR Generator
 
