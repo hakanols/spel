@@ -3,15 +3,15 @@ Cheat sheet for a beer game
 
 https://hakanols.github.io/spel/Beer/beer.html
 
-Counting game
+Spelet kommer (Counting game)
 
 https://hakanols.github.io/spel/Count/count.html
 
-Memory
+Taurus Labyrint (Memory)
 
 https://hakanols.github.io/spel/Memory/memory.html
 
-Move test
+Sommarskuggan
 
 https://hakanols.github.io/spel/Skuggan/index.html
 
