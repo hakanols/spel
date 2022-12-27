@@ -97,6 +97,19 @@
                 }
             });
         }
+
+        async function requestWakeLock() {
+        try {
+            let wakeLock = await navigator.wakeLock.request();
+            wakeLock.addEventListener('release', () => {
+            console.log('Screen Wake Lock released:', wakeLock.released);
+            });
+            console.log('Screen Wake Lock released:', wakeLock.released);
+        } catch (err) {
+            console.error('Screen Wake error: '+err.name+', '+err.message);
+        }
+        };
+        requestWakeLock();
     </script>
 </head>
 <body onload="startGame()">
