@@ -26,3 +26,7 @@ Scan QR
 https://hakanols.github.io/spel/QR_Scan/index.html
 
     node browser-quick-start.mjs /QR_Scan/index.html
+
+Wake Lock Test
+
+https://hakanols.github.io/spel/Wake/index.html

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Wake Lock Test</title>
+    <script type="module">
+        const checkButton = document.getElementById('wake_lock_element')
+        const wakeLockModule = navigator.wakeLock;
+        let lock = null
+
+        window.onload = function() {
+            console.log('Has Wake Lock: ' + (wakeLockModule != undefined) )
+
+            if (wakeLockModule != undefined){
+                checkButton.disabled = false
+                checkButton.addEventListener('change', checkEvent);
+            }
+        }
+
+        async function checkEvent(e){
+            console.log('Checked: ' + checkButton.checked)
+            await toggleWakeLock()
+        };
+    
+        async function toggleWakeLock() {
+            if (lock == null){
+                lock = await wakeLockModule.request();
+                lock.addEventListener('release', () => {
+                    console.log('Screen Wake Lock released');
+                });
+                console.log('Screen Wake Lock claimed');
+            }
+            else {
+                lock.release();
+                lock = null;
+            }
+        };
+    </script>
+</head>
+<body>
+    <h2>Simple test for Wake Lock</h2>
+    <label>
+        <input id="wake_lock_element" disabled="true" type="checkbox">
+        Activate Wake Lock
+    </label>
+    <br>
+    <br><a href="https://developer.chrome.com/articles/wake-lock/">Wake Lock API</a>  
+    <br><a href="https://developer.mozilla.org/en-US/docs/Web/API/Screen_Wake_Lock_API#browser_compatibility">Browser Compatibility</a>  
+</body>
+</html>

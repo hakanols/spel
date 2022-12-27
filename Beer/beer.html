@@ -15,6 +15,7 @@
 		window.onload = function() {
 			setInterval(updateIfNeaded, 30*1000);
 			updateIfNeaded();
+			requestWakeLock();
 		}
 		function updateIfNeaded() {
 			let currentTime = new Date().getTime() / 1000;
@@ -29,6 +30,15 @@
 			document.getElementById("A").innerHTML = localStorage.lastState == "t" ? '2-7 Svart' : '2-7 Rött';
 			document.getElementById("B").innerHTML = localStorage.lastState == "t" ? '2-7 Rött' : '2-7 Svart';
 		}
+
+		async function requestWakeLock() {
+			try {
+				let wakeLock = await navigator.wakeLock.request();
+				console.log('Screen Wake Lock claimed');
+			} catch (err) {
+				console.error('Screen Wake error: '+err.name+', '+err.message);
+			}
+		};
 		</script>
 	</head>
 	<body>
