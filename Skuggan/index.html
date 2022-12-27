@@ -72,9 +72,30 @@
                 const rect = canvas.getBoundingClientRect();
                 const canvasBoxWidth = (rect.right-rect.left)/canvasWidth
                 const canvasBoxHeight = (rect.bottom-rect.top)/canvasHeight
-                const x = Math.floor((e.pageX-rect.left)/canvasBoxWidth)
-                const y = Math.floor((e.pageY-rect.top)/canvasBoxHeight)
-                update(x, y, skugg)
+                const x = (e.pageX-rect.left)/canvasBoxWidth
+                const y = (e.pageY-rect.top)/canvasBoxHeight
+                
+                const diffX = x-(currentX+0.5)
+                const diffY = y-(currentY+0.5)
+                const overTiltPlusOne = diffY > diffX
+                const overTiltMinusOne = diffY > -diffX
+
+                if (overTiltPlusOne && overTiltMinusOne) {
+                    console.log('Down')
+                    update(currentX, currentY+1, skugg)
+                }
+                else if (!overTiltPlusOne && overTiltMinusOne){
+                    console.log('Rigth')
+                    update(currentX+1, currentY, skugg)
+                }
+                else if (overTiltPlusOne && !overTiltMinusOne){
+                    console.log('Left')
+                    update(currentX-1, currentY, skugg)
+                }
+                else {
+                    console.log('Up')
+                    update(currentX, currentY-1, skugg)
+                }
             }
             canvas.addEventListener('mousedown', HandleMoveEvent) // 'mouseup'
             canvas.addEventListener('touchstart', HandleMoveEvent) // 'touchend'
