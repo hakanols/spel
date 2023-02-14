@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Web Worker</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <script type="module">
+            /* 
+            * https://bugzilla.mozilla.org/show_bug.cgi?id=1247687
+            * https://whattrainisitnow.com/release/?version=111
+            * https://medium.com/@dee_bloo/make-multithreading-easier-with-inline-web-workers-a58723428a42
+            * https://plnkr.co/edit/yGxaIebN8ctNRcco?open=lib%2Fscript.js&preview
+            */
+
+            async function createWorker1(func) {
+                console.log(func.name)
+                const blob = new Blob([func.toString(), '\nawait '+func.name+'()'], { type: 'module' });
+                console.log("Inline Web Worker script:\n" + await blob.text())
+                const url = URL.createObjectURL(blob);
+                return new Worker(url, {type:'module'});
+            }
+
+            async function createWorker2(func) {
+                console.log(func.name)
+                const blob = new Blob([func.toString(), '\n'+func.name+'()'], { type: 'module' });
+                console.log("Inline Web Worker script:\n" + await blob.text())
+                const url = URL.createObjectURL(blob);
+                return new Worker(url);
+            }
+
+            async function webWorkerTask1(){
+                await import('./child.js')
+                console.log("Inside function webWorkerTask1")
+            }
+
+            function webWorkerTask2(){
+                console.log("Inside function webWorkerTask2")
+            }
+
+            window.runWebWorkerFile = function(){
+                console.log("Run Web Worker from file")
+                const worker = new Worker("parent.js", { type: "module" });
+                worker.onmessage = (evt) => console.log("Msg from worker: " + evt.data);
+                console.log("Starter done")
+            }
+            
+            window.runWebWorkerInline1 = function(){
+                console.log("Run Web Worker inline")
+                const worker = createWorker1(webWorkerTask1)
+                worker.onmessage = (evt) => console.log("Msg from worker: " + evt.data);
+                console.log("Starter done")
+            }
+
+            window.runWebWorkerInline2 = function(){
+                console.log("Run Web Worker inline")
+                const worker = createWorker2(webWorkerTask2)
+                worker.onmessage = (evt) => console.log("Msg from worker: " + evt.data);
+                console.log("Starter done")
+            }
+
+            window.runInline = async function(){
+                console.log("Run inline")
+                await webWorkerTask1()
+                console.log("Starter done")
+            }
+
+        </script>
+    </head>
+    <body>
+        <h4>Test to run ES6 Web Workers inline.</h4>
+        <p>While running some time consuming JS test in browser it was apparent that some kind of thread or worker was needed.
+        At that time FireFox did not have ES6 Web Worker support. It will be/was added in FireFox 111 planed for 2023-03-14.</p>
+
+        <p>The combination ES6, inline seem to not like to coexist. My efforts have so far not been successful</p>
+
+        <button onclick="runWebWorkerFile()">Run Web Worker from file</button>
+        <button onclick="runWebWorkerInline1()">Run Web Worker inline (v1)</button>
+        <button onclick="runWebWorkerInline2()">Run Web Worker inline (v2)</button>
+        <button onclick="runInline()">Run inline</button>
+
+        <p>Some links used</p>
+        <ul>
+            <li><a href="https://bugzilla.mozilla.org/show_bug.cgi?id=1247687">FireFox Bug: Implement worker modules</a></li>
+            <li><a href="https://whattrainisitnow.com/release/?version=111">Firefox release 111</a></li>
+            <li><a href="https://medium.com/@dee_bloo/make-multithreading-easier-with-inline-web-workers-a58723428a42">Blog: Make multithreading easier with Inline Web Workers</a></li>
+            <li><a href="https://plnkr.co/edit/yGxaIebN8ctNRcco?open=lib%2Fscript.js&preview">Worker Module live demo</a></li>
+        </ul> 
+    </body>
+</html>

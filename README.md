@@ -30,3 +30,11 @@ https://hakanols.github.io/spel/QR_Scan/index.html
 Wake Lock Test
 
 https://hakanols.github.io/spel/Wake/index.html
+
+    node browser-quick-start.mjs /Wake/index.html
+
+Web Worker
+
+https://hakanols.github.io/spel/Web_Worker/index.html
+
+    node browser-quick-start.mjs /Web_Worker/index.html
