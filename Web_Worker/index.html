@@ -4,27 +4,13 @@
         <title>Web Worker</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
         <script type="module">
-            /* 
-            * https://bugzilla.mozilla.org/show_bug.cgi?id=1247687
-            * https://whattrainisitnow.com/release/?version=111
-            * https://medium.com/@dee_bloo/make-multithreading-easier-with-inline-web-workers-a58723428a42
-            * https://plnkr.co/edit/yGxaIebN8ctNRcco?open=lib%2Fscript.js&preview
-            */
 
-            async function createWorker1(func) {
+            async function createWorker(func) {
                 console.log(func.name)
-                const blob = new Blob([func.toString(), '\nawait '+func.name+'()'], { type: 'module' });
+                const blob = new Blob([func.toString(), '\n '+func.name+'()'], { type: 'text/javascript' });
                 console.log("Inline Web Worker script:\n" + await blob.text())
                 const url = URL.createObjectURL(blob);
                 return new Worker(url, {type:'module'});
-            }
-
-            async function createWorker2(func) {
-                console.log(func.name)
-                const blob = new Blob([func.toString(), '\n'+func.name+'()'], { type: 'module' });
-                console.log("Inline Web Worker script:\n" + await blob.text())
-                const url = URL.createObjectURL(blob);
-                return new Worker(url);
             }
 
             async function webWorkerTask1(){
@@ -32,7 +18,7 @@
                 console.log("Inside function webWorkerTask1")
             }
 
-            function webWorkerTask2(){
+            async function webWorkerTask2(){
                 console.log("Inside function webWorkerTask2")
             }
 
@@ -44,15 +30,15 @@
             }
             
             window.runWebWorkerInline1 = function(){
-                console.log("Run Web Worker inline")
-                const worker = createWorker1(webWorkerTask1)
+                console.log("Run Web Worker inline (v1)")
+                const worker = createWorker(webWorkerTask1)
                 worker.onmessage = (evt) => console.log("Msg from worker: " + evt.data);
                 console.log("Starter done")
             }
 
             window.runWebWorkerInline2 = function(){
-                console.log("Run Web Worker inline")
-                const worker = createWorker2(webWorkerTask2)
+                console.log("Run Web Worker inline (v2)")
+                const worker = createWorker(webWorkerTask2)
                 worker.onmessage = (evt) => console.log("Msg from worker: " + evt.data);
                 console.log("Starter done")
             }
@@ -63,19 +49,25 @@
                 console.log("Starter done")
             }
 
+            window.isFireFox = function(){
+                console.log("Browser: " + navigator.userAgent)
+                console.log("Is FireFox: " + navigator.userAgent.toLowerCase().includes("firefox")) 
+            }
+
         </script>
     </head>
     <body>
         <h4>Test to run ES6 Web Workers inline.</h4>
         <p>While running some time consuming JS test in browser it was apparent that some kind of thread or worker was needed.
-        At that time FireFox did not have ES6 Web Worker support. It will be/was added in FireFox 111 planed for 2023-03-14.</p>
+        At that time FireFox did not have ES6 Web Worker support. It will be added in FireFox 111 planed for 2023-03-14.</p>
 
-        <p>The combination ES6, inline seem to not like to coexist. My efforts have so far not been successful</p>
+        <p>The combination ES6, inline seem to not like to coexist in any browser. My efforts have so far not been successful</p>
 
         <button onclick="runWebWorkerFile()">Run Web Worker from file</button>
         <button onclick="runWebWorkerInline1()">Run Web Worker inline (v1)</button>
         <button onclick="runWebWorkerInline2()">Run Web Worker inline (v2)</button>
         <button onclick="runInline()">Run inline</button>
+        <button onclick="isFireFox()">Is FireFox</button>
 
         <p>Some links used</p>
         <ul>
