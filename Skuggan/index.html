@@ -9,6 +9,7 @@
         const squarHeight = 100;
         const imageURL = "skuggan.svg"
         let devMode = false
+        let on = true
         const bricks = [
             [3,1,0,0,0,1,0,1,0,1,1,0,0,0],
             [0,1,0,1,0,0,0,1,0,1,0,0,1,0],
@@ -59,7 +60,7 @@
             const skuggan = await loadImage(imageURL);
             const brick = await loadImage("brick.svg");
             const livspuck = await loadImage("livspuck.svg");
-            const pokal = await loadImage("bricpokalk.svg");
+            const pokal = await loadImage("pokal.svg");
             const slime = await loadImage("slime.svg");
             const fire = [
                 await loadImage("fire1.svg"),
@@ -74,18 +75,18 @@
 
             function updateSkuggan(newPos){
                 console.log('Position [x,y]: ' + newPos)
-                if (inArea(newPos)) {
+                if (inArea(newPos) && on) {
                     if ( getValue(newPos) == 0  ) {
                         moveSkuggan(newPos)
                     }
                     else if ( getValue(newPos) == 2 ) {
                         clear(newPos);
                         moveSkuggan(newPos)
-                        win()
+                        winOrLose(true)
                     }
                     else if ( getValue(newPos) == 3 || getValue(newPos) == 4 ) {
                         clear(currentPos);
-                        lose()
+                        winOrLose(false)
                     }
                 }
             }
@@ -113,8 +114,15 @@
                 currentPos = newPos;
             }
 
-            function win(){
-                console.log("win")
+            function winOrLose(win){
+                if (win){
+                    context.drawImage(pokal, 0, 0, squarWidth*canvasWidth, squarHeight*canvasHeight);
+                }
+                else {
+                    context.drawImage(slime, 0, 0, squarWidth*canvasWidth, squarHeight*canvasHeight);
+                }
+                on = false
+                console.log("winOrLose: " + win)
             }
 
             function lose(){
@@ -131,7 +139,7 @@
             }
 
             async function runGuiFire(){
-                while (true){
+                while (on){
                     iterateArea( function (pos, item){
                         if (item == 3 || item == 4){     
                             let index = Math.floor(Math.random() * fire.length)
@@ -144,7 +152,7 @@
             }
 
             async function runUpdateFire(){
-                while (true){
+                while (on){
                     let newFires = [];
                     iterateArea( function (pos, item){
                         if (item == 3){ 
@@ -157,7 +165,7 @@
                         {  
                             if (currentPos[0] == newFire[0] && currentPos[1] == newFire[1]){
                                 clear(newFire)
-                                lose()
+                                winOrLose(false)
                             }
                             setValue(newFire, 3);
                         }
