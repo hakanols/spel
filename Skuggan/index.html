@@ -204,6 +204,10 @@
                     updateSkuggan([Math.floor(x), Math.floor(y)])
                     return
                 }
+
+                if (Math.floor(x) == currentPos[0] && Math.floor(y) == currentPos[1]){
+                    return; // Ignore if clicking the same tile
+                }
                 
                 const diffX = x-(currentPos[0]+0.5)
                 const diffY = y-(currentPos[1]+0.5)
@@ -244,6 +248,7 @@
                         updateSkuggan(getRel(currentPos, [0, 1]))
                         break;
                     case 'h':
+                    case 'H':
                         toggleDevMode()
                         break;
                     case ' ':
