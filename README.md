@@ -38,3 +38,7 @@ Web Worker
 https://hakanols.github.io/spel/Web_Worker/index.html
 
     node browser-quick-start.mjs /Web_Worker/index.html
+
+Maze
+
+https://hakanols.github.io/spel/Maze/index.html

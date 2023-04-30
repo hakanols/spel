@@ -1,0 +1,176 @@
+<html>
+  <head>
+	<script type="module">
+	let canvas = document.createElement('canvas');
+	let ctx = canvas.getContext('2d');
+
+	let height = 500;
+	let width = 800;
+	canvas.height = height;
+	canvas.width = width;
+	document.body.appendChild(canvas);
+	let end = false;
+	ctx.fillStyle = '#484848';
+	ctx.fillRect(0, 0, width, height);
+
+	let rows = 0;
+	let cols = 0;
+	let size = 50;
+	let cells = []; 
+	let stack = [];
+	let current;
+
+	function Cell(x, y, index) {
+	  this.x = x;
+	  this.y = y;
+	  this.top = true;
+	  this.right = true;
+	  this.bottom = true;
+	  this.left = true;
+	  this.visited = false;
+	  this.index = index;
+
+	  this.drawWall = function(bx, by, ex, ey) {
+		ctx.beginPath();
+		ctx.lineWidth = "1";
+		ctx.strokeStyle = "white";
+		ctx.moveTo(bx, by);
+		ctx.lineTo(ex, ey);
+		ctx.stroke();
+	  }
+
+	  this.draw = function() {
+		ctx.beginPath();
+		ctx.lineWidth = "1";
+		ctx.strokeStyle = "white";
+
+		//top
+		if (this.top) {
+		  this.drawWall(this.x, this.y, this.x + size, this.y);
+		}
+
+		//right
+		if (this.right) {
+		  this.drawWall(this.x + size, this.y, this.x + size, this.y + size);
+		}
+
+		//bottom
+		if (this.bottom) {
+		  this.drawWall(this.x, this.y + size, this.x + size, this.y + size);
+		}
+
+		//left
+		if (this.left) {
+		  this.drawWall(this.x, this.y, this.x, this.y + size);
+		}
+		ctx.stroke();
+	  }
+
+	  this.getNeighbours = function() {
+		//rowIndex * numberOfColumns + columnIndex.
+		//columnIndex * numberOfRows + rowIndex.
+		let arrayX = this.x / size;
+		let arrayY = this.y / size;
+		let neighbours = [];
+
+		let topY = arrayY - 1;
+		let bottomY = arrayY + 1;
+
+		let leftX = arrayX - 1;
+		let rightX = arrayX + 1;
+
+		//top 
+		let top = topY >= 0 ? cells[arrayX * rows + topY] : null;
+		//right
+		let right = rightX < cols ? cells[rightX * rows + arrayY] : null;
+		//bottom
+		let bottom = bottomY < rows ? cells[arrayX * rows + bottomY] : null;
+		//left
+		let left = leftX >= 0 ? cells[leftX * rows + arrayY] : null;
+
+		if (top && !top.visited) neighbours.push(top);
+		if (right && !right.visited) neighbours.push(right);
+		if (bottom && !bottom.visited) neighbours.push(bottom);
+		if (left && !left.visited) neighbours.push(left);
+		if (neighbours.length > 0) {
+		  return neighbours;
+		} else {
+		  return undefined;
+		}
+	  }
+
+	  this.removeWall = function(cell) {
+		let newX = this.x - cell.x;
+		let newY = this.y - cell.y;
+		if (newX > 0) {
+		  this.left = false;
+		  cell.right = false;
+		} else if (newX < 0) {
+		  cell.left = false;
+		  this.right = false;
+		}
+		if (newY > 0) {
+		  this.top = false;
+		  cell.bottom = false;
+		} else if (newY < 0) {
+		  cell.top = false;
+		  this.bottom = false;
+		}
+	  }
+
+	}
+
+	Cell.draw = function() {
+	  ctx.fillStyle = '#484848';
+	  ctx.fillRect(0, 0, width, height);
+	  for (let i = 0; i < cells.length; i++) {
+		cells[i].draw();
+	  }
+	  ctx.save();
+	  ctx.fillStyle = "rgba(245, 222, 179,0.8)";
+	  ctx.fillRect(current.x, current.y, size, size);
+	  ctx.restore();
+	}
+
+	function setup() {
+	  cols = Math.floor(width / size);
+	  rows = Math.floor(height / size);
+	  for (let x = 0; x < cols; x++) {
+		for (let y = 0; y < rows; y++) {
+		  cells.push(new Cell(x * size, y * size, cells.length));
+		}
+	  }
+	  cells[0].visited = true;
+	  current = cells[0];
+	  Cell.draw();
+	  update();
+	}
+
+	function update() {
+	  let neighbours = current.getNeighbours();
+	  if (neighbours) {
+		let rand = Math.floor(Math.random() * neighbours.length);
+		let next = neighbours[rand];
+		current.removeWall(next);
+		stack.push(current);
+		next.visited = true;
+		current = next;
+	  } else if (stack.length > 0) {
+		current = stack.pop();
+	  } else {
+		end = true;
+	  }
+	  Cell.draw();
+	  if (!end) {
+		//requestAnimationFrame(update);
+		update()
+	  }
+	}
+
+	setup();
+	</script>
+  </head>
+
+  <body>
+  </body>
+</html>
