@@ -10,8 +10,11 @@
 			const qrCodeElement = document.getElementById("qrcode");
 			const ssidElement = document.getElementById("ssid");
 			const passwordElement = document.getElementById("password");
-			const urlElement = document.getElementById("url");		
+			const smsNumberElement = document.getElementById("smsNumber");
+			const smsTextElement = document.getElementById("smsText");
+			const urlElement = document.getElementById("url");
 			const wifiRadioElement = document.getElementById("radioWifi");
+			const smsRadioElement = document.getElementById("radioSms");
 			const urlRadioElement = document.getElementById("radioUrl");
 			const correctionElement = document.getElementById("correctionLevel");
 			const dataTypeElement = document.getElementById("dataType");
@@ -25,6 +28,10 @@
 			function createWiFiMessage(ssid, password){
 				const security = "WPA" // <WPA|WEP|>
 				return "WIFI:S:"+ssid+";T:"+security+";P:"+password+";;";
+			}
+
+			function createSmsMessage(number, text){
+				return "SMSTO:"+number+":"+text;
 			}
 
 			async function setQRcode(content, options){
@@ -50,6 +57,9 @@
 				let content
 				if (wifiRadioElement.checked){
 					content = createWiFiMessage(ssidElement.value, passwordElement.value)
+				}
+				else if (smsRadioElement.checked){
+					content = createSmsMessage(smsNumberElement.value, smsTextElement.value)
 				}
 				else if (urlRadioElement.checked){
 					content = urlElement.value
@@ -91,6 +101,28 @@
 						Password:
 					</td><td width="100%" valign="top">
 						<input style="width:100%" id="password" oninput="updateCount()" type="text">
+					</td>
+				</tr><tr>
+					<td valign="top"><br></td>
+				</tr> <tr>
+					<td valign="top">
+						<input id="radioSms" name="qrType" onclick="updateCount();" type="radio">
+					</td> <td rowspan="1" colspan="2" width="100%" valign="top">
+						SMS
+					</td>
+				</tr><tr>
+					<td valign="top"><br></td>
+					<td valign="top">
+						Number:
+					</td><td valign="top">
+						<input style="width:100%;" id="smsNumber" oninput="updateCount()" type="text">
+					</td>
+				</tr><tr>
+					<td valign="top"><br></td>
+					<td valign="top">
+						Text:
+					</td><td width="100%" valign="top">
+						<input style="width:100%" id="smsText" oninput="updateCount()" type="text">
 					</td>
 				</tr><tr>
 					<td valign="top"><br></td>
