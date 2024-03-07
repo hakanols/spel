@@ -1,6 +1,7 @@
 <html>
 	<head>
 		<title>QR Generator</title>
+		<link rel="stylesheet" type="text/css" href="mystyle.css">
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 		<script type="module">
 			import * as QRCode from './qrcode-lite.js'
@@ -100,112 +101,117 @@
 		</script>
 	</head>
 	<body style="background-image: url('agave.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-size: cover; background-position: center center;">
-		<h1>QR Generator</h1>
+		<div class="ruta" style="width:400px;margin-right:auto;margin-left:auto;">
 
-		<table width="500px">
-			<tbody>
-				<tr>
-					<td valign="top">
-						<input id="radioWifi" name="qrType" checked="checked" onclick="updateCount();" type="radio">
-					</td> <td rowspan="1" colspan="2" width="100%" valign="top">
-						WiFi login
-					</td>
-				</tr><tr>
-					<td valign="top"><br></td>
-					<td valign="top">
-						SSID:
-					</td><td valign="top">
-						<input style="width:100%;" id="ssid" oninput="updateCount()" type="text">
-					</td>
-				</tr><tr>
-					<td valign="top"><br></td>
-					<td valign="top">
-						Password:
-					</td><td width="100%" valign="top">
-						<input style="width:100%" id="password" oninput="updateCount()" type="text">
-					</td>
-				</tr><tr>
-					<td valign="top"><br></td>
-				</tr> <tr>
-					<td valign="top">
-						<input id="radioSms" name="qrType" onclick="updateCount();" type="radio">
-					</td> <td rowspan="1" colspan="2" width="100%" valign="top">
-						SMS
-					</td>
-				</tr><tr>
-					<td valign="top"><br></td>
-					<td valign="top">
-						Number:
-					</td><td valign="top">
-						<input style="width:100%;" id="smsNumber" oninput="updateCount()" type="text">
-					</td>
-				</tr><tr>
-					<td valign="top"><br></td>
-					<td valign="top">
-						Text:
-					</td><td width="100%" valign="top">
-						<input style="width:100%" id="smsText" oninput="updateCount()" type="text">
-					</td>
-				</tr><tr>
-					<td valign="top"><br></td>
-				</tr> <tr>
-					<td valign="top">
-						<input id="radioUrl" name="qrType" onclick="updateCount();" type="radio">
-					</td> <td rowspan="1" colspan="2" valign="top">
-						Url or free text: (<label id="dataType"></label>)
-					</td>
-				</tr><tr>
-					<td valign="top"><br></td>
-					<td rowspan="1" colspan="2" valign="top">
-						<input style="width:100%;" id="url" oninput="checkUrl()" type="text">
-					</td>
-				</tr>
-					<td valign="top"><br></td>
-				</tr> <tr>
-					<td valign="top">
-						<input id="radioSwish" name="qrType" onclick="updateCount();" type="radio">
-					</td> <td rowspan="1" colspan="2" valign="top">
-						Swish
-					</td>
-				</tr><tr>
-					<td valign="top"><br></td>
-					<td valign="top">
-						Number:
-					</td><td width="100%" valign="top">
-						<input style="width:100%" id="swishTele" oninput="updateCount()" type="number">
-					</td><td valign="top">
-						🔐
-					</td>
-				</tr><tr>
-					<td valign="top"><br></td>
-					<td valign="top">
-						Amount:
-					</td><td width="100%" valign="top">
-						<input style="width:100%" id="swishAmount" oninput="updateCount()" type="number">
-					</td><td valign="top">
-						<input id="swishAmountOk" oninput="updateCount()" type="checkbox">
-					</td>
-				</tr><tr>
-					<td valign="top"><br></td>
-					<td valign="top">
-						Message:
-					</td><td width="100%" valign="top">
-						<input style="width:100%" id="swishMsg" oninput="updateCount()" type="text">
-					</td><td valign="top">
-						<input id="swishMsgOk" oninput="updateCount()" type="checkbox">
-					</td>
-				</tr>
-			</tbody>
-		</table>
+			<h1 style="text-align: center">QR Generator</h1>
 
-		<p>Correction level:
-			<select id="correctionLevel" onchange="updateCount();">
-				<option value="L">Low</option>
-				<option value="M" selected="selected">Medium</option>
-				<option value="H">High</option>
-			</select>
-		</p>
-		<br>
-		<canvas id="qrcode"></canvas>
+			<table>
+				<tbody>
+					<tr>
+						<td valign="top">
+							<input id="radioWifi" name="qrType" checked="checked" onclick="updateCount();" type="radio">
+						</td> <td rowspan="1" colspan="2" width="100%" valign="top">
+							WiFi login
+						</td>
+					</tr><tr>
+						<td valign="top"><br></td>
+						<td valign="top">
+							SSID:
+						</td><td valign="top">
+							<input style="width:100%;" id="ssid" oninput="updateCount()" type="text">
+						</td>
+					</tr><tr>
+						<td valign="top"><br></td>
+						<td valign="top">
+							Password:
+						</td><td width="100%" valign="top">
+							<input style="width:100%" id="password" oninput="updateCount()" type="text">
+						</td>
+					</tr><tr>
+						<td valign="top"><br></td>
+					</tr> <tr>
+						<td valign="top">
+							<input id="radioSms" name="qrType" onclick="updateCount();" type="radio">
+						</td> <td rowspan="1" colspan="2" width="100%" valign="top">
+							SMS
+						</td>
+					</tr><tr>
+						<td valign="top"><br></td>
+						<td valign="top">
+							Number:
+						</td><td valign="top">
+							<input style="width:100%;" id="smsNumber" oninput="updateCount()" type="text">
+						</td>
+					</tr><tr>
+						<td valign="top"><br></td>
+						<td valign="top">
+							Text:
+						</td><td width="100%" valign="top">
+							<input style="width:100%" id="smsText" oninput="updateCount()" type="text">
+						</td>
+					</tr><tr>
+						<td valign="top"><br></td>
+					</tr> <tr>
+						<td valign="top">
+							<input id="radioUrl" name="qrType" onclick="updateCount();" type="radio">
+						</td> <td rowspan="1" colspan="2" valign="top">
+							Url or free text: (<label id="dataType"></label>)
+						</td>
+					</tr><tr>
+						<td valign="top"><br></td>
+						<td rowspan="1" colspan="2" valign="top">
+							<input style="width:100%;" id="url" oninput="checkUrl()" type="text">
+						</td>
+					</tr>
+						<td valign="top"><br></td>
+					</tr> <tr>
+						<td valign="top">
+							<input id="radioSwish" name="qrType" onclick="updateCount();" type="radio">
+						</td> <td rowspan="1" colspan="2" valign="top">
+							Swish
+						</td>
+					</tr><tr>
+						<td valign="top"><br></td>
+						<td valign="top">
+							Number:
+						</td><td width="100%" valign="top">
+							<input style="width:100%" id="swishTele" oninput="updateCount()" type="number">
+						</td><td valign="top">
+							🔐
+						</td>
+					</tr><tr>
+						<td valign="top"><br></td>
+						<td valign="top">
+							Amount:
+						</td><td width="100%" valign="top">
+							<input style="width:100%" id="swishAmount" oninput="updateCount()" type="number">
+						</td><td valign="top">
+							<input id="swishAmountOk" oninput="updateCount()" type="checkbox">
+						</td>
+					</tr><tr>
+						<td valign="top"><br></td>
+						<td valign="top">
+							Message:
+						</td><td width="100%" valign="top">
+							<input style="width:100%" id="swishMsg" oninput="updateCount()" type="text">
+						</td><td valign="top">
+							<input id="swishMsgOk" oninput="updateCount()" type="checkbox">
+						</td>
+					</tr>
+				</tbody>
+			</table>
+
+			<p>Correction level:
+				<select id="correctionLevel" onchange="updateCount();">
+					<option value="L">Low</option>
+					<option value="M" selected="selected">Medium</option>
+					<option value="H">High</option>
+				</select>
+			</p>
+			
+			<br>
+			<canvas id="qrcode"  style=" margin: auto; display: block"></canvas>
+			<br>
+		</div>
 	</body>
 </html>
