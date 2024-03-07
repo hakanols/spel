@@ -13,9 +13,15 @@
 			const smsNumberElement = document.getElementById("smsNumber");
 			const smsTextElement = document.getElementById("smsText");
 			const urlElement = document.getElementById("url");
+			const swishTeleElement = document.getElementById("swishTele");
+			const swishAmountElement = document.getElementById("swishAmount");
+			const swishAmountOkElement = document.getElementById("swishAmountOk");
+			const swishMsgElement = document.getElementById("swishMsg");
+			const swishMsgOkElement = document.getElementById("swishMsgOk");
 			const wifiRadioElement = document.getElementById("radioWifi");
 			const smsRadioElement = document.getElementById("radioSms");
 			const urlRadioElement = document.getElementById("radioUrl");
+			const swishRadioElement = document.getElementById("radioSwish");
 			const correctionElement = document.getElementById("correctionLevel");
 			const dataTypeElement = document.getElementById("dataType");
 
@@ -32,6 +38,18 @@
 
 			function createSmsMessage(number, text){
 				return "SMSTO:"+number+":"+text;
+			}
+
+			function createSwishMessage(tele, amount, amountOk, msg, msgOk){
+				let edit = ""
+				if (!amountOk && !msgOk)
+					edit ="&edit=amt,msg"
+				else if (!amountOk)
+					edit ="&edit=amt"
+				else if (!msgOk)
+					edit ="&edit=msg"
+				
+				return "https://app.swish.nu/1/p/sw/?sw="+tele+"&amt="+amount+"&msg="+msg+edit;
 			}
 
 			async function setQRcode(content, options){
@@ -63,6 +81,9 @@
 				}
 				else if (urlRadioElement.checked){
 					content = urlElement.value
+				}
+				else if (swishRadioElement.checked){
+					content = createSwishMessage(swishTeleElement.value, swishAmountElement.value, swishAmountOkElement.checked, swishMsgElement.value, swishMsgOkElement.checked)
 				}
 				console.log(content)
 				if (content == ""){
@@ -136,6 +157,41 @@
 					<td valign="top"><br></td>
 					<td rowspan="1" colspan="2" valign="top">
 						<input style="width:100%;" id="url" oninput="checkUrl()" type="text">
+					</td>
+				</tr>
+					<td valign="top"><br></td>
+				</tr> <tr>
+					<td valign="top">
+						<input id="radioSwish" name="qrType" onclick="updateCount();" type="radio">
+					</td> <td rowspan="1" colspan="2" valign="top">
+						Swish
+					</td>
+				</tr><tr>
+					<td valign="top"><br></td>
+					<td valign="top">
+						Number:
+					</td><td width="100%" valign="top">
+						<input style="width:100%" id="swishTele" oninput="updateCount()" type="number">
+					</td><td valign="top">
+						🔐
+					</td>
+				</tr><tr>
+					<td valign="top"><br></td>
+					<td valign="top">
+						Amount:
+					</td><td width="100%" valign="top">
+						<input style="width:100%" id="swishAmount" oninput="updateCount()" type="number">
+					</td><td valign="top">
+						<input id="swishAmountOk" oninput="updateCount()" type="checkbox">
+					</td>
+				</tr><tr>
+					<td valign="top"><br></td>
+					<td valign="top">
+						Message:
+					</td><td width="100%" valign="top">
+						<input style="width:100%" id="swishMsg" oninput="updateCount()" type="text">
+					</td><td valign="top">
+						<input id="swishMsgOk" oninput="updateCount()" type="checkbox">
 					</td>
 				</tr>
 			</tbody>
