@@ -6,6 +6,7 @@
 			import * as QRCode from './qrcode-lite.js'
 
 			// String formating found here: https://github.com/zxing/zxing/wiki/Barcode-Contents 
+			// and here https://developer.swish.nu/documentation/guides/generate-qr-codes
 			
 			const qrCodeElement = document.getElementById("qrcode");
 			const ssidElement = document.getElementById("ssid");
@@ -48,7 +49,7 @@
 					edit ="&edit=amt"
 				else if (!msgOk)
 					edit ="&edit=msg"
-				
+
 				return "https://app.swish.nu/1/p/sw/?sw="+tele+"&amt="+amount+"&msg="+msg+edit;
 			}
 
