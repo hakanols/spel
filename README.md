@@ -3,7 +3,7 @@ Cheat sheet for a beer game
 
 https://hakanols.github.io/spel/Beer/beer.html
 
-Spelet kommer (Counting game)
+5 x 5 (Counting game)
 
 https://hakanols.github.io/spel/Count/count.html
 
