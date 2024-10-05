@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>SPELET KOMMER</title>
+		<title>5 x 5</title>
 		<script type="module">
 			const diffMap= {
 				"easy": 3,
@@ -9,27 +9,48 @@
 				"hard": 17,
 				"super": 31
 			}
-			let difficulty; 
+			const typeMap = {
+				"add": '+',
+				"sub": '-',
+				"mult": 'x'
+			}
+
+			let difficulty;
+			let type; 
+			const typeElements = document.getElementsByName("Type")
 			const diffElements = document.getElementsByName("Difficulty")
 			const question = document.getElementById("Question")
 			const buttons = document.getElementById("Buttons")
 			const trophy = document.getElementById("Trophy")
 
 			const queryString = window.location.search;
-            const urlParams = new URLSearchParams(queryString)
-            if (urlParams.has('Difficulty')){
-                difficulty = urlParams.get('Difficulty')
-            }
+			const urlParams = new URLSearchParams(queryString)
+			if (urlParams.has('Difficulty')){
+				difficulty = urlParams.get('Difficulty')
+			}
 			if (!(difficulty in diffMap)){
 				console.log(difficulty+' not in diffMap')
 				difficulty = "moderate" // Default
 			}
-
 			diffElements.forEach(function(item){
 				if (item.value == difficulty){
 					item.checked=true;
 				}
 			})
+
+			if (urlParams.has('Type')){
+				type = urlParams.get('Type')
+			}
+			if (!(type in typeMap)){
+				console.log(type+' not in typeMap')
+				type = "add" // Default
+			}
+			typeElements.forEach(function(item){
+				if (item.value == type){
+					item.checked=true;
+				}
+			})
+
 			let maxNumber = diffMap[difficulty]
 			const number1 = Math.floor(Math.random() * (maxNumber+1))
 			const number2 = Math.floor(Math.random() * (maxNumber+1))
@@ -38,12 +59,24 @@
 				document.getElementById("countForm").submit();
 			}
 
+			function getAswer()
+			{
+				switch (type) {
+					case "add":
+						return number1+number2;
+					case 'sub':
+						return number1-number2;
+					case 'mult':
+						return number1*number2;
+				}
+			}
+
 			function handleClick(element, number){
 				if (element.style.background != ""){
 					console.log("Ignore")
 					return
 				}
-				if (number == number1+number2){
+				if (number == getAswer()){
 					element.style.background = "blue";
 					let img = document.createElement("img");
 					img.src = "pokal.svg";
@@ -59,7 +92,7 @@
 			}
 
 			window.onload = function() {
-				question.innerText = number1+" + "+number2+" = ?"
+				question.innerText = number1+" "+typeMap[type]+" "+number2+" = ?"
 				for (let number of Array(maxNumber*2+1).keys()){
 					let btn = document.createElement("button");
 					btn.innerHTML = "<h1>"+number+"</h1>";
@@ -78,14 +111,23 @@
 		</script>
 	</head>
 	<body>
-		<h1>SPELET KOMMER</h1>
+		<h1>5 x 5</h1>
 		<form id="countForm">
+			<label>Typ</label><br>
+			<input type="radio" value="add" name="Type" onclick="updateCount();">
+			<label for="add">Plus</label>
+			<input type="radio" value="sub" name="Type" onclick="updateCount();">
+			<label for="sub">Minus</label>
+			<input type="radio" value="mult" name="Type" onclick="updateCount();">
+			<label for="mult">Gånger</label>
+			<br><br>
+			<label>Svårhetsgrad</label><br>
 			<input type="radio" value="easy" name="Difficulty" onclick="updateCount();">
-			<label for="easy">Easy</label>
+			<label for="easy">Lätt</label>
 			<input type="radio" value="moderate" name="Difficulty" onclick="updateCount();">
-			<label for="moderate">Moderate </label>
+			<label for="moderate">Mellan </label>
 			<input type="radio" value="hard" name="Difficulty" onclick="updateCount();">
-			<label for="hard">Hard</label>
+			<label for="hard">Svår</label>
 			<input type="radio" value="super" name="Difficulty" onclick="updateCount();">
 			<label for="super">Super</label>
 		</form>
