@@ -10,11 +10,17 @@
 				"hard": 17,
 				"super": 31
 			}
-			const typeMap = {
-				"add": '+',
-				"sub": '-',
-				"mult": 'x'
+			const multDiffMap= {
+				"easy": 2,
+				"moderate": 4,
+				"hard": 6,
+				"super": 10
 			}
+			const typeMap = [
+				"add",
+				"sub",
+				"mult"
+		]
 
 			let difficulty;
 			let type; 
@@ -42,7 +48,7 @@
 			if (urlParams.has('Type')){
 				type = urlParams.get('Type')
 			}
-			if (!(type in typeMap)){
+			if (!typeMap.includes(type)){
 				console.log(type+' not in typeMap')
 				type = "add" // Default
 			}
@@ -52,32 +58,16 @@
 				}
 			})
 
-			let maxNumber = diffMap[difficulty]
-			const number1 = Math.floor(Math.random() * (maxNumber+1))
-			const number2 = Math.floor(Math.random() * (maxNumber+1))
-
 			window.updateCount = function(){
 				document.getElementById("countForm").submit();
 			}
 
-			function getAswer()
-			{
-				switch (type) {
-					case "add":
-						return number1+number2;
-					case 'sub':
-						return number1-number2;
-					case 'mult':
-						return number1*number2;
-				}
-			}
-
-			function handleClick(element, number){
+			function handleClick(element, number, answer){
 				if (element.style.background != ""){
 					console.log("Ignore")
 					return
 				}
-				if (number == getAswer()){
+				if (number == answer){
 					element.style.background = "blue";
 					let img = document.createElement("img");
 					img.src = "pokal.svg";
@@ -92,15 +82,14 @@
 				}
 			}
 
-			window.onload = function() {
-				question.innerText = number1+" "+typeMap[type]+" "+number2+" = ?"
-				for (let number of Array(maxNumber*2+1).keys()){
+			function createButtons(numberCount, answer, handler){
+				for (let number of Array(numberCount).keys()){
 					let btn = document.createElement("button");
 					btn.innerHTML = "<h1>"+number+"</h1>";
 					btn.style.height = "80px";
 					btn.style.width = "80px"
 					btn.onclick = function() {
-						handleClick(btn, number)
+						handler(btn, number, answer)
 					}
 					buttons.appendChild(btn);
 
@@ -108,6 +97,40 @@
 						buttons.appendChild(document.createElement("br"))
 					}
 				}
+			}
+
+			function GetTask(type, difficulty){
+				let maxNumber = diffMap[difficulty]
+				const number1 = Math.floor(Math.random() * (maxNumber+1))
+				const number2 = Math.floor(Math.random() * (maxNumber+1))
+				switch (type) {
+					case "add":
+						return [
+							number1+" + "+number2+" = ?",
+							maxNumber*2+1,
+							number1+number2];
+					case 'sub':
+						const big = Math.max(number1, number2)
+						const small = Math.min(number1, number2)
+						return [
+							big+" - "+small+" = ?",
+							maxNumber+1,
+							big-small];
+					case 'mult':
+						let multMaxNumber = multDiffMap[difficulty]
+						const multNumber1 = Math.floor(Math.random() * (multMaxNumber+1))
+						const multNumber2 = Math.floor(Math.random() * (multMaxNumber+1))
+						return [
+							multNumber1+" x "+multNumber2+" = ?",
+							multMaxNumber*multMaxNumber+1,
+							multNumber1*multNumber2];
+				}
+			}
+
+			window.onload = function() {
+				let [quetionText, numberOfButton, answer] = GetTask(type, difficulty)
+				question.innerText = quetionText
+				createButtons(numberOfButton, answer, handleClick)
 			}
 		</script>
 	</head>
@@ -121,7 +144,7 @@
 			<label for="sub">Minus</label>
 			<input type="radio" value="mult" name="Type" onclick="updateCount();">
 			<label for="mult">Gånger</label>
-			<br><br>
+			<br>
 			<label>Svårhetsgrad</label><br>
 			<input type="radio" value="easy" name="Difficulty" onclick="updateCount();">
 			<label for="easy">Lätt</label>
