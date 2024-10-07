@@ -4,59 +4,44 @@
 		<title>5 x 5</title>
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 		<script type="module">
-			const diffMap= {
-				"easy": 3,
-				"moderate": 10,
-				"hard": 17,
-				"super": 31
-			}
-			const multDiffMap= {
-				"easy": 2,
-				"moderate": 4,
-				"hard": 6,
-				"super": 10
-			}
-			const typeMap = [
-				"add",
-				"sub",
-				"mult"
-		]
-
-			let difficulty;
-			let type; 
 			const typeElements = document.getElementsByName("Type")
 			const diffElements = document.getElementsByName("Difficulty")
 			const question = document.getElementById("Question")
 			const buttons = document.getElementById("Buttons")
 			const trophy = document.getElementById("Trophy")
 
-			const queryString = window.location.search;
-			const urlParams = new URLSearchParams(queryString)
-			if (urlParams.has('Difficulty')){
-				difficulty = urlParams.get('Difficulty')
-			}
-			if (!(difficulty in diffMap)){
-				console.log(difficulty+' not in diffMap')
-				difficulty = "moderate" // Default
-			}
-			diffElements.forEach(function(item){
-				if (item.value == difficulty){
-					item.checked=true;
+			function getInput(){
+				let difficulty;
+				let type; 
+				const queryString = window.location.search;
+				const urlParams = new URLSearchParams(queryString)
+				if (urlParams.has('Difficulty')){
+					difficulty = urlParams.get('Difficulty')
 				}
-			})
+				if (!["easy", "moderate", "hard", "super"].includes(difficulty)){
+					console.log(difficulty+' not in diffMap')
+					difficulty = "moderate" // Default
+				}
+				diffElements.forEach(function(item){
+					if (item.value == difficulty){
+						item.checked=true;
+					}
+				})
 
-			if (urlParams.has('Type')){
-				type = urlParams.get('Type')
-			}
-			if (!typeMap.includes(type)){
-				console.log(type+' not in typeMap')
-				type = "add" // Default
-			}
-			typeElements.forEach(function(item){
-				if (item.value == type){
-					item.checked=true;
+				if (urlParams.has('Type')){
+					type = urlParams.get('Type')
 				}
-			})
+				if (!["add", "sub", "mult"].includes(type)){
+					console.log(type+' not in typeMap')
+					type = "add" // Default
+				}
+				typeElements.forEach(function(item){
+					if (item.value == type){
+						item.checked=true;
+					}
+				})
+				return [type, difficulty]
+			}
 
 			window.updateCount = function(){
 				document.getElementById("countForm").submit();
@@ -99,36 +84,62 @@
 				}
 			}
 
+			function getRandomNumber(max){
+				return Math.floor(Math.random() * (max+1))
+			}
+
 			function GetTask(type, difficulty){
-				let maxNumber = diffMap[difficulty]
-				const number1 = Math.floor(Math.random() * (maxNumber+1))
-				const number2 = Math.floor(Math.random() * (maxNumber+1))
 				switch (type) {
 					case "add":
+						const addMaxNumber = function(){
+							switch (difficulty){
+								case "easy": return 3
+								case "moderate": return 10
+								case "hard": return 17
+								case "super": return 31
+							}
+						}()
+						const [addNumb1, addNumb2] = [getRandomNumber(addMaxNumber), getRandomNumber(addMaxNumber)]
 						return [
-							number1+" + "+number2+" = ?",
-							maxNumber*2+1,
-							number1+number2];
+							addNumb1+" + "+addNumb2+" = ?",
+							addMaxNumber*2+1,
+							addNumb1+addNumb2];
 					case 'sub':
-						const big = Math.max(number1, number2)
-						const small = Math.min(number1, number2)
+						const subMaxNumber = function(){
+							switch (difficulty){
+								case "easy": return 3
+								case "moderate": return 10
+								case "hard": return 17
+								case "super": return 31
+							}
+						}()
+						const [subNumb1, subNumb2] = [getRandomNumber(subMaxNumber), getRandomNumber(subMaxNumber)]
+						const big = Math.max(subNumb1, subNumb2)
+						const small = Math.min(subNumb1, subNumb2)
 						return [
 							big+" - "+small+" = ?",
-							maxNumber+1,
+							subMaxNumber+1,
 							big-small];
 					case 'mult':
-						let multMaxNumber = multDiffMap[difficulty]
-						const multNumber1 = Math.floor(Math.random() * (multMaxNumber+1))
-						const multNumber2 = Math.floor(Math.random() * (multMaxNumber+1))
+						const multMaxNumber = function(){
+							switch (difficulty){
+								case "easy": return 2
+								case "moderate": return 4
+								case "hard": return 6
+								case "super": return 10
+							}
+						}()
+						const [multNumb1, multNumb2] = [getRandomNumber(multMaxNumber), getRandomNumber(multMaxNumber)]
 						return [
-							multNumber1+" x "+multNumber2+" = ?",
+							multNumb1+" x "+multNumb2+" = ?",
 							multMaxNumber*multMaxNumber+1,
-							multNumber1*multNumber2];
+							multNumb1*multNumb2];
 				}
 			}
 
 			window.onload = function() {
-				let [quetionText, numberOfButton, answer] = GetTask(type, difficulty)
+				const [type, difficulty] = getInput()
+				const [quetionText, numberOfButton, answer] = GetTask(type, difficulty)
 				question.innerText = quetionText
 				createButtons(numberOfButton, answer, handleClick)
 			}
