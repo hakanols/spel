@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Nexus Morse</title>
+		<script type="module">
+			function createOscillator(morse) {
+				let AudioContext = window.AudioContext || window.webkitAudioContext;
+				let ctx = new AudioContext();
+				let dot = 1.2 / 15;
+
+				let t = ctx.currentTime;
+
+				let oscillator = ctx.createOscillator();
+				oscillator.type = "sine";
+				oscillator.frequency.value = 600;
+
+				let gainNode = ctx.createGain();
+				gainNode.gain.setValueAtTime(0, t);
+
+				morse.split("").forEach(function(letter) {
+					switch(letter) {
+						case ".":
+							gainNode.gain.setValueAtTime(1, t);
+							t += dot;
+							gainNode.gain.setValueAtTime(0, t);
+							t += dot;
+							break;
+						case "-":
+							gainNode.gain.setValueAtTime(1, t);
+							t += 3 * dot;
+							gainNode.gain.setValueAtTime(0, t);
+							t += dot;
+							break;
+						case " ":
+							t += 7 * dot;
+							break;
+					}
+				});
+
+				oscillator.connect(gainNode);
+				gainNode.connect(ctx.destination);
+
+				return oscillator;
+			}
+
+			window.updateCount = function() {
+				let morse = "-. .. -. ."
+				let oscillator = createOscillator(morse)
+				oscillator.start();
+			}
+		</script>
+	</head>
+	<body>
+		<button onclick="updateCount()" style="height:40px;width:300px">Play morse code</button>
+		<br><br>
+		<img src="International_Morse_Code.svg.png" style="width:300px">
+		<p>Do next task TBD</p>
+	</body>
+</html>
