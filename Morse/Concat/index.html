@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Scan all 12 QR codes</title>
+		<script type="module">
+			const numberOfParts = 12
+		
+			const statusField = document.getElementById("StatusField")
+			const codeField = document.getElementById("CodeField")
+
+			window.clearStorage = function() {
+				localStorage.clear()
+				window.location = window.location.pathname
+			}
+
+			function initMemory(){
+				if (localStorage.codes == undefined){
+					localStorage.codes = JSON.stringify(Array(numberOfParts));
+				}
+			}
+			
+			function setMemory(nr, value){
+				let codes = JSON.parse(localStorage.codes)
+				codes[nr] = value
+				localStorage.codes = JSON.stringify(codes)
+			}
+			
+			function getMemoryKeys(){
+				const codes = JSON.parse(localStorage.codes)
+				let outText = []
+				for (const code of codes){
+					outText.push(code==null?"_":"x")
+				}
+				return "["+outText.join('|')+"]"
+			}
+			
+			function getMemoryValues(){
+				return JSON.parse(localStorage.codes)
+			}
+			
+			function toyRandom(seed) {
+				var x = Math.sin(seed+0.1) * 10000;
+				return Math.floor((x - Math.floor(x))*100);
+			}
+			
+			function validCode(nr, code){
+				let check = toyRandom(nr)
+				console.log("Check number: "+check)
+				return toyRandom(nr) == code % 100
+			}
+			
+			
+			window.onload = function() {
+				const queryString = window.location.search;
+				const urlParams = new URLSearchParams(queryString)
+				if (!urlParams.has('Nr') || !urlParams.has('Code')){
+					statusField.innerText = "Missing param Nr or Code";
+					return;
+				}
+				const nr = Number(urlParams.get('Nr'))
+				const code = Number(urlParams.get('Code'))
+
+				console.log("Nr: "+nr+" Code: "+code);
+				if (!validCode(nr, code)){
+					statusField.innerText= "Code is not valid";
+					return;
+				}
+        
+				initMemory()
+				setMemory(nr, code)
+				statusField.innerText = getMemoryKeys()
+				
+				let codes = getMemoryValues()
+				if (code.length == numberOfParts){
+					let sum = 0;
+					for (let code of codes){
+						sum += code
+					}
+					console.log(sum)
+					codeField.innerText = sum % 11
+				}
+			}
+		
+		</script>
+	</head>
+	<body>
+		<h1>Scan all 12 QR codes</h1>
+		<div id="StatusField"></div>
+		<h1 id="CodeField" style="font-size:300px"> </h1>
+		<button onclick="clearStorage()">Clear</button>
+	</body>
+</html>
