@@ -68,7 +68,7 @@
         
 				initMemory()
 				setMemory(nr, code)
-				statusField.innerText = getMemoryKeys()
+				statusField.innerText = "Last scan "+(nr+1)+"\n"+getMemoryKeys()
 				
 				let codes = getMemoryValues()
 				if (codes.length == numberOfParts){
@@ -86,7 +86,8 @@
 	<body>
 		<h1>Scan all 12 QR codes</h1>
 		<div id="StatusField"></div>
-		<h1 id="CodeField" style="font-size:300px"> </h1>
+		<div id="CodeField" style="font-size:300px"> </div>
+		<br>
 		<button onclick="clearStorage()">Clear</button>
 	</body>
 </html>
