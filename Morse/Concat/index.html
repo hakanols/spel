@@ -35,7 +35,7 @@
 			}
 			
 			function getMemoryValues(){
-				return JSON.parse(localStorage.codes)
+				return JSON.parse(localStorage.codes).filter(Number) 
 			}
 			
 			function toyRandom(seed) {
@@ -77,7 +77,7 @@
 						sum += code
 					}
 					console.log(sum)
-					codeField.innerText = sum % 11
+					codeField.innerText = sum % 13
 				}
 			}
 		
