@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Nexus Morse</title>
+		<title>Morse</title>
 		<script type="module">
 			const morseText = document.getElementById("MorseText")
 			const submitButton = document.getElementById("SubmitButton")
@@ -93,12 +93,12 @@
 					code = urlParams.get('Code')
 					morse = atob(code)
 				} catch(e) {
-					console.log("Someting is very wrong '"+code+"'' is not base64")
+					console.Error("Someting is very wrong '"+code+"'' is not base64")
 					return [false, ""];
 				}
 
 				if (!morse.split("").every(validateMorseChar)){
-					console.log("Someting is very wrong '"+morse+"'' is not a morse code")
+					console.Error("Someting is very wrong '"+morse+"'' is not a morse code")
 					return [false, ""];
 				}
 				return [true, morse];
