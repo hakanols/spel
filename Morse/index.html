@@ -40,19 +40,26 @@
 				oscillator.connect(gainNode);
 				gainNode.connect(ctx.destination);
 
-				return oscillator;
+				return [oscillator, t*1000];
 			}
 
-			window.updateCount = function() {
+			function sleep(delay){	
+				return new Promise((resolve) => setTimeout(resolve, delay))
+			}
+
+			window.updateCount = async function() {
 				let morse = "-. .. -. ."
-				let oscillator = createOscillator(morse)
+				let [oscillator, durationMs] = createOscillator(morse)
 				oscillator.start();
+				console.log("Start to play")
+				await sleep(durationMs)
+				console.log("Sound is played")
 			}
 		</script>
 	</head>
 	<body>
 		<button onclick="updateCount()" style="height:40px;width:300px">Play morse code</button>
 		<br><br>
-		<img src="International_Morse_Code.svg.png" style="width:300px">
+		<img src="International_Morse_Code.svg" style="width:300px">
 	</body>
 </html>
