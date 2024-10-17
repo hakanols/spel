@@ -3,6 +3,9 @@
 	<head>
 		<title>Nexus Morse</title>
 		<script type="module">
+			const playButton = document.getElementById("PlayButton")
+			playButton.onclick = updateCount;
+			
 			function createOscillator(morse) {
 				let AudioContext = window.AudioContext || window.webkitAudioContext;
 				let ctx = new AudioContext();
@@ -47,18 +50,20 @@
 				return new Promise((resolve) => setTimeout(resolve, delay))
 			}
 
-			window.updateCount = async function() {
+			async function updateCount() {
+				playButton.disabled = true; 
 				let morse = "-. .. -. ."
 				let [oscillator, durationMs] = createOscillator(morse)
 				oscillator.start();
 				console.log("Start to play")
 				await sleep(durationMs)
 				console.log("Sound is played")
+				playButton.disabled = false; 
 			}
 		</script>
 	</head>
 	<body>
-		<button onclick="updateCount()" style="height:40px;width:300px">Play morse code</button>
+		<button id="PlayButton" style="height:40px;width:300px">Play morse code</button>
 		<br><br>
 		<img src="International_Morse_Code.svg" style="width:300px">
 	</body>
