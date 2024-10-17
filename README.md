@@ -42,3 +42,15 @@ https://hakanols.github.io/spel/Web_Worker/index.html
 Maze
 
 https://hakanols.github.io/spel/Maze/index.html
+
+Morse
+
+https://hakanols.github.io/spel/Morse/index.html
+
+Pussel (Shows URL parameter)
+
+https://hakanols.github.io/spel/Puzzel/index.html?D=7
+
+Orienteering
+
+https://hakanols.github.io/spel/Orient/index.html
