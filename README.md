@@ -53,4 +53,6 @@ https://hakanols.github.io/spel/Puzzel/index.html?D=7
 
 Orienteering
 
-https://hakanols.github.io/spel/Orient/index.html
+https://hakanols.github.io/spel/Orient/generator.html
+
+    node browser-quick-start.mjs /Orient/generator.html

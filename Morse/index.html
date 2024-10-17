@@ -77,7 +77,6 @@
 					console.log("Someting is very wrong '"+morse+"'' is not a morse code")
 					return;
 				}
-				console.log(location.protocol + '//' + location.host + location.pathname)
 				window.location = location.protocol + '//' + location.host + location.pathname + "?Code=" + btoa(morseText.value);
 			}
 

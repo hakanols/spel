@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Generate Orienteering QRs</title>
+		<link rel="stylesheet" type="text/css" href="mystyle.css">
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<script type="module">
+            import * as QRCode from './qrcode-lite.js'
+
+            const numberItems = document.getElementById("NumberItems")
+            const secretText = document.getElementById("SecretText")
+			const outputArea = document.getElementById("OutputArea")
+            const qrOptions = {
+				errorCorrectionLevel: 'L'
+			}
+
+            function toyRandom(seed) {
+				var x = Math.sin(seed+0.1) * 10000;
+				return Math.floor((x - Math.floor(x))*100);
+			}
+			
+			function generateCode(nr,value){
+				let check = toyRandom(nr)
+				return value*100 + check
+            }
+
+            function getShowerUrl(){
+                let currentLocation = location.protocol + '//' + location.host + location.pathname
+                return currentLocation.replace("generator.html", "index.html")
+            }
+
+            window.update = async function() {
+                let newUrl = getShowerUrl()
+                const number = Number(numberItems.value)
+                //const secret = secretText.value
+                outputArea.innerHTML = '';
+                let sum = 0;
+				for (let index of Array(number).keys()){
+                    let code = generateCode(index, 3)
+                    sum += code
+                    const content = newUrl +'?Tot='+number+'&Nr='+ index +'&Code='+ generateCode(index, 3)
+                    console.log(content)
+                    let qrCanvas = document.createElement("canvas");
+                    outputArea.appendChild(qrCanvas);
+                    await QRCode.toCanvas(qrCanvas, content, qrOptions);
+                }
+
+				console.log(sum % 13)
+			}
+
+			window.onload = async function() {
+                await update()
+			}
+		</script>
+	</head>
+	<body>
+        <h3>Generate Orienteering QRs</h3>
+        <input id="NumberItems" oninput="update()" type="number" value="3">
+        <!-- 
+        <input id="SecretText" oninput="update()" type="text" value="11" disabled>
+        -->
+        <br>
+		<div id="OutputArea" style="width:560px"\>
+	</body>
+</html>

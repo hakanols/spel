@@ -3,8 +3,7 @@
 	<head>
 		<title>Scan all 12 QR codes</title>
 		<script type="module">
-			const numberOfParts = 12
-		
+			const titleField = document.getElementById("TitleField")
 			const statusField = document.getElementById("StatusField")
 			const codeField = document.getElementById("CodeField")
 
@@ -13,7 +12,7 @@
 				window.location = window.location.pathname
 			}
 
-			function initMemory(){
+			function initMemory(numberOfParts){
 				if (localStorage.codes == undefined){
 					localStorage.codes = JSON.stringify(Array(numberOfParts));
 				}
@@ -53,12 +52,15 @@
 			window.onload = function() {
 				const queryString = window.location.search;
 				const urlParams = new URLSearchParams(queryString)
-				if (!urlParams.has('Nr') || !urlParams.has('Code')){
-					statusField.innerText = "Missing param Nr or Code";
+				if (!urlParams.has('Tot') || !urlParams.has('Nr') || !urlParams.has('Code')){
+					statusField.innerText = "Missing param Tot, Nr or Code";
 					return;
 				}
+				const tot = Number(urlParams.get('Tot'))
 				const nr = Number(urlParams.get('Nr'))
 				const code = Number(urlParams.get('Code'))
+
+				titleField.innerText = "Scan all "+tot+" QR codes"
 
 				console.log("Nr: "+nr+" Code: "+code);
 				if (!validCode(nr, code)){
@@ -66,12 +68,12 @@
 					return;
 				}
         
-				initMemory()
+				initMemory(tot)
 				setMemory(nr, code)
 				statusField.innerText = "Last scan "+(nr+1)+"\n"+getMemoryKeys()
 				
 				let codes = getMemoryValues()
-				if (codes.length == numberOfParts){
+				if (codes.length == tot){
 					let sum = 0;
 					for (let code of codes){
 						sum += code
@@ -84,7 +86,7 @@
 		</script>
 	</head>
 	<body>
-		<h1>Scan all 12 QR codes</h1>
+		<h1 id="TitleField">Scan all QR codes</h1>
 		<div id="StatusField"></div>
 		<div id="CodeField" style="font-size:300px"> </div>
 		<br>
