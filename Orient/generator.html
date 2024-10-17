@@ -14,14 +14,12 @@
 				errorCorrectionLevel: 'L'
 			}
 
-            function toyRandom(seed) {
-				var x = Math.sin(seed+0.1) * 10000;
-				return Math.floor((x - Math.floor(x))*100);
+			function pseudoRandom(seed) {
+				return seed * 16807 % 2147483647 // https://javascript.info/task/pseudo-random-generator
 			}
 			
 			function generateCode(nr,value){
-				let check = toyRandom(nr)
-				return value*100 + check
+				return value*100 + (pseudoRandom(nr) % 100)
             }
 
             function getShowerUrl(){

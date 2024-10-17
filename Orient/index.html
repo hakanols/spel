@@ -37,15 +37,14 @@
 				return JSON.parse(localStorage.codes).filter(Number) 
 			}
 			
-			function toyRandom(seed) {
-				var x = Math.sin(seed+0.1) * 10000;
-				return Math.floor((x - Math.floor(x))*100);
+			function pseudoRandom(seed) {
+				return seed * 16807 % 2147483647 // https://javascript.info/task/pseudo-random-generator
 			}
 			
 			function validCode(nr, code){
-				let check = toyRandom(nr)
+				let check = pseudoRandom(nr) % 100
 				console.log("Check number: "+check)
-				return toyRandom(nr) == code % 100
+				return check == code % 100
 			}
 			
 			
