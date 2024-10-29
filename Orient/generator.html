@@ -5,14 +5,11 @@
 		<link rel="stylesheet" type="text/css" href="mystyle.css">
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 		<script type="module">
-            import * as QRCode from './qrcode-lite.js'
+            import QRCode from './qrcode.js'
 
             const numberItems = document.getElementById("NumberItems")
             const secretText = document.getElementById("SecretText")
 			const outputArea = document.getElementById("OutputArea")
-            const qrOptions = {
-				errorCorrectionLevel: 'L'
-			}
 
 			function pseudoRandom(seed) {
 				return seed * 16807 % 2147483647 // https://javascript.info/task/pseudo-random-generator
@@ -38,9 +35,8 @@
                     sum += code
                     const content = newUrl +'?Tot='+number+'&Nr='+ index +'&Code='+ generateCode(index, 3)
                     console.log(content)
-                    let qrCanvas = document.createElement("canvas");
-                    outputArea.appendChild(qrCanvas);
-                    await QRCode.toCanvas(qrCanvas, content, qrOptions);
+                    let qrCode = new QRCode({ content: content, join: true, ecl: "L" });
+                    outputArea.appendChild(qrCode.htmlImg());
                 }
 
 				console.log(sum % 13)
@@ -58,6 +54,6 @@
         <input id="SecretText" oninput="update()" type="text" value="11" disabled>
         -->
         <br>
-		<div id="OutputArea" style="width:560px"\>
+		<div id="OutputArea" style="width:800px"\>
 	</body>
 </html>
