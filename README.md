@@ -56,3 +56,9 @@ Orienteering
 https://hakanols.github.io/spel/Orient/generator.html
 
     node browser-quick-start.mjs /Orient/generator.html
+
+PDF Generator
+
+https://hakanols.github.io/spel/pdf/index.html
+
+    node browser-quick-start.mjs /pdf/index.html
