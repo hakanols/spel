@@ -1,0 +1,76 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Generate PDF</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script type="module">
+		import * as jsPDF from './jspdf.es.js'
+        import QRCode from './qrcode.js'
+        import { Canvg } from 'https://cdn.skypack.dev/canvg@^4.0.0';
+
+        const imageOutput = document.getElementById('output_image');
+        let imageBlob
+
+        function imgUrlFromSvg(svg){
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+
+            var pixelRatio = 100;
+
+            // lets scale the canvas and change its CSS width/height to make it high res.
+            canvas.style.width = canvas.width +'px';
+            canvas.style.height = canvas.height +'px';
+            canvas.width *= pixelRatio;
+            canvas.height *= pixelRatio;
+
+            // Now that its high res we need to compensate so our images can be drawn as 
+            //normal, by scaling everything up by the pixelRatio.
+            ctx.setTransform(pixelRatio,0,0,pixelRatio,0,0);
+
+            const v2 = Canvg.fromString(ctx, svg);
+            v2.start();
+            return canvas.toDataURL()
+        }
+
+        window.onload = function(){
+            const svgContent = '<svg width="600" height="600"><text x="50" y="50">Hello World!</text></svg>'
+            imageOutput.src = imgUrlFromSvg(svgContent)
+        }
+
+        window.generatePDF = function() {
+            const doc = new jsPDF.jsPDF();
+            const pageWidth = doc.internal.pageSize.width
+            const imgWidth = pageWidth*0.9
+            const imgstart = ( pageWidth - imgWidth ) / 2
+
+            const content = "Smakprov"
+            let qrCode = new QRCode({ content: content, join: true});
+            const qrImg = imgUrlFromSvg(qrCode.svg())
+            imageOutput.src = qrImg; 
+            doc.addImage(qrImg, 0, 0, pageWidth, pageWidth)
+
+            doc.addPage();
+
+            if (imageBlob !== undefined){
+                doc.addImage(URL.createObjectURL(imageBlob), imgstart, imgstart, imgWidth, imgWidth)
+            }
+
+            doc.save("newFile.pdf");
+        }
+        
+        window.showImage = async function(event) {
+            [imageBlob] = event.target.files
+            imageOutput.src = URL.createObjectURL(imageBlob); 
+		  }
+    </script>  
+</head>
+<body>
+    <h2>Generate PDF file using jsPDF library</h2>
+    <input type="button" value="Create PDF" onclick="generatePDF()" />
+    <input type="file" accept="image/*" onchange="showImage(event)"/>
+    <br>
+    <img id="output_image" width="600"/>
+</body>
+</html>
