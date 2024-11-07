@@ -47,9 +47,9 @@ Morse
 
 https://hakanols.github.io/spel/Morse/index.html
 
-Pussel (Shows URL parameter)
+Puzzel
 
-https://hakanols.github.io/spel/Puzzel/index.html?D=7
+https://hakanols.github.io/spel/Puzzel/generator.html
 
 Orienteering
 
