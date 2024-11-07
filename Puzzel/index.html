@@ -21,7 +21,7 @@
 			window.onload = function() {
 				const [hasCode, morse] = tryGetCode()
 				if (!hasCode){
-					console.error("Midding parameter 'D'")
+					console.error("Missing parameter 'D'")
 					textArea.innerHTML = "😭";
 					return
 				}
@@ -30,7 +30,7 @@
 
 		</script>
 	</head>
-	<body style="background-image: url('dwarves-rings.png'); background-repeat: no-repeat; background-attachment: fixed; background-size: cover; background-position: center center;">
+	<body>
 		<div class="ruta" style="width:400px;margin-right:auto;margin-left:auto;">
 			<br>
 			<div id="TextArea" style="text-align: center; font-size:300px; background-color: grey; color: black;"></div>

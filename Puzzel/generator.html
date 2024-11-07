@@ -3,74 +3,66 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Generate PDF</title>
+    <title>Generate Puzzel</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<script type="module">
-		import * as jsPDF from './jspdf.es.js'
         import QRCode from './qrcode.js'
-        import { Canvg } from 'https://cdn.skypack.dev/canvg@^4.0.0';
 
-        const imageOutput = document.getElementById('output_image');
-        let imageBlob
+        const message = document.getElementById('message');
+        const link = document.getElementById('link');
+        const printArea = document.getElementById('print_area');
+        const qrOutput = document.getElementById('qr_image');
+		const imgOutput = document.getElementById('img_image');
 
-        function imgUrlFromSvg(svg){
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-
-            var pixelRatio = 100;
-
-            // lets scale the canvas and change its CSS width/height to make it high res.
-            canvas.style.width = canvas.width +'px';
-            canvas.style.height = canvas.height +'px';
-            canvas.width *= pixelRatio;
-            canvas.height *= pixelRatio;
-
-            // Now that its high res we need to compensate so our images can be drawn as 
-            //normal, by scaling everything up by the pixelRatio.
-            ctx.setTransform(pixelRatio,0,0,pixelRatio,0,0);
-
-            const v2 = Canvg.fromString(ctx, svg);
-            v2.start();
-            return canvas.toDataURL()
-        }
 
         window.onload = function(){
-            const svgContent = '<svg width="600" height="600"><text x="50" y="50">Hello World!</text></svg>'
-            imageOutput.src = imgUrlFromSvg(svgContent)
+            message.value = "12"
+            window.updateLink()
         }
 
-        window.generatePDF = function() {
-            const doc = new jsPDF.jsPDF();
-            const pageWidth = doc.internal.pageSize.width
-            const imgWidth = pageWidth*0.9
-            const imgstart = ( pageWidth - imgWidth ) / 2
-
-            const content = "Smakprov"
-            let qrCode = new QRCode({ content: content, join: true});
-            const qrImg = imgUrlFromSvg(qrCode.svg())
-            imageOutput.src = qrImg; 
-            doc.addImage(qrImg, 0, 0, pageWidth, pageWidth)
-
-            doc.addPage();
-
-            if (imageBlob !== undefined){
-                doc.addImage(URL.createObjectURL(imageBlob), imgstart, imgstart, imgWidth, imgWidth)
-            }
-
-            doc.save("newFile.pdf");
+        window.updateLink = function() {
+            const content = createShowerUrl(message.value)
+            link.href = content;
+            let qrCode = new QRCode({ content: content, padding: 1, join: true});
+            const blob = new Blob([qrCode.svg()], { type: "image/svg+xml" });
+            qrOutput.src = URL.createObjectURL(blob);
         }
         
         window.showImage = async function(event) {
-            [imageBlob] = event.target.files
-            imageOutput.src = URL.createObjectURL(imageBlob); 
-		  }
+            const [imageBlob] = event.target.files
+            imgOutput.src = URL.createObjectURL(imageBlob);
+		}
+
+        window.myPrint = function(){
+            const printContents = printArea.innerHTML;
+            const originalContents = document.body.innerHTML;
+
+            document.body.innerHTML = printContents;
+            window.print();
+            document.body.innerHTML = originalContents;
+        }
+
+        function createShowerUrl(text){
+                let currentLocation = location.protocol + '//' + location.host + location.pathname
+                let url = currentLocation.replace("generator.html", "index.html")
+                return url + '?D=' + text
+            }
     </script>  
 </head>
 <body>
-    <h2>Generate PDF file using jsPDF library</h2>
-    <input type="button" value="Create PDF" onclick="generatePDF()" />
+    <h2>Generate Puzzel</h2>
+    <input style="width:500;" id="message" oninput="updateLink()" type="text"></input>
+    <a id="link">(link)</a>
+    <br>
     <input type="file" accept="image/*" onchange="showImage(event)"/>
     <br>
-    <img id="output_image" width="600"/>
+    <button onclick="myPrint()">Print</button>
+    <br>
+
+    <div id="print_area">
+        <img id="img_image" width="500" height="500"/>
+        <div style="break-after:page"></div>
+        <img id="qr_image" width="500" height="500"/>
+    </div>
 </body>
 </html>
