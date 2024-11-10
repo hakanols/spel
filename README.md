@@ -51,6 +51,8 @@ Puzzel
 
 https://hakanols.github.io/spel/Puzzel/generator.html
 
+    node browser-quick-start.mjs /Puzzel/generator.html
+
 Orienteering
 
 https://hakanols.github.io/spel/Orient/generator.html
@@ -59,6 +61,6 @@ https://hakanols.github.io/spel/Orient/generator.html
 
 PDF Generator
 
-https://hakanols.github.io/spel/pdf/index.html
+https://hakanols.github.io/spel/PDF/index.html
 
-    node browser-quick-start.mjs /pdf/index.html
+    node browser-quick-start.mjs /PDF/index.html

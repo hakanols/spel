@@ -10,14 +10,22 @@
 
         const message = document.getElementById('message');
         const link = document.getElementById('link');
-        const printArea = document.getElementById('print_area');
+        const customImage = document.getElementById('custom_image');
+        const inputArea = document.getElementById('input_area');
         const qrOutput = document.getElementById('qr_image');
 		const imgOutput = document.getElementById('img_image');
 
+        let customImgUrl;
 
         window.onload = function(){
-            message.value = "12"
+            const printPixelWith = 700
+            qrOutput.width = printPixelWith
+            qrOutput.height = printPixelWith
+            imgOutput.width = printPixelWith
+            imgOutput.height = printPixelWith
+            message.value = "Hej"
             window.updateLink()
+            window.showImage("Tourist.svg")
         }
 
         window.updateLink = function() {
@@ -28,41 +36,58 @@
             qrOutput.src = URL.createObjectURL(blob);
         }
         
-        window.showImage = async function(event) {
+        window.setCustomImg = async function(event) {
             const [imageBlob] = event.target.files
-            imgOutput.src = URL.createObjectURL(imageBlob);
+            customImgUrl = URL.createObjectURL(imageBlob)
+            window.showImage(customImgUrl)
+            customImage.disabled=false
+            customImage.checked="checked"
+            
+        }
+
+        window.showImage = function(imageUrl){
+            if (imageUrl === undefined){
+                imgOutput.src = customImgUrl;
+            }
+            else {
+                imgOutput.src = imageUrl;
+            }
 		}
 
         window.myPrint = function(){
-            const printContents = printArea.innerHTML;
-            const originalContents = document.body.innerHTML;
-
-            document.body.innerHTML = printContents;
+            inputArea.style.display = 'none';
             window.print();
-            document.body.innerHTML = originalContents;
+            inputArea.style.display = 'inline';
         }
 
         function createShowerUrl(text){
-                let currentLocation = location.protocol + '//' + location.host + location.pathname
-                let url = currentLocation.replace("generator.html", "index.html")
-                return url + '?D=' + text
-            }
+            let currentLocation = location.protocol + '//' + location.host + location.pathname
+            let url = currentLocation.replace("generator.html", "index.html")
+            return url + '?D=' + text
+        }
     </script>  
 </head>
 <body>
-    <h2>Generate Puzzel</h2>
-    <input style="width:500;" id="message" oninput="updateLink()" type="text"></input>
-    <a id="link">(link)</a>
-    <br>
-    <input type="file" accept="image/*" onchange="showImage(event)"/>
-    <br>
-    <button onclick="myPrint()">Print</button>
-    <br>
+    <div id="input_area">
+        <h2>Generate Puzzel</h2>
+        Message:
+        <input size="75" id="message" oninput="updateLink()" type="text"></input>
+        <a id="link">(link)</a>
+        <br>
+        Image:
+        <input name="imageSelect" onclick="showImage('Sea.svg');" checked="checked" type="radio">Sea
+        <input name="imageSelect" onclick="showImage('Tourist.svg');" type="radio">Tourist
+        <input name="imageSelect" onclick="" id="custom_image" disabled="true" type="radio">
+        <input type="file" accept="image/*" onchange="setCustomImg(event)"/>
+        <br>
+        <button style="width:680px" onclick="myPrint()">Print</button>
+        <br><br>
+    </div>
 
-    <div id="print_area">
-        <img id="img_image" width="500" height="500"/>
+    <div>
+        <img id="img_image"/>
         <div style="break-after:page"></div>
-        <img id="qr_image" width="500" height="500"/>
+        <img id="qr_image" width="700" height="500"/>
     </div>
 </body>
 </html>
