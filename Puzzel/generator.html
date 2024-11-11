@@ -42,7 +42,6 @@
             window.showImage(customImgUrl)
             customImage.disabled=false
             customImage.checked="checked"
-            
         }
 
         window.showImage = function(imageUrl){
@@ -54,11 +53,15 @@
             }
 		}
 
-        window.myPrint = function(){
+        window.myPrint = async function(){
             inputArea.style.display = 'none';
             window.print();
-            // Remove to test redraw on mobile
-            // inputArea.style.display = 'inline';
+            await sleep(500)
+            inputArea.style.display = 'inline';
+        }
+
+        async function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
         }
 
         function createShowerUrl(text){
