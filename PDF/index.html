@@ -1,0 +1,22 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Generate PDF</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<script type="module">
+		import * as jsPDF from './jspdf.es.js'
+		
+        window.generatePDF = function() {
+            const doc = new jsPDF.jsPDF();
+            doc.text("Hello world!", 100, 100);
+            doc.save("newFile.pdf");                
+        }            
+    </script>  
+</head>
+<body>
+    <h2>Generate PDF file using jsPDF library</h2>
+    <input type="button" value="Create PDF" onclick="generatePDF()">  
+</body>
+</html>
