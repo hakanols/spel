@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Seven for the Dwarf-lords in their halls of stone</title>
+		<title>Puzzel result</title>
 		<link rel="stylesheet" type="text/css" href="mystyle.css">
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 		<script type="module">
@@ -14,26 +14,31 @@
 					return [false, ""];
 				}
 				
-				let code = urlParams.get('D')
+				let code = atob(urlParams.get('D'))
 				return [true, code];
 			}
 
 			window.onload = function() {
-				const [hasCode, morse] = tryGetCode()
+				const [hasCode, code] = tryGetCode()
 				if (!hasCode){
 					console.error("Missing parameter 'D'")
 					textArea.innerHTML = "😭";
 					return
 				}
-				textArea.innerHTML = morse;
+				textArea.innerHTML = code;
 			}
 
 		</script>
 	</head>
 	<body>
-		<div class="ruta" style="width:400px;margin-right:auto;margin-left:auto;">
-			<br>
-			<div id="TextArea" style="text-align: center; font-size:300px; background-color: grey; color: black;"></div>
-		</div>
+		<p id="TextArea" style="
+			text-align: center; 
+			width:600px; 
+			margin-right:auto;
+			margin-left:auto;
+			font-size:50px; 
+			background-color: grey; 
+			color: black;
+		"></p>
 	</body>
 </html>

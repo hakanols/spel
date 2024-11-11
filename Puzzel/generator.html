@@ -57,13 +57,14 @@
         window.myPrint = function(){
             inputArea.style.display = 'none';
             window.print();
-            inputArea.style.display = 'inline';
+            // Remove to test redraw on mobile
+            // inputArea.style.display = 'inline';
         }
 
         function createShowerUrl(text){
             let currentLocation = location.protocol + '//' + location.host + location.pathname
             let url = currentLocation.replace("generator.html", "index.html")
-            return url + '?D=' + text
+            return url + '?D=' + btoa(text)
         }
     </script>  
 </head>
@@ -75,9 +76,9 @@
         <a id="link">(link)</a>
         <br>
         Image:
-        <input name="imageSelect" onclick="showImage('Sea.svg');" checked="checked" type="radio">Sea
-        <input name="imageSelect" onclick="showImage('Tourist.svg');" type="radio">Tourist
-        <input name="imageSelect" onclick="showImage()" id="custom_image" disabled="true" type="radio">
+        <input name="imageSelect" type="radio" onclick="showImage('Sea.svg');" checked="checked">Sea
+        <input name="imageSelect" type="radio" onclick="showImage('Tourist.svg');">Tourist
+        <input name="imageSelect" type="radio" onclick="showImage()" id="custom_image" disabled="true">
         <input type="file" accept="image/*" onchange="setCustomImg(event)"/>
         <br>
         <button style="width:680px" onclick="myPrint()">Print</button>
