@@ -9,6 +9,8 @@
 			const statusField = document.getElementById("StatusField")
 			const codeField = document.getElementById("CodeField")
 
+			const isNotString = (value) => typeof value == "string";
+
 			window.clearStorage = function() {
 				localStorage.clear()
 				window.location = window.location.pathname
@@ -28,16 +30,15 @@
 			}
 			
 			function getMemoryKeys(){
-				const codes = JSON.parse(localStorage.codes)
 				let outText = []
-				for (const code of codes){
-					outText.push(code==null?"_":"x")
+				for (const code of getMemoryValues()){
+					outText.push(isNotString(code)?"x":"_")
 				}
 				return "["+outText.join('|')+"]"
 			}
 			
 			function getMemoryValues(){
-				return JSON.parse(localStorage.codes).filter(String) 
+				return JSON.parse(localStorage.codes)
 			}
 			
 			function getSecret(box){
@@ -73,8 +74,6 @@
 				statusField.innerText = "Last scan "+(nr+1)+"\n"+getMemoryKeys()
 				
 				const codes = getMemoryValues()
-
-				const isNotString = (value) => typeof value == "string";
 				if (codes.every(isNotString)){
 					const code = codes.join('')
 					const bytes = fromHexString(code)
