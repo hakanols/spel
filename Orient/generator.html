@@ -6,40 +6,52 @@
 		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
 		<script type="module">
             import QRCode from './qrcode.js'
+            import nacl from './nacl-fast-es.js';
 
             const numberItems = document.getElementById("NumberItems")
             const secretText = document.getElementById("SecretText")
 			const outputArea = document.getElementById("OutputArea")
-
-			function pseudoRandom(seed) {
-				return seed * 16807 % 2147483647 // https://javascript.info/task/pseudo-random-generator
-			}
-			
-			function generateCode(nr,value){
-				return value*100 + (pseudoRandom(nr) % 100)
-            }
 
             function getShowerUrl(){
                 let currentLocation = location.protocol + '//' + location.host + location.pathname
                 return currentLocation.replace("generator.html", "index.html")
             }
 
+            function splitToNChunks(array, n) {
+                let result = [];
+                let lastIndex = 0; 
+                for (let i = 1; i <= n; i++) {
+                    let newIndex = Math.ceil(i*array.length / n)
+                    result.push(array.slice(lastIndex,newIndex ));
+                    lastIndex = newIndex
+                }
+                return result;
+            }
+
+            function getDataChunks(secret, n){
+                const key = new Uint8Array(nacl.secretbox.keyLength);
+                const nonce = new Uint8Array(nacl.secretbox.nonceLength);
+                const msgIn = (new TextEncoder()).encode(secret);
+                const box = nacl.secretbox(msgIn, nonce, key);
+                return splitToNChunks(box, n)
+            }
+
+            function toHexString(bytes){
+                return bytes.reduce((str, byte) => str + byte.toString(16).padStart(2, '0'), '');
+            }
+
             window.update = async function() {
                 let newUrl = getShowerUrl()
                 const number = Number(numberItems.value)
-                //const secret = secretText.value
+                const secretChunks = getDataChunks(secretText.value, number)
                 outputArea.innerHTML = '';
                 let sum = 0;
 				for (let index of Array(number).keys()){
-                    let code = generateCode(index, 3)
-                    sum += code
-                    const content = newUrl +'?Tot='+number+'&Nr='+ index +'&Code='+ generateCode(index, 3)
+                    const content = newUrl +'?Tot='+number+'&Nr='+ index +'&Code='+ toHexString(secretChunks[index])
                     console.log(content)
                     let qrCode = new QRCode({ content: content, join: true, ecl: "L" });
                     outputArea.appendChild(qrCode.htmlImg());
                 }
-
-				console.log(sum % 13)
 			}
 
 			window.onload = async function() {
@@ -50,9 +62,7 @@
 	<body>
         <h3>Generate Orienteering QRs</h3>
         <input id="NumberItems" oninput="update()" type="number" value="3">
-        <!-- 
-        <input id="SecretText" oninput="update()" type="text" value="11" disabled>
-        -->
+        <input id="SecretText" oninput="update()" type="text" value="Hello">
         <br>
 		<div id="OutputArea" style="width:800px"\>
 	</body>

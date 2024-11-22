@@ -3,6 +3,8 @@
 	<head>
 		<title>Scan all 12 QR codes</title>
 		<script type="module">
+            import nacl from './nacl-fast-es.js';
+
 			const titleField = document.getElementById("TitleField")
 			const statusField = document.getElementById("StatusField")
 			const codeField = document.getElementById("CodeField")
@@ -22,6 +24,7 @@
 				let codes = JSON.parse(localStorage.codes)
 				codes[nr] = value
 				localStorage.codes = JSON.stringify(codes)
+				console.log(localStorage.codes)
 			}
 			
 			function getMemoryKeys(){
@@ -34,19 +37,21 @@
 			}
 			
 			function getMemoryValues(){
-				return JSON.parse(localStorage.codes).filter(Number) 
+				return JSON.parse(localStorage.codes).filter(String) 
 			}
 			
-			function pseudoRandom(seed) {
-				return seed * 16807 % 2147483647 // https://javascript.info/task/pseudo-random-generator
-			}
+			function getSecret(box){
+				const key = new Uint8Array(nacl.secretbox.keyLength);
+                const nonce = new Uint8Array(nacl.secretbox.nonceLength);
+                const msgOut = nacl.secretbox.open(box, nonce, key);
+                return (new TextDecoder()).decode(msgOut)
+			}		
+
 			
-			function validCode(nr, code){
-				let check = pseudoRandom(nr) % 100
-				console.log("Check number: "+check)
-				return check == code % 100
+            function fromHexString(hexString){
+				return Uint8Array.from(hexString.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)));
 			}
-			
+
 			
 			window.onload = function() {
 				const queryString = window.location.search;
@@ -57,28 +62,24 @@
 				}
 				const tot = Number(urlParams.get('Tot'))
 				const nr = Number(urlParams.get('Nr'))
-				const code = Number(urlParams.get('Code'))
+				const code = urlParams.get('Code') // Toido validate is hex
 
 				titleField.innerText = "Scan all "+tot+" QR codes"
 
 				console.log("Nr: "+nr+" Code: "+code);
-				if (!validCode(nr, code)){
-					statusField.innerText= "Code is not valid";
-					return;
-				}
         
 				initMemory(tot)
 				setMemory(nr, code)
 				statusField.innerText = "Last scan "+(nr+1)+"\n"+getMemoryKeys()
 				
-				let codes = getMemoryValues()
-				if (codes.length == tot){
-					let sum = 0;
-					for (let code of codes){
-						sum += code
-					}
-					console.log(sum)
-					codeField.innerText = sum % 13
+				const codes = getMemoryValues()
+
+				const isNotString = (value) => typeof value == "string";
+				if (codes.every(isNotString)){
+					const code = codes.join('')
+					const bytes = fromHexString(code)
+					const text = getSecret(bytes)
+					codeField.innerText = text
 				}
 			}
 		
