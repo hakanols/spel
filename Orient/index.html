@@ -54,7 +54,7 @@
 			}
 
 			
-			window.onload = function() {
+			function run(){
 				const queryString = window.location.search;
 				const urlParams = new URLSearchParams(queryString)
 				if (!urlParams.has('Tot') || !urlParams.has('Nr') || !urlParams.has('Code')){
@@ -81,6 +81,8 @@
 					codeField.innerText = text
 				}
 			}
+
+			window.onload = run()
 		
 		</script>
 	</head>
