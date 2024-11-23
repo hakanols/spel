@@ -1,9 +1,10 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<title>Scan all 12 QR codes</title>
+		<title>Scan all QR codes</title>
 		<script type="module">
             import nacl from './nacl-fast-es.js';
+			import * as misc from './misc.js';
 
 			const titleField = document.getElementById("TitleField")
 			const statusField = document.getElementById("StatusField")
@@ -16,29 +17,29 @@
 				window.location = window.location.pathname
 			}
 
-			function initMemory(numberOfParts){
-				if (localStorage.codes == undefined){
-					localStorage.codes = JSON.stringify(Array(numberOfParts));
+			function initMemory(bob,numberOfParts){
+				if (localStorage[bob] == undefined){
+					localStorage[bob] = JSON.stringify(Array(numberOfParts));
 				}
 			}
 			
-			function setMemory(nr, value){
-				let codes = JSON.parse(localStorage.codes)
+			function setMemory(bob, nr, value){
+				let codes = getMemoryValues(bob)
 				codes[nr] = value
-				localStorage.codes = JSON.stringify(codes)
-				console.log(localStorage.codes)
+				localStorage[bob] = JSON.stringify(codes)
+				console.log(localStorage[bob])
 			}
 			
-			function getMemoryKeys(){
+			function getMemoryKeys(bob){
 				let outText = []
-				for (const code of getMemoryValues()){
+				for (const code of getMemoryValues(bob)){
 					outText.push(isNotString(code)?"x":"_")
 				}
 				return "["+outText.join('|')+"]"
 			}
 			
-			function getMemoryValues(){
-				return JSON.parse(localStorage.codes)
+			function getMemoryValues(bob){
+				return JSON.parse(localStorage[bob])
 			}
 			
 			function getSecret(box){
@@ -48,35 +49,33 @@
                 return (new TextDecoder()).decode(msgOut)
 			}		
 
-			
-            function fromHexString(hexString){
-				return Uint8Array.from(hexString.match(/.{1,2}/g).map((byte) => parseInt(byte, 16)));
-			}
-
-			
 			function run(){
 				const queryString = window.location.search;
 				const urlParams = new URLSearchParams(queryString)
-				if (!urlParams.has('Tot') || !urlParams.has('Nr') || !urlParams.has('Code')){
-					statusField.innerText = "Missing param Tot, Nr or Code";
+				if (!urlParams.has('D')){
+					statusField.innerText = "Missing param D";
 					return;
 				}
-				const tot = Number(urlParams.get('Tot'))
-				const nr = Number(urlParams.get('Nr'))
-				const code = urlParams.get('Code') // Toido validate is hex
+				const data = misc.fromBase64URL(urlParams.get('D'))
+				const id = data.slice(0,4)
+				const number = data[4]
+				const index = data[5]
+				const secretChunks = new Uint8Array(...data.slice(6))
+				const bob = misc.toHexString([...id, number])
 
-				titleField.innerText = "Scan all "+tot+" QR codes"
+				titleField.innerText = "Scan all "+number+" QR codes"
 
-				console.log("Nr: "+nr+" Code: "+code);
+				console.log("Nr: "+index+" Code: "+secretChunks);
         
-				initMemory(tot)
-				setMemory(nr, code)
-				statusField.innerText = "Last scan "+(nr+1)+"\n"+getMemoryKeys()
+				initMemory(bob, number)
+				console.log(secretChunks)
+				setMemory(bob, index, misc.toHexString(secretChunks))
+				statusField.innerText = "Last scan "+(index+1)+"\n"+getMemoryKeys(bob)
 				
-				const codes = getMemoryValues()
+				const codes = getMemoryValues(bob)
 				if (codes.every(isNotString)){
 					const code = codes.join('')
-					const bytes = fromHexString(code)
+					const bytes = misc.fromHexString(code)
 					const text = getSecret(bytes)
 					codeField.innerText = text
 				}
@@ -89,7 +88,14 @@
 	<body>
 		<h1 id="TitleField">Scan all QR codes</h1>
 		<div id="StatusField"></div>
-		<div id="CodeField" style="font-size:300px"> </div>
+		<p id="CodeField" style="
+			text-align: center; 
+			width:600px; 
+			margin-right:auto;
+			margin-left:auto;
+			font-size:50px; 
+			background-color: grey; 
+			color: black;"></p>
 		<br>
 		<button onclick="clearStorage()">Clear</button>
 	</body>

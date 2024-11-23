@@ -7,6 +7,7 @@
 		<script type="module">
             import QRCode from './qrcode.js'
             import nacl from './nacl-fast-es.js';
+            import * as misc from './misc.js';
 
             const numberItems = document.getElementById("NumberItems")
             const secretText = document.getElementById("SecretText")
@@ -36,18 +37,18 @@
                 return splitToNChunks(box, n)
             }
 
-            function toHexString(bytes){
-                return bytes.reduce((str, byte) => str + byte.toString(16).padStart(2, '0'), '');
-            }
-
             window.update = async function() {
                 let newUrl = getShowerUrl()
                 const number = Number(numberItems.value)
                 const secretChunks = getDataChunks(secretText.value, number)
                 outputArea.innerHTML = '';
                 let sum = 0;
+                
+                const msgIn = (new TextEncoder()).encode(secretText.value);
+                let id = nacl.hash(msgIn).slice(0,4)
 				for (let index of Array(number).keys()){
-                    const content = newUrl +'?Tot='+number+'&Nr='+ index +'&Code='+ toHexString(secretChunks[index])
+                    let g = new Uint8Array([...id, number, index, ...secretChunks[index]])
+                    const content = newUrl +'?D='+misc.toBase64URL(g)
                     console.log(content)
                     let qrCode = new QRCode({ content: content, join: true, ecl: "L" });
                     outputArea.appendChild(qrCode.htmlImg());
@@ -61,7 +62,7 @@
 	</head>
 	<body>
         <h3>Generate Orienteering QRs</h3>
-        <input id="NumberItems" oninput="update()" type="number" value="3">
+        <input id="NumberItems" oninput="update()" type="number" value="3" min="1" max="100">
         <input id="SecretText" oninput="update()" type="text" value="Hello">
         <br>
 		<div id="OutputArea" style="width:800px"\>
