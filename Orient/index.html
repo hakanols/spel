@@ -17,29 +17,28 @@
 				window.location = window.location.pathname
 			}
 
-			function initMemory(bob,numberOfParts){
-				if (localStorage[bob] == undefined){
-					localStorage[bob] = JSON.stringify(Array(numberOfParts));
+			function initMemory(id,numberOfParts){
+				if (localStorage[id] == undefined){
+					localStorage[id] = JSON.stringify(Array(numberOfParts));
 				}
 			}
 			
-			function setMemory(bob, nr, value){
-				let codes = getMemoryValues(bob)
+			function setMemory(id, nr, value){
+				let codes = getMemoryValues(id)
 				codes[nr] = value
-				localStorage[bob] = JSON.stringify(codes)
-				console.log(localStorage[bob])
+				localStorage[id] = JSON.stringify(codes)
 			}
 			
-			function getMemoryKeys(bob){
+			function getMemoryKeys(id){
 				let outText = []
-				for (const code of getMemoryValues(bob)){
+				for (const code of getMemoryValues(id)){
 					outText.push(isNotString(code)?"x":"_")
 				}
 				return "["+outText.join('|')+"]"
 			}
 			
-			function getMemoryValues(bob){
-				return JSON.parse(localStorage[bob])
+			function getMemoryValues(id){
+				return JSON.parse(localStorage[id])
 			}
 			
 			function getSecret(box){
@@ -57,26 +56,25 @@
 					return;
 				}
 				const data = misc.fromBase64URL(urlParams.get('D'))
-				const id = data.slice(0,4)
+				const msgId = data.slice(0,4)
 				const number = data[4]
 				const index = data[5]
-				const secretChunks = new Uint8Array(...data.slice(6))
-				const bob = misc.toHexString([...id, number])
+				const secretChunk = data.slice(6)
+				const id = misc.toHexString([...msgId, number])
 
 				titleField.innerText = "Scan all "+number+" QR codes"
 
-				console.log("Nr: "+index+" Code: "+secretChunks);
+				console.log("Nr: "+index+" Code: "+secretChunk);
         
-				initMemory(bob, number)
-				console.log(secretChunks)
-				setMemory(bob, index, misc.toHexString(secretChunks))
-				statusField.innerText = "Last scan "+(index+1)+"\n"+getMemoryKeys(bob)
+				initMemory(id, number)
+				setMemory(id, index, misc.toBase64(secretChunk))
+				statusField.innerText = "Last scan "+(index+1)+"\n"+getMemoryKeys(id)
 				
-				const codes = getMemoryValues(bob)
+				const codes = getMemoryValues(id)
 				if (codes.every(isNotString)){
-					const code = codes.join('')
-					const bytes = misc.fromHexString(code)
-					const text = getSecret(bytes)
+					const secretChunks =  codes.map((x) => misc.fromBase64(x))
+					const secret = new Uint8Array(secretChunks.reduce((acc, curr) => [...acc, ...curr], []));
+					const text = getSecret(secret)
 					codeField.innerText = text
 				}
 			}
