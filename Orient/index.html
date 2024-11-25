@@ -3,6 +3,7 @@
 	<head>
 		<title>Scan all QR codes</title>
 		<script type="module">
+			/*
             import nacl from './nacl-fast-es.js';
 			import * as misc from './misc.js';
 
@@ -47,12 +48,13 @@
                 const nonce = new Uint8Array(nacl.secretbox.nonceLength);
                 const msgOut = nacl.secretbox.open(box, nonce, key);
                 return (new TextDecoder()).decode(msgOut)
-			}		
+			}*/
 
 			function run(){
 				console.log(window.onload)
 				console.log(window.test)
 				console.log("Hej")
+				/*
 				const queryString = window.location.search;
 				const urlParams = new URLSearchParams(queryString)
 				if (!urlParams.has('D')){
@@ -81,6 +83,7 @@
 					const text = getSecret(secret)
 					codeField.innerText = text
 				}
+					*/
 			}
 
 			window.onload = function() {
@@ -96,6 +99,7 @@
 	<body>
 		<h1 id="TitleField">Scan all QR codes</h1>
 		<div id="StatusField"></div>
+		<!--
 		<p id="CodeField" style="
 			text-align: center; 
 			width:600px; 
@@ -104,7 +108,7 @@
 			font-size:50px; 
 			background-color: grey; 
 			color: black;"></p>
-		<br>
+		<br>-->
 		<button onclick="clearStorage()">Clear</button>
 		<button onclick="test()">Test</button>
 	</body>
