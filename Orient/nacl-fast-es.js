@@ -2345,7 +2345,7 @@ nacl.setPRNG = function(fn) {
 };
 
 
-async function init() {
+(async function() {
   // Initialize PRNG if environment provides CSPRNG.
   // If not, methods calling randombytes will throw.
   if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
@@ -2361,7 +2361,6 @@ async function init() {
     });
   } else {
     // Node.js.
-    /*
     const { randomBytes } = await import('crypto');
     if (randomBytes) {
       nacl.setPRNG(function(x, n) {
@@ -2369,7 +2368,6 @@ async function init() {
         for (i = 0; i < n; i++) x[i] = v[i];
         cleanup(v);
       });
-    }*/
+    }
   }
-}
-await init();
+})();
