@@ -2344,6 +2344,7 @@ nacl.setPRNG = function(fn) {
   randombytes = fn;
 };
 
+/*
 await (async function() {
   // Initialize PRNG if environment provides CSPRNG.
   // If not, methods calling randombytes will throw.
@@ -2370,3 +2371,4 @@ await (async function() {
     }
   }
 })();
+*/
