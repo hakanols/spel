@@ -3,7 +3,6 @@
 	<head>
 		<title>Scan all QR codes</title>
 		<script type="module">
-			/*
             import nacl from './nacl-fast-es.js';
 			import * as misc from './misc.js';
 
@@ -12,7 +11,7 @@
 			const codeField = document.getElementById("CodeField")
 
 			const isNotString = (value) => typeof value == "string";
-*/
+
 			window.onload = function() {
 				run()
         	}
@@ -98,7 +97,6 @@
 	<body>
 		<h1 id="TitleField">Scan all QR codes</h1>
 		<div id="StatusField"></div>
-		<!--
 		<p id="CodeField" style="
 			text-align: center; 
 			width:600px; 
@@ -107,7 +105,7 @@
 			font-size:50px; 
 			background-color: grey; 
 			color: black;"></p>
-		<br>-->
+		<br>
 		<button onclick="clearStorage()">Clear</button>
 		<button onclick="test()">Test</button>
 	</body>
