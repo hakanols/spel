@@ -12,6 +12,10 @@
 			const codeField = document.getElementById("CodeField")
 
 			const isNotString = (value) => typeof value == "string";
+*/
+			window.onload = function() {
+				run()
+        	}
 
 			window.clearStorage = function() {
 				console.log("Clear")
@@ -48,7 +52,7 @@
                 const nonce = new Uint8Array(nacl.secretbox.nonceLength);
                 const msgOut = nacl.secretbox.open(box, nonce, key);
                 return (new TextDecoder()).decode(msgOut)
-			}*/
+			}
 
 			function run(){
 				console.log(window.onload)
@@ -85,10 +89,6 @@
 				}
 					*/
 			}
-
-			window.onload = function() {
-				run()
-        	}
 
 			window.test = function() {
 				run()
