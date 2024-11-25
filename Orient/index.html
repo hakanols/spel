@@ -65,7 +65,6 @@
 					statusField.innerText = "Missing param D";
 					return;
 				}
-				/*
 				const data = misc.fromBase64URL(urlParams.get('D'))
 				const msgId = data.slice(0,4)
 				const number = data[4]
@@ -88,7 +87,6 @@
 					const text = getSecret(secret)
 					codeField.innerText = text
 				}
-					*/
 			}
 
 			window.test = function() {
@@ -100,7 +98,6 @@
 	<body>
 		<h1 id="TitleField">Scan all QR codes</h1>
 		<div id="StatusField"></div>
-		<!--
 		<p id="CodeField" style="
 			text-align: center; 
 			width:600px; 
@@ -109,7 +106,7 @@
 			font-size:50px; 
 			background-color: grey; 
 			color: black;"></p>
-		<br>-->
+		<br>
 		<button onclick="clearStorage()">Clear</button>
 		<button onclick="test()">Test</button>
 	</body>
