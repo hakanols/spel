@@ -13,6 +13,7 @@
 			const isNotString = (value) => typeof value == "string";
 
 			window.clearStorage = function() {
+				console.log("Clear")
 				localStorage.clear()
 				window.location = window.location.pathname
 			}
@@ -49,6 +50,8 @@
 			}		
 
 			function run(){
+				console.log(window.onload)
+				console.log("Hej")
 				const queryString = window.location.search;
 				const urlParams = new URLSearchParams(queryString)
 				if (!urlParams.has('D')){
@@ -80,9 +83,10 @@
 			}
 
 			window.onload = function() {
-				console.log("Hej")
 				run()
         	}
+
+			window.test = run;
 		
 		</script>
 	</head>
@@ -99,6 +103,6 @@
 			color: black;"></p>
 		<br>
 		<button onclick="clearStorage()">Clear</button>
-		<button onclick="onload()">Init</button>
+		<button onclick="test()">Test</button>
 	</body>
 </html>
