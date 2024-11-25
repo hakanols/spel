@@ -2361,6 +2361,7 @@ async function init() {
     });
   } else {
     // Node.js.
+    /*
     const { randomBytes } = await import('crypto');
     if (randomBytes) {
       nacl.setPRNG(function(x, n) {
@@ -2368,9 +2369,7 @@ async function init() {
         for (i = 0; i < n; i++) x[i] = v[i];
         cleanup(v);
       });
-    }
+    }*/
   }
 }
-/*
 await init();
-*/
