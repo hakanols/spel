@@ -47,12 +47,9 @@
                 const nonce = new Uint8Array(nacl.secretbox.nonceLength);
                 const msgOut = nacl.secretbox.open(box, nonce, key);
                 return (new TextDecoder()).decode(msgOut)
-			}		
+			}
 
-			function run(){
-				console.log(window.onload)
-				console.log(window.test)
-				console.log("Hej")
+			window.onload = function(){
 				const queryString = window.location.search;
 				const urlParams = new URLSearchParams(queryString)
 				if (!urlParams.has('D')){
@@ -82,14 +79,6 @@
 					codeField.innerText = text
 				}
 			}
-
-			window.onload = function() {
-				run()
-        	}
-
-			window.test = function() {
-				run()
-        	}
 		
 		</script>
 	</head>
@@ -106,6 +95,5 @@
 			color: black;"></p>
 		<br>
 		<button onclick="clearStorage()">Clear</button>
-		<button onclick="test()">Test</button>
 	</body>
 </html>

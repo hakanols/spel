@@ -2344,7 +2344,8 @@ nacl.setPRNG = function(fn) {
   randombytes = fn;
 };
 
-await (async function() {
+
+(async function() {
   // Initialize PRNG if environment provides CSPRNG.
   // If not, methods calling randombytes will throw.
   if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
