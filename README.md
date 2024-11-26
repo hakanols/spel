@@ -64,3 +64,7 @@ PDF Generator
 https://hakanols.github.io/spel/PDF/index.html
 
     node browser-quick-start.mjs /PDF/index.html
+
+Inline SVG favicon
+
+    https://hakanols.github.io/spel/Favicon/index.html
