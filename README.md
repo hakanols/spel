@@ -67,4 +67,4 @@ https://hakanols.github.io/spel/PDF/index.html
 
 Inline SVG favicon
 
-    https://hakanols.github.io/spel/Favicon/index.html
+https://hakanols.github.io/spel/Favicon/index.html
