@@ -1,3 +1,5 @@
+import test from './tap-esm.js'
+
 test('Console log', async function (t) {
     console.log("Log message");
     console.debug("Debug message");
