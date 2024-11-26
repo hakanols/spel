@@ -68,3 +68,7 @@ https://hakanols.github.io/spel/PDF/index.html
 Inline SVG favicon
 
 https://hakanols.github.io/spel/Favicon/index.html
+
+HTML JS Runner
+
+https://hakanols.github.io/spel/JS_Runner/runJs.html?file=test.js
