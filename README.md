@@ -72,3 +72,7 @@ https://hakanols.github.io/spel/Favicon/index.html
 HTML JS Runner
 
 https://hakanols.github.io/spel/JS_Runner/runJs.html?file=test.js
+https://hakanols.github.io/spel/JS_Runner/runJs.html?file=withAwaitTopLevel.js
+
+    node browser-quick-start.mjs /JS_Runner/runJs.html?file=test.js
+    node browser-quick-start.mjs /JS_Runner/runJs.html?file=withAwaitTopLevel.js

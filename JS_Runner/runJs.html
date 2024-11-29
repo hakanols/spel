@@ -22,11 +22,11 @@
                 }
             }
 
-            function printToPage(type, message, style){
-                let row = style != undefined ? '<div style="'+style+';">':'<div>';
-                row += type == undefined ? "" : type+ ": ";
-                row += toString(message)
-                logger.innerHTML += row+'</div>';
+            function printToPage(type, message, color="Black"){
+                const div = document.createElement("div")
+                div.innerText = type+ ": " + toString(message)
+                div.style.color=color
+                logger.appendChild(div)
             }
 
             function wrapConsolePrint(oldPrinter, type, style) {
@@ -34,6 +34,26 @@
                     oldPrinter(message)
                     printToPage(type, message, style);
                 }   
+            }
+
+            function wrapAssert(oldPrinter) {
+                return function(statment, message){
+                    oldPrinter(statment, message)
+                    if(!statment){
+                        printToPage("Assertion failed: ", message, "Tomato");
+                    }
+                }   
+            }
+
+            function wrapTrace(oldPrinter){
+                return function(){
+                    oldPrinter()
+                    printToPage("Trace", "\n"+getStack());
+                }   
+            }
+
+            function getStack(){
+                return (new Error()).stack.replace(/@/g, "\t")
             }
 
             function noPath(file){
@@ -62,31 +82,36 @@
                 }
             }
 
-            console.log = wrapConsolePrint(console.log);
-            console.debug = wrapConsolePrint(console.debug, "Debug", "color:MediumSeaGreen");
-            console.warn = wrapConsolePrint(console.warn, "Warning", "color:Orange");
-            console.error = wrapConsolePrint(console.error, "Error", "color:Tomato");
-            console.trace = wrapConsolePrint(console.trace, "Trace", "color:Tomato");
-            console.assert = wrapConsolePrint(console.assert, "Assert", "color:Tomato");
+            console.log = wrapConsolePrint(console.log, "Log");
+            console.debug = wrapConsolePrint(console.debug, "Debug", "MediumSeaGreen");
+            console.warn = wrapConsolePrint(console.warn, "Warning", "Orange");
+            console.error = wrapConsolePrint(console.error, "Error", "Tomato");
+            console.assert = wrapAssert(console.assert);
+            console.trace = wrapTrace(console.trace);
             
             window.onerror = function(message, source, lineno) {
                 printToPage("Browser error",
                     "File: "+source+" Line: "+lineno+"\nMessage: "+message,
-                    "color:Tomato");
+                    "Tomato");
             };
             window.addEventListener("unhandledrejection", function(reason, promise) { 
                 printToPage("Unhandled rejection",
-                    "More info in console\n"+toErrorString(reason),
-                    "color:Tomato");                
+                    "More info in console\n"+toErrorString(reason)+"\n"+getStack(),
+                    "Tomato");                
             });
 
-            window.onload = run();
+            window.onload = async function(){
+                logger.innerHTML = ''
+                run();
+            }
 
         </script>
     </head>
     <body>
         <p>Run JS files</p>
         <hr>
-        <pre id='log'></pre>
+        <pre id='log'>
+            <div>If this message is seen a import error of a of submodule has occured. This is likely casue a await was used on top level.</div>
+        </pre>
     </body>
 </html>

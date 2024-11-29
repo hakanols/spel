@@ -4,7 +4,10 @@ test('Console log', async function (t) {
     console.log("Log message");
     console.debug("Debug message");
     console.warn("Warning message");
-    console.error("Error message");
+    console.error("Error message"); 
+    console.assert(1 == 1, "Expression returned 'true'");
+    console.assert(1 == 2, "Expression returned 'false'");
+    console.trace()
 	t.end();
 });
 
