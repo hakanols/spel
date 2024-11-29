@@ -53,7 +53,16 @@
             }
 
             function getStack(){
-                return (new Error()).stack.replace(/@/g, "\t")
+                const rows = (new Error()).stack
+                    .replace(/\*/g, '\n')
+                    .split('\n')
+                    .slice(1)
+                const firsts = rows.map((x) => x.indexOf('@'));
+                const largest = [...firsts].sort((a,b)=>a-b)[firsts.length-1];
+
+                return rows
+                    .map((x,i)=>x.replace(/@/g, ' '.repeat(largest-firsts[i]+4)))
+                    .join('\n')
             }
 
             function noPath(file){
