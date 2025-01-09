@@ -8,7 +8,7 @@ function cleanup(arr) {
   for (var i = 0; i < arr.length; i++) arr[i] = 0;
 }
 
-await (async function() {
+(async function() {
   // Initialize PRNG if environment provides CSPRNG.
   // If not, methods calling randombytes will throw.
   if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
