@@ -2344,29 +2344,36 @@ nacl.setPRNG = function(fn) {
   randombytes = fn;
 };
 
-await (async function() {
+async function initRandom() {
   // Initialize PRNG if environment provides CSPRNG.
   // If not, methods calling randombytes will throw.
-  if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
-    // Browsers.
-    const QUOTA = 65536;
-    nacl.setPRNG(function(x, n) {
-      let i, v = new Uint8Array(n);
-      for (i = 0; i < n; i += QUOTA) {
-        crypto.getRandomValues(v.subarray(i, i + Math.min(n - i, QUOTA)));
-      }
-      for (i = 0; i < n; i++) x[i] = v[i];
-      cleanup(v);
-    });
-  } else {
-    // Node.js.
-    const { randomBytes } = await import('crypto');
-    if (randomBytes) {
+  try {
+    if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+      // Browsers.
+      const QUOTA = 65536;
       nacl.setPRNG(function(x, n) {
-        let i, v = randomBytes(n);
+        let i, v = new Uint8Array(n);
+        for (i = 0; i < n; i += QUOTA) {
+          crypto.getRandomValues(v.subarray(i, i + Math.min(n - i, QUOTA)));
+        }
         for (i = 0; i < n; i++) x[i] = v[i];
         cleanup(v);
       });
+    } else {
+      // Node.js.
+      const { randomBytes } = await import('crypto');
+      if (randomBytes) {
+        nacl.setPRNG(function(x, n) {
+          let i, v = randomBytes(n);
+          for (i = 0; i < n; i++) x[i] = v[i];
+          cleanup(v);
+        });
+      }
     }
   }
-})();
+  catch (err) {
+    console.error(err)
+  }
+};
+
+await initRandom();
