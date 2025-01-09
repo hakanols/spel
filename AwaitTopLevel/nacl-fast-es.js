@@ -1,3 +1,36 @@
+let randombytes = await initRandom();
+
+async function initRandom() {
+    // Initialize PRNG if environment provides CSPRNG.
+    // If not, methods calling randombytes will throw.
+    if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
+        // Browsers.
+        const QUOTA = 65536;
+        return function(x, n) {
+            let i, v = new Uint8Array(n);
+            for (i = 0; i < n; i += QUOTA) {
+                crypto.getRandomValues(v.subarray(i, i + Math.min(n - i, QUOTA)));
+            }
+            for (i = 0; i < n; i++) x[i] = v[i];
+            cleanup(v);
+        };
+    }
+   else {
+        // Node.js.
+        const { randomBytes } = await import('crypto');
+        if (randomBytes) {
+            return function(x, n) {
+                let i, v = randomBytes(n);
+                for (i = 0; i < n; i++) x[i] = v[i];
+                cleanup(v);
+            };
+        }
+    }
+    return function(/* x, n */) { 
+        throw new Error('no PRNG');
+    };
+};
+
 const nacl = {};
 export default nacl;
 
@@ -14,7 +47,6 @@ var gf = function(init) {
 };
 
 //  Pluggable, initialized in high-level API below.
-var randombytes = function(/* x, n */) { throw new Error('no PRNG'); };
 
 var _0 = new Uint8Array(16);
 var _9 = new Uint8Array(32); _9[0] = 9;
@@ -2343,37 +2375,3 @@ nacl.verify = function(x, y) {
 nacl.setPRNG = function(fn) {
   randombytes = fn;
 };
-
-async function initRandom() {
-  // Initialize PRNG if environment provides CSPRNG.
-  // If not, methods calling randombytes will throw.
-  try {
-    if (typeof crypto !== 'undefined' && crypto.getRandomValues) {
-      // Browsers.
-      const QUOTA = 65536;
-      nacl.setPRNG(function(x, n) {
-        let i, v = new Uint8Array(n);
-        for (i = 0; i < n; i += QUOTA) {
-          crypto.getRandomValues(v.subarray(i, i + Math.min(n - i, QUOTA)));
-        }
-        for (i = 0; i < n; i++) x[i] = v[i];
-        cleanup(v);
-      });
-    } else {
-      // Node.js.
-      const { randomBytes } = await import('crypto');
-      if (randomBytes) {
-        nacl.setPRNG(function(x, n) {
-          let i, v = randomBytes(n);
-          for (i = 0; i < n; i++) x[i] = v[i];
-          cleanup(v);
-        });
-      }
-    }
-  }
-  catch (err) {
-    console.error(err)
-  }
-};
-
-await initRandom();
