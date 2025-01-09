@@ -11,6 +11,8 @@
 			const outputArea = document.getElementById("OutputArea")
 
             window.update = async function() {
+                outputArea.appendChild(document.createTextNode("Ping from JS"));
+                outputArea.appendChild(document.createElement("br"));
                 const msgIn = (new TextEncoder()).encode("RandomText");
                 const staticHash = misc.toBase64URL(nacl.hash(msgIn).slice(0,4))
                 outputArea.appendChild(document.createTextNode("Static Hash: " + staticHash));
