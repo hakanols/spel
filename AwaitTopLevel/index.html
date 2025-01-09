@@ -10,7 +10,7 @@
 
 			const outputArea = document.getElementById("OutputArea")
 
-            window.update = async function() {
+            async function doStuff() {
                 outputArea.appendChild(document.createTextNode("Ping from JS"));
                 outputArea.appendChild(document.createElement("br"));
                 const msgIn = (new TextEncoder()).encode("RandomText");
@@ -22,7 +22,7 @@
 			}
 
 			window.onload = async function() {
-                await update()
+                await doStuff()
 			}
 		</script>
 	</head>

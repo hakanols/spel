@@ -2376,4 +2376,4 @@ async function initRandom() {
   }
 };
 
-initRandom();
+await initRandom();
