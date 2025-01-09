@@ -12,8 +12,11 @@
 
             window.update = async function() {
                 const msgIn = (new TextEncoder()).encode("RandomText");
-                let id = misc.toBase64URL(nacl.hash(msgIn).slice(0,4))
-                outputArea.appendChild(document.createTextNode("Hello World"));
+                const staticHash = misc.toBase64URL(nacl.hash(msgIn).slice(0,4))
+                outputArea.appendChild(document.createTextNode("Static Hash: " + staticHash));
+                outputArea.appendChild(document.createElement("br"));
+                const randomHash = misc.toBase64URL(nacl.randomBytes(4))
+                outputArea.appendChild(document.createTextNode("Random Hash: " + randomHash));
 			}
 
 			window.onload = async function() {
