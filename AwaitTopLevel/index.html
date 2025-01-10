@@ -1,33 +1,12 @@
 <!DOCTYPE html>
-<html>
-	<head>
-		<title>Await Top Level</title>
-		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-        <meta name="viewport" content="width=700, initial-scale=1.0">
-		<script type="module">
-            import nacl from './nacl-fast-es.js';
-            import * as misc from './misc.js';
-
-			const outputArea = document.getElementById("OutputArea")
-
-            async function doStuff() {
-                outputArea.appendChild(document.createTextNode("Ping from JS"));
-                outputArea.appendChild(document.createElement("br"));
-                const msgIn = (new TextEncoder()).encode("RandomText");
-                const staticHash = misc.toBase64URL(nacl.hash(msgIn).slice(0,4))
-                outputArea.appendChild(document.createTextNode("Static Hash: " + staticHash));
-                outputArea.appendChild(document.createElement("br"));
-                const randomHash = misc.toBase64URL(nacl.randomBytes(4))
-                outputArea.appendChild(document.createTextNode("Random Hash: " + randomHash));
-			}
-
-			window.onload = async function() {
-                await doStuff()
-			}
-		</script>
-	</head>
-	<body>
-        <h3>Await Top Level</h3>
-		<div id="OutputArea" style="width:800px"\>
-	</body>
+<html lang="en">
+  <title>TweetNaCl.js Tests</title>
+  <body>
+    <h1>Select test to run:</h1>
+    <ul>
+      <li><a href="./test1.html">onload</a></li>
+      <li><a href="./test2.html">await top level</a></li>
+      <li><a href="./test3.html">top level</a></li>
+    </ul>
+  </body>
 </html>

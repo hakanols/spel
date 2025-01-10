@@ -80,3 +80,5 @@ AwaitTopLevel
 https://hakanols.github.io/spel/AwaitTopLevel/index.html
 
     node browser-quick-start.mjs /AwaitTopLevel/index.html
+
+    node AwaitTopLevel/test.js
