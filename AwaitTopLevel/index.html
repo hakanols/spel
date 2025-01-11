@@ -2,12 +2,18 @@
 <html lang="en">
   <title>TweetNaCl.js Tests</title>
   <body>
+    <p>Importing JS module with await on top level casuses browsers on iOS to fail to run windows.onload().<br>
+      This was noted by me while using <a href="https://github.com/hakanols/tweetnacl-es6">nacl-fast-es</a> case it use top level await to set random function.<br>
+      It has also been noted in this stackoverflow post <a href="https://stackoverflow.com/questions/77671939/top-level-await-in-a-module-prevents-onload-from-firing">
+      top-level await in a module prevents `onload` from firing</a><br>
+      For the moment I will skip using windows.onload() and hope that GUI element has been loaded correct.
+    </p>
     <h1>Select test to run:</h1>
     <ul>
-      <li><a href="./test1.html">onload</a></li>
+      <li><a href="./test1.html">onload</a> (fail on iOS)</li>
       <li><a href="./test2.html">await top level</a></li>
       <li><a href="./test3.html">top level</a></li>
-      <li><a href="./test4.html">await top level then onload</a></li>
+      <li><a href="./test4.html">await top level then onload</a> (half fail on iOS)</li>
     </ul>
   </body>
 </html>
