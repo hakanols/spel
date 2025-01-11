@@ -13,15 +13,15 @@
                 outputArea.appendChild(document.createElement("br"));
             }
 
-            async function doStuff() {
-                print("Ping from JS")
+            async function doStuff(text) {
+                print(text)
                 print("Static Hash: " + test.getStaticString())
                 print("Random Hash: " + test.getRandomString())
 			}
 
-			await doStuff()
+			await doStuff("TopLevelAwait")
 			window.onload = async function() {
-                await doStuff()
+                await doStuff("OnLoad")
 			}
 		</script>
 	</head>
