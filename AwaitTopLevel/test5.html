@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Await Top Level 5/title>
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+        <meta name="viewport" content="width=700, initial-scale=1.0">
+		<script type="module">
+            import * as test from './baseTest.js';
+
+			const outputArea = document.getElementById("OutputArea")
+            function print(text) {
+                outputArea.appendChild(document.createTextNode(text));
+                outputArea.appendChild(document.createElement("br"));
+            }
+
+            function doStuff(text) {
+                print(text)
+                print("Static Hash: " + test.getStaticString())
+                print("Random Hash: " + test.getRandomString())
+			}
+
+			window.onload = function() {
+                doStuff("OnLoad")
+			}
+		</script>
+	</head>
+	<body>
+        <h3>Await Top Level 5</h3>
+		<div id="OutputArea" style="width:800px"\>
+	</body>
+</html>
