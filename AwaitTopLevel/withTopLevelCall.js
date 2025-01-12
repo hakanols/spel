@@ -1,6 +1,6 @@
 init();
 
-let isInit = false
+var isInit = false
 
 function init() {
     console.log("StartInit")

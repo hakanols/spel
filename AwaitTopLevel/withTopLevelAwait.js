@@ -1,10 +1,10 @@
 await init();
 
-let isInit = false
+var isInit = false
 
 async function init() {
     console.log("StartInit")
-    await sleep(2000)
+    await sleep(500)
     isInit = true
     console.log("DoneInit")
 };
