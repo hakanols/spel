@@ -49,7 +49,7 @@
                 return (new TextDecoder()).decode(msgOut)
 			}
 
-			window.onload = function(){
+			function run(){
 				const queryString = window.location.search;
 				const urlParams = new URLSearchParams(queryString)
 				if (!urlParams.has('D')){
@@ -79,6 +79,8 @@
 					codeField.innerText = text
 				}
 			}
+
+			run()
 		
 		</script>
 	</head>

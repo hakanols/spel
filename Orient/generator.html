@@ -37,7 +37,7 @@
                 return splitToNChunks(box, n)
             }
 
-            window.update = async function() {
+            function update() {
                 let newUrl = getShowerUrl()
                 const number = Number(numberItems.value)
                 const secretChunks = getDataChunks(secretText.value, number)
@@ -55,9 +55,7 @@
                 }
 			}
 
-			window.onload = async function() {
-                await update()
-			}
+			update()
 		</script>
 	</head>
 	<body>
