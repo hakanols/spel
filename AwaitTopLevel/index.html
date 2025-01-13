@@ -1,6 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
-  <title>TweetNaCl.js Tests</title>
+  <head>
+    <title>TweetNaCl.js Tests</title>
+    <style>
+      table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+      }
+      
+      td, th {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+      }
+      
+      tr:nth-child(even) {
+        background-color: #dddddd;
+      }
+    </style>
+  </head>
   <body>
     <p>Importing JS module with await on top level casuses browsers on iOS to fail to run windows.onload().<br>
       This was noted by me while using <a href="https://github.com/hakanols/tweetnacl-es6">nacl-fast-es</a> case it use top level await to set random function.<br>
@@ -8,16 +26,34 @@
       top-level await in a module prevents `onload` from firing</a><br>
       For the moment I will skip using windows.onload() and hope that GUI element has been loaded correct.
     </p>
-    <h1>Select test to run:</h1>
-    <ul>
-      <li><a href="./test1.html">onLoad - await module init call</a> (Fail on all iOS browsers)</li>
-      <li><a href="./test2.html">initCall - await module init call</a></li>
-      <li><a href="./test3.html">onLoad - sleep module init call (await import())</a></li>
-      <li><a href="./test4.html">initCall - sleep module init call (await import())</a></li>
-      <li><a href="./test5.html">onLoad - sleep module init call </a> (Fail on all browsers)</li>
-      <li><a href="./test6.html">initCall - sleep module init call </a></li>
-      <li><a href="./test7.html">onLoad - syncron module init call</a></li>
-      <li><a href="./test8.html">initCall - syncron module init call</a></li>
-    </ul>
+    <table>
+      <tr>
+        <th></th>
+        <th>onLoad</th>
+        <th>initCall</th>
+      </tr>
+      <tr>
+        <th>Await module init call</th>
+        <td><a href="./test1.html">run </a>(*)</td>
+        <td><a href="./test2.html">run</a></td>
+      </tr>
+      <tr>
+        <th>Sleep module init call (await import())</th>
+        <td><a href="./test3.html">run</a></td>
+        <td><a href="./test4.html">run</a></td>
+      </tr>
+      <tr>
+        <th>Sleep module init call</th>
+        <td><a href="./test5.html">run</a>(**)</td>
+        <td><a href="./test6.html">run</a></td>
+      </tr>
+      <tr>
+        <th>Syncron module init call</th>
+        <td><a href="./test7.html">run</a></td>
+        <td><a href="./test8.html">run</a></td>
+      </tr>
+    </table>
+    <p>* Fail on all iOS browsers</p>
+    <p>** Fail on  iOS browsers</p>
   </body>
 </html>
