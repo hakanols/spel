@@ -1,5 +1,3 @@
-import * as test from './baseTest.js';
+import * as test from './withTopLevelSleep.js';
 
-console.log("Ping from JS")
-console.log("Static Hash: " + test.getStaticString())
-console.log("Random Hash: " + test.getRandomString())
+console.log("Hello from TopLevel. IsInit " + test.getIsInit())
