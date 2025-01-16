@@ -25,13 +25,6 @@
 			}
 			document.getElementById("A").innerHTML = localStorage.lastState == "t" ? '2-7 Svart' : '2-7 Rött';
 			document.getElementById("B").innerHTML = localStorage.lastState == "t" ? '2-7 Rött' : '2-7 Svart';
-
-			function init() {
-				setInterval(updateIfNeaded, 30*1000);
-				updateIfNeaded();
-				requestWakeLock();
-			}
-			init()
 		}
 
 		async function requestWakeLock() {
@@ -42,6 +35,14 @@
 				console.error('Screen Wake error: '+err.name+', '+err.message);
 			}
 		};
+
+		function init() {
+			setInterval(updateIfNeaded, 30*1000);
+			updateIfNeaded();
+			requestWakeLock();
+		}
+		init()
+
 		</script>
 	</head>
 	<body>
