@@ -12,11 +12,7 @@
 		kod som ändrar rött mot svart lite då och då.
 		Vänligen behåll hemligheten om att sidan är dynamisk.*/
 		const updateInterval = 3*60; //sec
-		window.onload = function() {
-			setInterval(updateIfNeaded, 30*1000);
-			updateIfNeaded();
-			requestWakeLock();
-		}
+
 		function updateIfNeaded() {
 			let currentTime = new Date().getTime() / 1000;
 			if (!localStorage.lastChange){
@@ -29,6 +25,13 @@
 			}
 			document.getElementById("A").innerHTML = localStorage.lastState == "t" ? '2-7 Svart' : '2-7 Rött';
 			document.getElementById("B").innerHTML = localStorage.lastState == "t" ? '2-7 Rött' : '2-7 Svart';
+
+			function init() {
+				setInterval(updateIfNeaded, 30*1000);
+				updateIfNeaded();
+				requestWakeLock();
+			}
+			init()
 		}
 
 		async function requestWakeLock() {

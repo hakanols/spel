@@ -135,7 +135,7 @@
 				return elements
 			}
 
-			window.onload = async function() {
+			async function init() {
 				const imgQuest = new Image()
 				imgQuest.style.height = "100%";
 				imgQuest.style.width = "100%"
@@ -153,7 +153,9 @@
 				}
 				active = true
 				console.log('Game on')
-			}	
+			}
+			await init()
+			
 		</script>
 	</head>
 	<body style="background: #21455d;">

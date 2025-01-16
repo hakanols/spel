@@ -103,7 +103,7 @@
 				return [true, morse];
 			}
 
-			window.onload = function() {
+			function init() {
 				const [hasCode, morse] = tryGetCode()
 				if (!hasCode){
 					morseText.value = defaultMorse;
@@ -115,6 +115,7 @@
 				console.log("Code: "+morse)
 				playButton.onclick = () => playMorse(morse);
 			}
+			init()
 
 		</script>
 	</head>

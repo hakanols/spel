@@ -7,15 +7,6 @@
         const wakeLockModule = navigator.wakeLock;
         let lock = null
 
-        window.onload = function() {
-            console.log('Has Wake Lock: ' + (wakeLockModule != undefined) )
-
-            if (wakeLockModule != undefined){
-                checkButton.disabled = false
-                checkButton.addEventListener('change', checkEvent);
-            }
-        }
-
         async function checkEvent(e){
             console.log('Checked: ' + checkButton.checked)
             await toggleWakeLock()
@@ -34,6 +25,17 @@
                 lock = null;
             }
         };
+
+        function init() {
+            console.log('Has Wake Lock: ' + (wakeLockModule != undefined) )
+
+            if (wakeLockModule != undefined){
+                checkButton.disabled = false
+                checkButton.addEventListener('change', checkEvent);
+            }
+        }
+        init()
+        
     </script>
 </head>
 <body>
