@@ -12,11 +12,7 @@
 		kod som ändrar rött mot svart lite då och då.
 		Vänligen behåll hemligheten om att sidan är dynamisk.*/
 		const updateInterval = 3*60; //sec
-		window.onload = function() {
-			setInterval(updateIfNeaded, 30*1000);
-			updateIfNeaded();
-			requestWakeLock();
-		}
+
 		function updateIfNeaded() {
 			let currentTime = new Date().getTime() / 1000;
 			if (!localStorage.lastChange){
@@ -39,6 +35,14 @@
 				console.error('Screen Wake error: '+err.name+', '+err.message);
 			}
 		};
+
+		function init() {
+			setInterval(updateIfNeaded, 30*1000);
+			updateIfNeaded();
+			requestWakeLock();
+		}
+		init()
+
 		</script>
 	</head>
 	<body>

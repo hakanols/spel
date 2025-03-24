@@ -17,7 +17,7 @@
 				return [true, code];
 			}
 
-			window.onload = function() {
+			function init() {
 				const [hasCode, code] = tryGetCode()
 				if (!hasCode){
 					console.error("Missing parameter 'D'")
@@ -26,6 +26,7 @@
 				}
 				textArea.innerHTML = code;
 			}
+			init()
 
 		</script>
 	</head>

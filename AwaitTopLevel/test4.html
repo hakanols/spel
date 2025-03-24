@@ -1,32 +1,26 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Await Top Level 4</title>
-		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <head>
+        <title>Await Top Level 4</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=700, initial-scale=1.0">
-		<script type="module">
-            import * as test from './baseTest.js';
-
-			const outputArea = document.getElementById("OutputArea")
+        <script type="module">
+            const outputArea = document.getElementById("OutputArea")
             function print(text) {
                 outputArea.appendChild(document.createTextNode(text));
-                outputArea.appendChild(document.createElement("br"));
             }
 
-            async function doStuff(text) {
-                print(text)
-                print("Static Hash: " + test.getStaticString())
-                print("Random Hash: " + test.getRandomString())
-			}
-
-			await doStuff("TopLevelAwait")
-			window.onload = async function() {
-                await doStuff("OnLoad")
-			}
-		</script>
-	</head>
-	<body>
+            async function init(){
+                const test = await import('./withTopLevelSleep.js')
+                print("Hello from TopLevel. IsInit " + test.getIsInit())
+            }
+            await init()
+            
+        </script>
+    </head>
+    <body>
         <h3>Await Top Level 4</h3>
-		<div id="OutputArea" style="width:800px"\>
-	</body>
+        <p>Expekt string "Hello from TopLevel. IsInit true":</p>
+        <div id="OutputArea" style="width:800px"\>
+    </body>
 </html>

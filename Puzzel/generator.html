@@ -17,17 +17,6 @@
 
         let customImgUrl;
 
-        window.onload = function(){
-            const printPixelWith = 700
-            qrOutput.width = printPixelWith
-            qrOutput.height = printPixelWith
-            imgOutput.width = printPixelWith
-            imgOutput.height = printPixelWith
-            message.value = "Hej"
-            window.updateLink()
-            window.showImage("Sea.svg")
-        }
-
         window.updateLink = function() {
             const content = createShowerUrl(message.value)
             link.href = content;
@@ -69,6 +58,19 @@
             let url = currentLocation.replace("generator.html", "index.html")
             return url + '?D=' + btoa(text)
         }
+        
+        function init(){
+            const printPixelWith = 700
+            qrOutput.width = printPixelWith
+            qrOutput.height = printPixelWith
+            imgOutput.width = printPixelWith
+            imgOutput.height = printPixelWith
+            message.value = "Hej"
+            window.updateLink()
+            window.showImage("Sea.svg")
+        }
+        init()
+        
     </script>  
 </head>
 <body>

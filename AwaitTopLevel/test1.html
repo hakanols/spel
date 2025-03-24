@@ -1,31 +1,25 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Await Top Level 1</title>
-		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <head>
+        <title>Await Top Level 1</title>
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
         <meta name="viewport" content="width=700, initial-scale=1.0">
-		<script type="module">
-            import * as test from './baseTest.js';
+        <script type="module">
+            import * as test from './withTopLevelAwait.js';
 
-			const outputArea = document.getElementById("OutputArea")
+            const outputArea = document.getElementById("OutputArea")
             function print(text) {
                 outputArea.appendChild(document.createTextNode(text));
-                outputArea.appendChild(document.createElement("br"));
             }
 
-            async function doStuff() {
-                print("Ping from JS")
-                print("Static Hash: " + test.getStaticString())
-                print("Random Hash: " + test.getRandomString())
-			}
-
-			window.onload = async function() {
-                await doStuff()
-			}
-		</script>
-	</head>
-	<body>
+            window.onload = function() {
+                print("Hello from OnLoad. IsInit " + test.getIsInit())
+            }
+        </script>
+    </head>
+    <body>
         <h3>Await Top Level 1</h3>
-		<div id="OutputArea" style="width:800px"\>
-	</body>
+        <p>Expekt string "Hello from OnLoad. IsInit true":</p>
+        <div id="OutputArea" style="width:800px"\>
+    </body>
 </html>
