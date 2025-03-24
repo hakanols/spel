@@ -82,3 +82,9 @@ https://hakanols.github.io/spel/AwaitTopLevel/index.html
     node browser-quick-start.mjs /AwaitTopLevel/index.html
 
     node AwaitTopLevel/test.js
+
+Clock
+
+https://hakanols.github.io/spel/Clock/index.html
+
+    node browser-quick-start.mjs /Clock/index.html
