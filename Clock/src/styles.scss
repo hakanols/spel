@@ -1,0 +1,129 @@
+$cycle-duration: 40s;
+
+$lg-sky-at-day: linear-gradient(to bottom, rgba(30,87,153,1) 0%,rgba(41,137,216,1) 52%,rgba(125,185,232,1) 100%);
+$lg-sky-at-night: linear-gradient(to bottom, rgba(9,21,45,1) 0%,rgba(28,30,147,1) 53%,rgba(83,101,155,1) 100%);
+$lg-sky-dimming: linear-gradient(to bottom, rgba(248,80,50,1) 0%,rgba(170,66,167,1) 50%,rgba(196,156,76,1) 79%,rgba(16,37,99,1) 100%);
+
+body {
+  font-family: sans-serif;
+  margin: 0;
+  background: #000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+@keyframes reflexion {
+  0% {opacity: 0}
+  15% {opacity: 0.7} 
+  25% {opacity: 0.1} 
+  50% {opacity: 0.0}
+  60% {opacity: 0.7}
+  75% {opacity: 0.1} 
+  100% {opacity: 0}
+}
+
+@keyframes sun {
+  0% {transform: rotate(0deg)}
+  50% {transform: rotate(-180deg)}
+  100% {transform: rotate(-360deg)}
+}
+
+@keyframes darken {
+  0% {opacity: 0}
+  50% {opacity: 1}
+  100% {opacity: 0}
+}
+
+@keyframes day-fader {
+  0% {opacity: 1}
+  50% {opacity: 0}
+  100% {opacity: 1}
+}
+
+@keyframes dimm-fader {
+  0% {opacity: 0}
+  20% {opacity: 1}
+  25% {opacity: 0}
+  55% {opacity: 0}
+  65% {opacity: 1}
+  75% {opacity: 0}
+  100% {opacity: 0}
+}
+
+#scene {
+  width: 600px;
+  height: 400px;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  position: relative;
+  border: 5px dashed rgb(14, 14, 14);
+
+  & .day-sky {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    animation: day-fader $cycle-duration ease-in-out infinite;
+    background: $lg-sky-at-day;
+  }
+  
+  &  .night-sky {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    background: $lg-sky-at-night;
+  }
+   
+  & .dimm-sky {
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    animation: dimm-fader $cycle-duration ease-in-out infinite;
+    background: $lg-sky-dimming;
+  }
+}
+
+object {
+  position: absolute;
+
+  &.reflexion {
+    opacity: 0;
+    animation: reflexion $cycle-duration ease-in-out infinite;
+  }
+
+  &.sun {
+    top: 0;
+    transform: scale(0.8);
+  }
+  
+  &.moon {
+    bottom: 0;
+    right: 0;
+    transform: scale(0.6);
+  }
+
+  &.gras-dark {
+    animation: darken $cycle-duration ease-in-out infinite;
+  }
+
+  &.trees {
+    top: 250px;
+  }
+  
+  &.trees-dark  {
+    top: 250px;
+    animation: darken $cycle-duration ease-in-out infinite;
+  }
+}
+
+.orb-wrapper {
+  position: relative;
+  animation: sun $cycle-duration linear infinite;
+  top: 100px;
+  left: 100px;
+  width: 400px;
+  height: 400px;
+}
+
