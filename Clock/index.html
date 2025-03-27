@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<!--// Stolen from https://www.w3schools.com/graphics/tryit.asp?filename=trycanvas_clock_start-->
+<!-- Stolen from https://www.w3schools.com/graphics/tryit.asp?filename=trycanvas_clock_start -->
+<!-- STAR CRAFT II -->
 <html>
   <head>
     <meta name="viewport" content="width=700, initial-scale=1.0">
@@ -33,16 +34,17 @@
       }
 
       function update (time) {
-        drawDayNigth(ctxDayNigth, time)
-        drawClock(ctxClock, radius, time)
+        const totSeconds = time.getSeconds()+ time.getMinutes()*60 + time.getHours()*60*60;
+        drawDayNigth(ctxDayNigth, totSeconds)
+        drawClock(ctxClock, radius, totSeconds)
       }
 
 
-      function drawDayNigth(ctx, time) {
+      function drawDayNigth(ctx, totSeconds) {
         ctx.reset(); 
-        drawSky(ctx, "lightblue", "darkblue");
-        drawCelestial(ctx, sun, time, Math.PI);
-        drawCelestial(ctx, moon, time, 0);
+        drawSky(ctx, "lightblue", "rgba(332,56,21,1)");
+        drawCelestial(ctx, sun, totSeconds, 12*60*60);
+        drawCelestial(ctx, moon, totSeconds, 0);
         draw(ctx, mountains, 1, 0, 251);
         draw(ctx, gras, 1, 0, 316);
         draw(ctx, grasDark, 0, 0, 316);
@@ -50,9 +52,8 @@
         draw(ctx, treesDark, 0, 0, 250);
       }
 
-      function drawCelestial(ctx, img, time, offset){
-        const totSeconds = time.getSeconds()+ time.getMinutes()*60 + time.getHours() +  time.getHours()*60*60;
-        const dayAngle = totSeconds*2*Math.PI / (24) + offset //*60*60) + offset ToDo remove speed up of nigth day cykle
+      function drawCelestial(ctx, img, totSeconds, offset){
+        const dayAngle = (totSeconds+offset)*2*Math.PI / (24*60*60)
         const x = Math.sin(dayAngle)*200 + 300 - img.width/2
         const y = -Math.cos(dayAngle)*200 + 250 - img.height/2
         draw(ctx, img, 1, x, y);
@@ -76,10 +77,10 @@
         update(now)
       }
 
-      function drawClock(ctx, radius, time) {
+      function drawClock(ctx, radius, totSeconds) {
         drawFace(ctx, radius);
         drawNumbers(ctx, radius);
-        drawTime(ctx, radius, time);
+        drawTime(ctx, radius, totSeconds);
       }
 
       function drawFace(ctx, radius) {
@@ -122,15 +123,10 @@
         }
       }
       
-      function drawTime(ctx, radius, time){
-        const secondAng = time.getSeconds()*Math.PI/30;
-        drawHand(ctx, secondAng, radius*0.8, radius*0.02);
-
-        const minuteAng = time.getMinutes()*Math.PI/30 + secondAng/60;
-        drawHand(ctx, minuteAng, radius*0.8, radius*0.07);
-
-        const hourAng = (time.getHours()%12)*Math.PI/6 + minuteAng/60;
-        drawHand(ctx, hourAng, radius*0.5, radius*0.07);
+      function drawTime(ctx, radius, totSeconds){
+        drawHand(ctx, 2*Math.PI*totSeconds/60, radius*0.8, radius*0.02); // Seconds
+        drawHand(ctx, 2*Math.PI*totSeconds/(60*60), radius*0.8, radius*0.07); // Minutes
+        drawHand(ctx, 2*Math.PI*totSeconds/(60*60*12), radius*0.5, radius*0.07);  // Hours
       }
       
       function drawHand(ctx, ang, length, width) {
