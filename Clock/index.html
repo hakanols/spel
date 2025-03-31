@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<!-- Stolen from https://www.w3schools.com/graphics/tryit.asp?filename=trycanvas_clock_start -->
+<!-- Stolen from  -->
+<!-- https://www.w3schools.com/graphics/tryit.asp?filename=trycanvas_clock_start -->
+<!-- https://codesandbox.io/p/sandbox/css-day-n-night-79mwt-->
 <!-- STAR CRAFT II -->
 <html>
   <head>
@@ -17,15 +19,90 @@
       ctxClock.translate(radius, radius);
       radius = radius * 0.90
 
-      const sun = await loadImage("src/svgs/sun.svg");
-      const moon = await loadImage("src/svgs/moon.svg");
-      const mountains = await loadImage("src/svgs/mountains.svg");
-      const gras = await loadImage("src/svgs/gras.svg");
-      const grasDark = await loadImage("src/svgs/gras-dark.svg");
-      const trees = await loadImage("src/svgs/trees.svg");
-      const treesDark = await loadImage("src/svgs/trees-dark.svg");
+      const sun = await loadImage("images/sun.svg");
+      const moon = await loadImage("images/moon.svg");
+      const mountains = await loadImage("images/mountains.svg");
+      const mountainsReflexion = await loadImage("images/mountains-reflexion.svg");
+      const gras = await loadImage("images/gras.svg");
+      const grasDark = await loadImage("images/gras-dark.svg");
+      const trees = await loadImage("images/trees.svg");
+      const treesDark = await loadImage("images/trees-dark.svg");
 
       let tickGenerator
+
+      function rgba(red, green, blue, opacity){
+        return `rgba(${red},${green},${blue},${opacity})`
+      }
+
+      function gradSkyAtDay(ctx, opacity, heigth){
+        const grad = ctx.createLinearGradient(0, 0, 0, heigth);
+        grad.addColorStop(0, rgba(30,87,153,opacity));
+        grad.addColorStop(0.52, rgba(41,137,216,opacity));
+        grad.addColorStop(1, rgba(125,185,232,opacity));
+        return grad
+      }
+
+      function gradSkyAtNight(ctx, opacity, heigth){
+        const grad = ctx.createLinearGradient(0, 0, 0, heigth);
+        grad.addColorStop(0, rgba(9,21,45,opacity));
+        grad.addColorStop(0.53, rgba(28,30,147,opacity));
+        grad.addColorStop(1, rgba(83,101,155,opacity));
+        return grad
+      }
+
+      function gradSkyAtDimming(ctx, opacity, heigth){
+        const grad = ctx.createLinearGradient(0, 0, 0, heigth);
+        grad.addColorStop(0, rgba(248,80,50,opacity));
+        grad.addColorStop(0.5, rgba(170,66,167,opacity));
+        grad.addColorStop(0.79, rgba(196,156,76,opacity));
+        grad.addColorStop(1, rgba(16,37,99,opacity));
+        return grad
+      }
+
+      const faderDay = new Map([
+        [0, 0],
+        [0.5, 1],
+        [1, 0]
+      ])
+
+      const faderNight = new Map([
+        [0, 1],
+        [0.5, 0],
+        [1, 1]
+      ])
+
+      const faderSkyAtDimming = new Map([
+        [0, 0],
+        [0.20, 1],
+        [0.25, 0],
+        [0.55, 0],
+        [0.65, 1],
+        [0.75, 0],
+        [1, 0]
+      ])
+
+      const faderReflexion = new Map([
+        [0, 0],
+        [0.15, 0.7],
+        [0.25, 0.1],
+        [0.50, 0],
+        [0.60, 0.7],
+        [0.75, 0.1],
+        [1, 0]
+      ])
+
+      function getOpacity(fader, index){
+        let last;
+        for (let element of fader) {
+          if (element[0] <= index  ){
+            last = element
+            continue
+          }
+          let effekt = (index-last[0])/(element[0]-last[0])
+          return last[1]+(element[1]-last[1])*effekt
+        };
+        throw "Something is wrong"
+      }
 
       async function loadImage(imgPath){
         const img = new Image();
@@ -35,34 +112,40 @@
 
       function update (time) {
         const totSeconds = time.getSeconds()+ time.getMinutes()*60 + time.getHours()*60*60;
-        drawDayNigth(ctxDayNigth, totSeconds)
+        drawDayNigth(ctxDayNigth, (totSeconds % 120)/120 )
         drawClock(ctxClock, radius, totSeconds)
       }
 
 
-      function drawDayNigth(ctx, totSeconds) {
-        ctx.reset(); 
-        drawSky(ctx, "lightblue", "rgba(332,56,21,1)");
-        drawCelestial(ctx, sun, totSeconds, 12*60*60);
-        drawCelestial(ctx, moon, totSeconds, 0);
+      function drawDayNigth(ctx, phase) {
+        ctx.reset();
+
+        drawSky(ctx, gradSkyAtNight(ctx, 1, 400 ));
+        let opacity = getOpacity(faderDay, phase)
+        drawSky(ctx, gradSkyAtDay(ctx, opacity, 400 ));
+        opacity = getOpacity(faderSkyAtDimming, phase)
+        drawSky(ctx, gradSkyAtDimming(ctx, opacity, 400 ));
+
+        drawCelestial(ctx, sun, phase, 0.5);
+        drawCelestial(ctx, moon, phase, 0);
         draw(ctx, mountains, 1, 0, 251);
+        opacity = getOpacity(faderReflexion, phase)
+        draw(ctx, mountainsReflexion, opacity, 0, 251);
         draw(ctx, gras, 1, 0, 316);
-        draw(ctx, grasDark, 0, 0, 316);
+        opacity = getOpacity(faderNight, phase)
+        draw(ctx, grasDark, opacity, 0, 316);
         draw(ctx, trees, 1, 0, 250);
-        draw(ctx, treesDark, 0, 0, 250);
+        draw(ctx, treesDark, opacity, 0, 250);
       }
 
       function drawCelestial(ctx, img, totSeconds, offset){
-        const dayAngle = (totSeconds+offset)*2*Math.PI / (24*60*60)
+        const dayAngle = (totSeconds+offset)*2*Math.PI
         const x = Math.sin(dayAngle)*200 + 300 - img.width/2
-        const y = -Math.cos(dayAngle)*200 + 250 - img.height/2
+        const y = -Math.cos(dayAngle)*200 + 275 - img.height/2
         draw(ctx, img, 1, x, y);
       }
 
-      function drawSky(ctx, col0, col1){
-        const grad=ctx.createLinearGradient(0, 0, 0, 400);
-        grad.addColorStop(0, col0);
-        grad.addColorStop(1, col1);
+      function drawSky(ctx, grad){
         ctx.fillStyle = grad;
         ctx.fillRect(0, 0, 600, 400);
       }
@@ -150,6 +233,7 @@
       }
 
       window.setCustomSource = function() {
+        console.log("Custom source")
         clearInterval(tickGenerator);
         customClockEl.checked="checked"
         update(getCustomTime())
