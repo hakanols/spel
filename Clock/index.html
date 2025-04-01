@@ -112,7 +112,7 @@
 
       function update (time) {
         const totSeconds = time.getSeconds()+ time.getMinutes()*60 + time.getHours()*60*60;
-        drawDayNigth(ctxDayNigth, (totSeconds % 120)/120 )
+        drawDayNigth(ctxDayNigth, totSeconds/(24*60*60) )
         drawClock(ctxClock, radius, totSeconds)
       }
 
@@ -255,12 +255,12 @@
       Sorry, your browser does not support canvas.
     </canvas>
     <br>
-    <input name="sourceSelect" type="radio" onclick="setRealSource()" id="real_clock">
-    Real time
+    <input name="sourceSelect" type="radio" onclick="setRealSource()" style="font-size:24px;" id="real_clock">
+    <b style="font-size:30px;">Real time</b> 
     <br>
     <input name="sourceSelect" type="radio" onclick="setCustomSource()" id="custom_clock">
-    Custom time: 
-    <input type="time" id="custom_time" oninput="setCustomSource()">
+    <b style="font-size:30px;">Custom time:</b> 
+    <input type="time" id="custom_time" style="font-size:30px;" oninput="setCustomSource()">
     <br>
     <canvas id="canvas_day_nigth" width="600" height="400">
       Sorry, your browser does not support canvas.
