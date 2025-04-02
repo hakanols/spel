@@ -8,16 +8,11 @@
     <meta name="viewport" content="width=700, initial-scale=1.0">
 	  <script type="module">
       const realClockEl = document.getElementById('real_clock');
+      const speedClockEl = document.getElementById('speed_clock');
       const customClockEl = document.getElementById('custom_clock');
       const customTimeEl = document.getElementById('custom_time');
       const canvasDayNigth = document.getElementById("canvas_day_nigth");
-      const ctxDayNigth = canvasDayNigth.getContext("2d");
       const canvasClock = document.getElementById("canvas_clock");  
-      const ctxClock = canvasClock.getContext("2d");
-      let radius = canvasClock.height / 2;
-      ctxClock.resetTransform();
-      ctxClock.translate(radius, radius);
-      radius = radius * 0.90
 
       const sun = await loadImage("images/sun.svg");
       const moon = await loadImage("images/moon.svg");
@@ -28,7 +23,7 @@
       const trees = await loadImage("images/trees.svg");
       const treesDark = await loadImage("images/trees-dark.svg");
 
-      let tickGenerator
+      let lastTimeSec;
 
       function rgba(red, green, blue, opacity){
         return `rgba(${red},${green},${blue},${opacity})`
@@ -109,22 +104,48 @@
         await new Promise(r => img.onload=r, img.src=imgPath);
         return img;
       }
+      function getEpoc(){
+        const now = new Date();
+        return now.getTime();
+      }
 
-      function update (time) {
-        const totSeconds = time.getSeconds()+ time.getMinutes()*60 + time.getHours()*60*60;
-        drawDayNigth(ctxDayNigth, totSeconds/(24*60*60) )
-        drawClock(ctxClock, radius, totSeconds)
+      function getCustomTimeSec(){
+        const timeArray = customTimeEl.value.split(":")
+        return timeArray[0]*60*60 + timeArray[1]*60
+      }
+
+      function getTimeSecFromSource(){
+        if (realClockEl.checked) {
+          return Math.floor(getEpoc() / 1000)  % (24*60*60)
+        }
+        if (speedClockEl.checked) {
+          return Math.floor(getEpoc() * 24*60/1000) % (24*60*60)
+        }
+        if (customClockEl.checked) {
+          return getCustomTimeSec()
+        }
+      }
+
+      function update () {
+        const newTimeSec = getTimeSecFromSource()
+        if (lastTimeSec != newTimeSec){
+          drawDayNigth(newTimeSec/(24*60*60) )
+          drawClock(newTimeSec)
+          lastTimeSec = newTimeSec
+        }
       }
 
 
-      function drawDayNigth(ctx, phase) {
+      function drawDayNigth(phase) {
+        const ctx = canvasDayNigth.getContext("2d");
+        const height = canvasDayNigth.height;
         ctx.reset();
 
-        drawSky(ctx, gradSkyAtNight(ctx, 1, 400 ));
+        drawSky(ctx, gradSkyAtNight(ctx, 1, height ));
         let opacity = getOpacity(faderDay, phase)
-        drawSky(ctx, gradSkyAtDay(ctx, opacity, 400 ));
+        drawSky(ctx, gradSkyAtDay(ctx, opacity, height ));
         opacity = getOpacity(faderSkyAtDimming, phase)
-        drawSky(ctx, gradSkyAtDimming(ctx, opacity, 400 ));
+        drawSky(ctx, gradSkyAtDimming(ctx, opacity, height ));
 
         drawCelestial(ctx, sun, phase, 0.5);
         drawCelestial(ctx, moon, phase, 0);
@@ -155,15 +176,15 @@
         ctx.drawImage(img, x, y);
       }
 
-      function realTimeTick(){
-        const now = new Date();
-        update(now)
-      }
-
-      function drawClock(ctx, radius, totSeconds) {
-        drawFace(ctx, radius);
-        drawNumbers(ctx, radius);
-        drawTime(ctx, radius, totSeconds);
+      function drawClock(totSeconds) {
+        const ctx = canvasClock.getContext("2d");
+        const radius = canvasClock.height / 2;
+        ctx.reset();
+        ctx.resetTransform();
+        ctx.translate(radius, radius);
+        drawFace(ctx, radius*0.9);
+        drawNumbers(ctx, radius*0.9);
+        drawTime(ctx, radius*0.9, totSeconds);
       }
 
       function drawFace(ctx, radius) {
@@ -223,29 +244,18 @@
         ctx.stroke();
       }
 
-      function getCustomTime(){
-        const timeArray = customTimeEl.value.split(":")
-        let date = new Date()
-        date.setHours(timeArray[0]);
-        date.setMinutes(timeArray[1]);
-        date.setSeconds("00");
-        return date
-      }
-
       window.setCustomSource = function() {
-        clearInterval(tickGenerator);
         customClockEl.checked="checked"
-        update(getCustomTime())
+        update()
       }
 
-      window.setRealSource = function() {
-        realTimeTick()
-        tickGenerator = setInterval(realTimeTick, 1000);
-        realClockEl.checked="checked"
+      window.radioChange = function() {
+        update()
       }
 
       customTimeEl.value = "12:00"
-      window.setRealSource()
+      setInterval(update, 100);
+      update()
 
     </script>
   </head>
@@ -254,12 +264,15 @@
       Sorry, your browser does not support canvas.
     </canvas>
     <br>
-    <input name="sourceSelect" type="radio" onclick="setRealSource()" style="font-size:24px;" id="real_clock">
-    <b style="font-size:30px;">Real time</b> 
+    <input name="sourceSelect" type="radio" style="width:30px;height:30px;" onclick="radioChange()" id="real_clock">
+    <b style="font-size:40px;">Riktig tid </b> 
     <br>
-    <input name="sourceSelect" type="radio" onclick="setCustomSource()" id="custom_clock">
-    <b style="font-size:30px;">Custom time:</b> 
-    <input type="time" id="custom_time" style="font-size:30px;" oninput="setCustomSource()">
+    <input name="sourceSelect" type="radio" style="width:30px;height:30px;" onclick="radioChange()" id="speed_clock">
+    <b style="font-size:40px;">60min dygn</b> 
+    <br>
+    <input name="sourceSelect" type="radio" style="width:30px;height:30px;" onclick="radioChange()" id="custom_clock">
+    <b style="font-size:40px;">Vald tid:</b> 
+    <input type="time" id="custom_time" style="font-size:40px;" oninput="setCustomSource()">
     <br>
     <canvas id="canvas_day_nigth" width="600" height="400">
       Sorry, your browser does not support canvas.
