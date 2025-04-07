@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Count Down</title>
+		<meta name="viewport" content="width=700, initial-scale=1.0">
+		<style>
+			div.ruta
+			{
+			padding:10px; 
+			background-color: white;
+			border:5px solid gray;
+			margin:10px;
+			border-radius: 10px 10px 10px 10px;
+			box-shadow: 4px 4px 2px 2px black;
+			font-family: Noteworthy;
+			}
+		</style>
+		<script type="module">
+			const textPostInput = document.getElementById("TextPostInput")
+			const textPreInput = document.getElementById("TextPreInput")
+			const dateTime = document.getElementById("DateTime")
+			const submitButton = document.getElementById("SubmitButton")
+			const clockDisplay = document.getElementById("ClockDisplay")
+			const textDisplay = document.getElementById("TextDisplay")
+			const inputDiv = document.getElementById("InputDiv")
+			const displayDiv = document.getElementById("DisplayDiv")
+
+			let timer;
+
+			window.submit = function(){
+				const time = Date.parse(dateTime.value);
+				const timeBytes = timeToBytes(time) 
+
+				const encoder = new TextEncoder()
+				const textPostBytes = encoder.encode(textPostInput.value);
+				const textPreBytes = encoder.encode(textPreInput.value);
+
+				const bytes = new Uint8Array([...timeBytes, textPostBytes.length, ...textPostBytes, ...textPreBytes]);
+				window.location = location.protocol + '//' + location.host + location.pathname + "?data=" + bytes.toBase64();
+			}
+
+			function bytesToTime(bytes) {
+				return (new Uint32Array(bytes.buffer))[0] *1000
+			}
+
+			function timeToBytes(number) {
+				const array = new Uint32Array([number/1000])
+				return new Uint8Array(array.buffer)
+			}
+
+			function tryGetData(){
+				const queryString = window.location.search;
+				const urlParams = new URLSearchParams(queryString)
+				if (!urlParams.has('data')){
+					return [false, 0, "", ""];
+				}
+				const data = urlParams.get('data')
+
+				let bytes
+				try {
+					bytes = Uint8Array.fromBase64(data)
+				} catch(e) {
+					console.error("Someting is very wrong '"+data+"' is not base64")
+					return [false, 0, "", ""];
+				}
+
+				console.log(bytes)
+
+				const timeBytes= new Uint8Array(bytes.slice(0, 4))
+				const time = bytesToTime(timeBytes)
+
+				let index = 4
+				const textPostLength = bytes[index]
+				index++;
+				const decoder = new TextDecoder();
+				const textPostBytes = new Uint8Array( bytes.slice(index, index+textPostLength))
+				index += textPostLength
+				const textPreBytes = new Uint8Array( bytes.slice(index))
+
+				const textPost = decoder.decode(textPostBytes);
+				const textPre = decoder.decode(textPreBytes);
+
+				return [true, time, textPost, textPre];
+			}
+
+			function getTimeInFuture(minutes) {
+				const date = new Date()
+				const localDate = new Date(date - date.getTimezoneOffset() * 60000);
+				localDate.setMinutes(localDate.getMinutes() + minutes);
+				localDate.setSeconds(null);
+				localDate.setMilliseconds(null);
+				return localDate.toISOString().slice(0, -1);
+			}
+
+			function updateStuff(countDownDate, textPost, textPre) {
+
+				const now = new Date().getTime();
+				const distance = countDownDate - now;
+
+				if (distance < 0) {
+					clearInterval(timer);
+					clockDisplay.innerHTML = "EXPIRED";
+					textDisplay.innerText = textPre;
+					return
+				}
+
+				const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+				const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+				const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+				const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+				clockDisplay.innerHTML = 
+					days + "d " + 
+					hours + "h " +
+					minutes + "m " +
+					seconds + "s ";
+
+				textDisplay.innerText = textPost;
+			}
+
+			function init() {
+				const [hasCode, time, textPost, textPre] = tryGetData()
+				if (!hasCode){
+					textPostInput.value = "Snart ses vi älskling";
+					textPreInput.value = "Äntligen!!!";
+					dateTime.value = getTimeInFuture(2)
+					displayDiv.style.display = 'none';
+					return
+				}
+				console.log("Time: "+time)
+				console.log("Post: "+textPost)
+				console.log("Pre: "+textPre)
+				inputDiv.style.display = 'none';
+
+				timer = setInterval(function(){
+					updateStuff(time, textPost, textPre)
+				} , 1000);
+				updateStuff(time, textPost, textPre)
+			}
+			init()
+
+		</script>
+	</head>
+	<body style="background-image: url('MeltingClocks.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-size: cover; background-position: center center;">
+		<div class="ruta" id="InputDiv" style="width:550px;margin-right:auto;margin-left:auto;text-align:center;">
+			<input id="TextPostInput" type="text" style="font-size:40px;"/>
+			<br>
+			<input id="TextPreInput" type="text" style="font-size:40px;"/>
+			<br>
+			<input id="DateTime" type="datetime-local" style="font-size:40px;">
+			<br>
+			<button id="SubmitButton" onclick="submit()" style="font-size:40px;">Set</button>
+		</div>
+		<div class="ruta" id="DisplayDiv" style="width:550px;margin-right:auto;margin-left:auto;text-align:center;">
+			<div id="ClockDisplay" style="font-size:40px;"></div>
+			<div id="TextDisplay" style="font-size:40px;"></div>
+		</div>
+	</body>
+</html>
