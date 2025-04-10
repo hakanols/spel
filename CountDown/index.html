@@ -35,7 +35,7 @@
 				const textPreBytes = encoder.encode(textPreInput.value);
 
 				const bytes = new Uint8Array([...timeBytes, textPostBytes.length, ...textPostBytes, ...textPreBytes]);
-				window.location = location.protocol + '//' + location.host + location.pathname + "?data=" + bytes.toBase64();
+				window.location = location.protocol + '//' + location.host + location.pathname + "?data=" + toBase64URL(bytes);
 			}
 
 			function bytesToTime(bytes) {
@@ -45,6 +45,17 @@
 			function timeToBytes(number) {
 				const array = new Uint32Array([number/1000])
 				return new Uint8Array(array.buffer)
+			}
+
+			function toBase64URL(bytes) {
+				const base64Encoded = btoa(String.fromCharCode.apply(null, bytes));
+				return base64Encoded.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+			}
+			
+			function fromBase64URL(base64) {
+				const base64Encoded = base64.replace(/-/g, '+').replace(/_/g, '/');
+				const padding = base64.length % 4 === 0 ? '' : '='.repeat(4 - (base64.length % 4));
+				return Uint8Array.from(atob(base64Encoded + padding), c => c.charCodeAt(0))
 			}
 
 			function tryGetData(){
@@ -57,7 +68,7 @@
 
 				let bytes
 				try {
-					bytes = Uint8Array.fromBase64(data)
+					bytes = fromBase64URL(data)
 				} catch(e) {
 					console.error("Someting is very wrong '"+data+"' is not base64")
 					return [false, 0, "", ""];
