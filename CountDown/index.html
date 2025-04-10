@@ -62,15 +62,17 @@
 				const queryString = window.location.search;
 				const urlParams = new URLSearchParams(queryString)
 				if (!urlParams.has('data')){
-					return [false, 0, "", ""];
+					return null;
 				}
-				const data = urlParams.get('data')
+				return urlParams.get('data')
+			}
 
+			function tryParsData(data){
 				let bytes
 				try {
 					bytes = fromBase64URL(data)
 				} catch(e) {
-					console.error("Someting is very wrong '"+data+"' is not base64")
+					console.error("Someting is wrong '"+data+"' is not base64")
 					return [false, 0, "", ""];
 				}
 
@@ -128,12 +130,20 @@
 			}
 
 			function init() {
-				const [hasCode, time, textPost, textPre] = tryGetData()
-				if (!hasCode){
+
+				const data = tryGetData()
+				if (data == null){
 					textPostInput.value = "Snart ses vi älskling";
 					textPreInput.value = "Äntligen!!!";
 					dateTime.value = getTimeInFuture(2)
 					displayDiv.style.display = 'none';
+					return
+				}
+
+				const [parsOk, time, textPost, textPre] = tryParsData(data)
+				if (!parsOk){
+					inputDiv.style.display = 'none';
+					textDisplay.innerText = "Something went wrong";
 					return
 				}
 				console.log("Time: "+time)
