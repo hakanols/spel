@@ -105,9 +105,11 @@
         await new Promise(r => img.onload=r, img.src=imgPath);
         return img;
       }
-      function getEpoc(){
+      
+      function getRealTimeSec(factor){
         const now = new Date();
-        return now.getTime();
+        const epocWithOffset = now - now.getTimezoneOffset() * 60000
+        return Math.floor( epocWithOffset*factor / 1000 ) % (24*60*60)
       }
 
       function getCustomTimeSec(){
@@ -117,10 +119,10 @@
 
       function getTimeSecFromSource(){
         if (realClockEl.checked) {
-          return Math.floor(getEpoc() / 1000)  % (24*60*60)
+          return getRealTimeSec(1)
         }
         if (speedClockEl.checked) {
-          return Math.floor(getEpoc() * 24*60/1000) % (24*60*60)
+          return getRealTimeSec(24*60)
         }
         if (customClockEl.checked) {
           return getCustomTimeSec()
