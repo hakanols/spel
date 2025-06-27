@@ -56,11 +56,12 @@
 				flags.set('8', await loadImage("Images/ICS_Pennant_Eight.svg"))
 				flags.set('9', await loadImage("Images/ICS_Pennant_Niner.svg"))
 
-				for (const [key, value] of flags.entries()) {
+				for (const [key, image] of flags.entries()) {
 					let text = document.createElement("DIV");
-					text.innerText = key
+					text.innerText = key.toUpperCase()
 					printArea.appendChild(text)
-					printArea.appendChild(value);
+					image.style.height= "50px";
+					printArea.appendChild(image);
 					printArea.appendChild(document.createElement("br"))
 				}
 			}
