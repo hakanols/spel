@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>TabClose</title>
+		<script type="module">
+		const pageIdField = document.getElementById("PageIdField")
+			const pageId = Date.now();
+						
+			function init(){
+				window.localStorage.setItem("lastEpoc", pageId)
+				pageIdField.innerHTML = "PageID: " + pageId
+			}
+			init()
+			
+		
+			window.onstorage = () => {
+				const lastEpoc = window.localStorage.getItem("lastEpoc")
+				if (lastEpoc > pageId){
+					window.close();
+				}
+			};
+		</script>
+	</head>
+	<body>
+		<p>This page close all old instancesTtabs of this page and only keep the last opened. This is useful for example if multiple QR codes with différent data leading to the same page</p>
+		<p id=PageIdField></p>
+	</body>
+</html>

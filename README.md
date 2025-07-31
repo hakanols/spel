@@ -92,3 +92,11 @@ https://hakanols.github.io/spel/Clock/index.html
 CountDown
 
 https://hakanols.github.io/spel/CountDown/index.html
+
+Nautical Flags
+
+https://hakanols.github.io/spel/Flags/index.html
+
+TabClose
+
+https://hakanols.github.io/spel/TabClose/index.html
