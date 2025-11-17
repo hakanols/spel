@@ -18,7 +18,7 @@
 			const emailSubjectElement = document.getElementById("emailSubject");
 			const emailTextElement = document.getElementById("emailText");
 			const urlElement = document.getElementById("url");
-			const swishTeleElement = document.getElementById("swishTele");
+			const swishNumberElement = document.getElementById("swishNumber");
 			const swishAmountElement = document.getElementById("swishAmount");
 			const swishAmountOkElement = document.getElementById("swishAmountOk");
 			const swishMsgElement = document.getElementById("swishMsg");
@@ -72,16 +72,20 @@
 					return createWiFiMessage(ssidElement.value, passwordElement.value)
 				}
 				else if (smsRadioElement.checked){
+					if (!smsNumberElement.checkValidity()) return;
 					return createSmsMessage(smsNumberElement.value, smsTextElement.value)
 				}
 				else if (emailRadioElement.checked){
+					if (!emailAddressElement.checkValidity()) return;
 					return createEmailMessage(emailAddressElement.value, emailSubjectElement.value, emailTextElement.value)
 				}
 				else if (urlRadioElement.checked){
 					return urlElement.value
 				}
 				else if (swishRadioElement.checked){
-					return createSwishMessage(swishTeleElement.value, swishAmountElement.value, swishAmountOkElement.checked, swishMsgElement.value, swishMsgOkElement.checked)
+					if (!swishNumberElement.checkValidity()) return;
+					if (!swishAmountElement.checkValidity()) return;
+					return createSwishMessage(swishNumberElement.value, swishAmountElement.value, swishAmountOkElement.checked, swishMsgElement.value, swishMsgOkElement.checked)
 				}
 			}
 
@@ -97,7 +101,7 @@
 			window.update = async function(){
 				let content = getContent()
 				console.log(content)
-				if (content == ""){
+				if (content == "" || content == null){
 					clearQRcode()
 				}
 				else {
@@ -108,6 +112,9 @@
 			window.checkUrl();
 
 		</script>
+		<style>
+			input:invalid{background-color: #ffdddd;}
+		</style>
 	</head>
 	<body style="background-image: url('agave.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-size: cover; background-position: center center;">
 		<div class="ruta" style="width:400px;margin-right:auto;margin-left:auto;">
@@ -149,7 +156,7 @@
 						<td valign="top">
 							Number:
 						</td><td valign="top">
-							<input style="width:100%;" id="smsNumber" oninput="update()" type="number">
+							<input style="width:100%;" id="smsNumber" oninput="update()" type="number" required>
 						</td>
 					</tr><tr>
 						<td valign="top"><br></td>
@@ -171,7 +178,7 @@
 						<td valign="top">
 							Address:
 						</td><td valign="top">
-							<input style="width:100%;" id="emailAddress" oninput="update()" type="email">
+							<input style="width:100%" id="emailAddress" oninput="update()" type="email" required>
 						</td>
 					</tr><tr>	
 						<td valign="top"><br></td>
@@ -213,7 +220,7 @@
 						<td valign="top">
 							Number:
 						</td><td width="100%" valign="top">
-							<input style="width:100%" id="swishTele" oninput="update()" type="number">
+							<input style="width:100%" id="swishNumber" oninput="update()" type="number" required>
 						</td><td valign="top">
 							🔐
 						</td>
@@ -222,7 +229,7 @@
 						<td valign="top">
 							Amount:
 						</td><td width="100%" valign="top">
-							<input style="width:100%" id="swishAmount" oninput="update()" type="number">
+							<input style="width:100%" id="swishAmount" oninput="update()" type="number" required>
 						</td><td valign="top">
 							<input id="swishAmountOk" oninput="update()" type="checkbox">
 						</td>
