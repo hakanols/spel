@@ -6,7 +6,7 @@
 		<script type="module">
 			import QRCode from './qrcode.js'
 
-			// String formating found here: https://github.com/zxing/zxing/wiki/Barcode-Contents 
+			// String formatting found here: https://github.com/zxing/zxing/wiki/Barcode-Contents 
 			// and here https://developer.swish.nu/documentation/guides/generate-qr-codes
 			
 			const outputArea = document.getElementById("outputArea");
@@ -14,6 +14,9 @@
 			const passwordElement = document.getElementById("password");
 			const smsNumberElement = document.getElementById("smsNumber");
 			const smsTextElement = document.getElementById("smsText");
+			const emailAddressElement = document.getElementById("emailAddress");
+			const emailSubjectElement = document.getElementById("emailSubject");
+			const emailTextElement = document.getElementById("emailText");
 			const urlElement = document.getElementById("url");
 			const swishTeleElement = document.getElementById("swishTele");
 			const swishAmountElement = document.getElementById("swishAmount");
@@ -22,6 +25,7 @@
 			const swishMsgOkElement = document.getElementById("swishMsgOk");
 			const wifiRadioElement = document.getElementById("radioWifi");
 			const smsRadioElement = document.getElementById("radioSms");
+			const emailRadioElement = document.getElementById("radioEmail");
 			const urlRadioElement = document.getElementById("radioUrl");
 			const swishRadioElement = document.getElementById("radioSwish");
 			const correctionElement = document.getElementById("correctionLevel");
@@ -34,6 +38,10 @@
 
 			function createSmsMessage(number, text){
 				return "SMSTO:"+number+":"+text;
+			}
+
+			function createEmailMessage(address, subject, text){
+				return "MATMSG:TO:"+address+";SUB:"+subject+";BODY:"+text+";;";
 			}
 
 			function createSwishMessage(tele, amount, amountOk, msg, msgOk){
@@ -59,29 +67,35 @@
 				outputArea.src = "";
 			}
 
+			function getContent() {
+				if (wifiRadioElement.checked){
+					return createWiFiMessage(ssidElement.value, passwordElement.value)
+				}
+				else if (smsRadioElement.checked){
+					return createSmsMessage(smsNumberElement.value, smsTextElement.value)
+				}
+				else if (emailRadioElement.checked){
+					return createEmailMessage(emailAddressElement.value, emailSubjectElement.value, emailTextElement.value)
+				}
+				else if (urlRadioElement.checked){
+					return urlElement.value
+				}
+				else if (swishRadioElement.checked){
+					return createSwishMessage(swishTeleElement.value, swishAmountElement.value, swishAmountOkElement.checked, swishMsgElement.value, swishMsgOkElement.checked)
+				}
+			}
+
 			window.checkUrl = async function(){
 				try {
 					dataTypeElement.innerText = (new URL(urlElement.value)).protocol
 				} catch (_) {
 					dataTypeElement.innerText = "Free text"
 				}
-				window.updateCount()
+				window.update()
 			}
 
-			window.updateCount = async function(){
-				let content
-				if (wifiRadioElement.checked){
-					content = createWiFiMessage(ssidElement.value, passwordElement.value)
-				}
-				else if (smsRadioElement.checked){
-					content = createSmsMessage(smsNumberElement.value, smsTextElement.value)
-				}
-				else if (urlRadioElement.checked){
-					content = urlElement.value
-				}
-				else if (swishRadioElement.checked){
-					content = createSwishMessage(swishTeleElement.value, swishAmountElement.value, swishAmountOkElement.checked, swishMsgElement.value, swishMsgOkElement.checked)
-				}
+			window.update = async function(){
+				let content = getContent()
 				console.log(content)
 				if (content == ""){
 					clearQRcode()
@@ -104,7 +118,7 @@
 				<tbody>
 					<tr>
 						<td valign="top">
-							<input id="radioWifi" name="qrType" checked="checked" onclick="updateCount();" type="radio">
+							<input id="radioWifi" name="qrType" checked="checked" onclick="update();" type="radio">
 						</td> <td rowspan="1" colspan="2" width="100%" valign="top">
 							WiFi login
 						</td>
@@ -113,20 +127,20 @@
 						<td valign="top">
 							SSID:
 						</td><td valign="top">
-							<input style="width:100%;" id="ssid" oninput="updateCount()" type="text">
+							<input style="width:100%;" id="ssid" oninput="update()" type="text">
 						</td>
 					</tr><tr>
 						<td valign="top"><br></td>
 						<td valign="top">
 							Password:
 						</td><td width="100%" valign="top">
-							<input style="width:100%" id="password" oninput="updateCount()" type="text">
+							<input style="width:100%" id="password" oninput="update()" type="text">
 						</td>
 					</tr><tr>
 						<td valign="top"><br></td>
 					</tr> <tr>
 						<td valign="top">
-							<input id="radioSms" name="qrType" onclick="updateCount();" type="radio">
+							<input id="radioSms" name="qrType" onclick="update();" type="radio">
 						</td> <td rowspan="1" colspan="2" width="100%" valign="top">
 							SMS
 						</td>
@@ -135,20 +149,49 @@
 						<td valign="top">
 							Number:
 						</td><td valign="top">
-							<input style="width:100%;" id="smsNumber" oninput="updateCount()" type="text">
+							<input style="width:100%;" id="smsNumber" oninput="update()" type="number">
 						</td>
 					</tr><tr>
 						<td valign="top"><br></td>
 						<td valign="top">
 							Text:
 						</td><td width="100%" valign="top">
-							<input style="width:100%" id="smsText" oninput="updateCount()" type="text">
+							<input style="width:100%" id="smsText" oninput="update()" type="text">
+						</td>
+					</tr><tr>
+						<td valign="top"><br></td>
+							</tr> <tr>
+						<td valign="top">
+							<input id="radioEmail" name="qrType" onclick="update();" type="radio">
+						</td> <td rowspan="1" colspan="2" width="100%" valign="top">
+							Email
+						</td>
+					</tr><tr>
+						<td valign="top"><br></td>
+						<td valign="top">
+							Address:
+						</td><td valign="top">
+							<input style="width:100%;" id="emailAddress" oninput="update()" type="email">
+						</td>
+					</tr><tr>	
+						<td valign="top"><br></td>
+						<td valign="top">
+							Subject:
+						</td><td width="100%" valign="top">
+							<input style="width:100%" id="emailSubject" oninput="update()" type="text">
+						</td>
+					</tr><tr>
+						<td valign="top"><br></td>
+						<td valign="top">
+							Text:
+						</td><td width="100%" valign="top">
+							<input style="width:100%" id="emailText" oninput="update()" type="text">
 						</td>
 					</tr><tr>
 						<td valign="top"><br></td>
 					</tr> <tr>
 						<td valign="top">
-							<input id="radioUrl" name="qrType" onclick="updateCount();" type="radio">
+							<input id="radioUrl" name="qrType" onclick="update();" type="radio">
 						</td> <td rowspan="1" colspan="2" valign="top">
 							Url or free text: (<label id="dataType"></label>)
 						</td>
@@ -161,7 +204,7 @@
 						<td valign="top"><br></td>
 					</tr> <tr>
 						<td valign="top">
-							<input id="radioSwish" name="qrType" onclick="updateCount();" type="radio">
+							<input id="radioSwish" name="qrType" onclick="update();" type="radio">
 						</td> <td rowspan="1" colspan="2" valign="top">
 							Swish
 						</td>
@@ -170,7 +213,7 @@
 						<td valign="top">
 							Number:
 						</td><td width="100%" valign="top">
-							<input style="width:100%" id="swishTele" oninput="updateCount()" type="number">
+							<input style="width:100%" id="swishTele" oninput="update()" type="number">
 						</td><td valign="top">
 							🔐
 						</td>
@@ -179,25 +222,25 @@
 						<td valign="top">
 							Amount:
 						</td><td width="100%" valign="top">
-							<input style="width:100%" id="swishAmount" oninput="updateCount()" type="number">
+							<input style="width:100%" id="swishAmount" oninput="update()" type="number">
 						</td><td valign="top">
-							<input id="swishAmountOk" oninput="updateCount()" type="checkbox">
+							<input id="swishAmountOk" oninput="update()" type="checkbox">
 						</td>
 					</tr><tr>
 						<td valign="top"><br></td>
 						<td valign="top">
 							Message:
 						</td><td width="100%" valign="top">
-							<input style="width:100%" id="swishMsg" oninput="updateCount()" type="text">
+							<input style="width:100%" id="swishMsg" oninput="update()" type="text">
 						</td><td valign="top">
-							<input id="swishMsgOk" oninput="updateCount()" type="checkbox">
+							<input id="swishMsgOk" oninput="update()" type="checkbox">
 						</td>
 					</tr>
 				</tbody>
 			</table>
 
 			<p>Correction level:
-				<select id="correctionLevel" onchange="updateCount();">
+				<select id="correctionLevel" onchange="update();">
 					<option value="L">Low</option>
 					<option value="M" selected="selected">Medium</option>
 					<option value="H">High</option>
