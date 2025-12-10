@@ -43,16 +43,18 @@
 				return "MATMSG:TO:"+address+";SUB:"+subject+";BODY:"+text+";;";
 			}
 
-			function createSwishMessage(tele, amount, amountOk, msg, msgOk){
-				let edit = ""
+			function createSwishMessage(number, amount, amountOk, msg, msgOk){
+				let swishMessage = "https://app.swish.nu/1/p/sw/?sw="+number
+				if (amount != "") swishMessage += "&amt="+amount
+				if (msg != "") swishMessage += "&msg="+msg
 				if (!amountOk && !msgOk)
-					edit ="&edit=amt,msg"
+					swishMessage += "&edit=amt,msg"
 				else if (!amountOk)
-					edit ="&edit=amt"
+					swishMessage += "&edit=amt"
 				else if (!msgOk)
-					edit ="&edit=msg"
+					swishMessage += "&edit=msg"
 
-				return "https://app.swish.nu/1/p/sw/?sw="+tele+"&amt="+amount+"&msg="+msg+edit;
+				return swishMessage
 			}
 
 			async function setQRcode(content, correctionLevel ){
@@ -237,7 +239,7 @@
 						<td valign="top">
 							Amount:
 						</td><td width="100%" valign="top">
-							<input style="width:100%" id="swishAmount" oninput="update()" type="number" required>
+							<input style="width:100%" id="swishAmount" oninput="update()" type="number">
 						</td><td valign="top">
 							<input id="swishAmountOk" oninput="update()" type="checkbox">
 						</td>
