@@ -13,7 +13,8 @@
       const customClockEl = document.getElementById('custom_clock');
       const customTimeEl = document.getElementById('custom_time');
       const canvasDayNigth = document.getElementById("canvas_day_nigth");
-      const canvasClock = document.getElementById("canvas_clock");  
+      const canvasClock = document.getElementById("canvas_clock");
+      const digitalClock = document.getElementById("digital_clock");  
 
       const sun = await loadImage("images/sun.svg");
       const moon = await loadImage("images/moon.svg");
@@ -134,10 +135,18 @@
         if (lastTimeSec != newTimeSec){
           drawDayNigth(newTimeSec/(24*60*60) )
           drawClock(newTimeSec)
+          setDigitalClock(newTimeSec)
           lastTimeSec = newTimeSec
         }
       }
 
+      function setDigitalClock(totSeconds) {
+        const hour = String(Math.floor(totSeconds/(60*60))%24).padStart(2, '0')
+        const min = String(Math.floor(totSeconds/60)%60).padStart(2, '0')
+        const sec = String(totSeconds%60).padStart(2, '0')
+
+        digitalClock.innerHTML = hour + ":" + min +  ":" + sec 
+      }
 
       function drawDayNigth(phase) {
         const ctx = canvasDayNigth.getContext("2d");
@@ -267,7 +276,7 @@
     <canvas id="canvas_clock" width="400" height="400" style="background-color:#333">
       Sorry, your browser does not support canvas.
     </canvas>
-    <br>
+    <div id="digital_clock" style="font-size: 100px; width: 400px; text-align: center; border: 2px solid black; border-radius: 20px;">08:10:45</div>
     <input name="sourceSelect" type="radio" style="width:40px;height:40px;" onclick="radioChange()" id="real_clock">
     <b style="font-size:50px;">Riktig tid </b> 
     <br>

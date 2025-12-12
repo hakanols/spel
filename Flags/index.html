@@ -17,45 +17,47 @@
 			async function init() {
 				const flags = new Map();
 				// Source: https://sv.wikipedia.org/wiki/Signalflagga_(sj%C3%B6fart)
-				flags.set('a', await loadImage("Images/Alfa_flag.svg"))
-				flags.set('b', await loadImage("Images/Bravo_flag.svg"))
-				flags.set('c', await loadImage("Images/Charlie_flag.svg"))
-				flags.set('d', await loadImage("Images/Delta_flag.svg"))
-				flags.set('e', await loadImage("Images/Echo_flag.svg"))
-				flags.set('f', await loadImage("Images/Foxtrot_flag.svg"))
-				flags.set('g', await loadImage("Images/Golf_flag.svg"))
-				flags.set('h', await loadImage("Images/Hotel_flag.svg"))
-				flags.set('i', await loadImage("Images/India_flag.svg"))
-				flags.set('j', await loadImage("Images/Juliett_flag.svg"))
-				flags.set('k', await loadImage("Images/Kilo_flag.svg"))
-				flags.set('l', await loadImage("Images/Lima_flag.svg"))
-				flags.set('m', await loadImage("Images/Mike_flag.svg"))
-				flags.set('n', await loadImage("Images/November_flag.svg"))
-				flags.set('o', await loadImage("Images/Oscar_flag.svg"))
-				flags.set('p', await loadImage("Images/Papa_flag.svg"))
-				flags.set('q', await loadImage("Images/Quebec_flag.svg"))
-				flags.set('r', await loadImage("Images/Romeo_flag.svg"))
-				flags.set('s', await loadImage("Images/Sierra_flag.svg"))
-				flags.set('t', await loadImage("Images/Tango_flag.svg"))
-				flags.set('u', await loadImage("Images/Uniform_flag.svg"))
-				flags.set('v', await loadImage("Images/Victor_flag.svg"))
-				flags.set('w', await loadImage("Images/Whiskey_flag.svg"))
-				flags.set('x', await loadImage("Images/Xray_flag.svg"))
-				flags.set('y', await loadImage("Images/Yankee_flag.svg"))
-				flags.set('z', await loadImage("Images/Zulu_flag.svg"))
-				flags.set('å', await loadImage("Images/Signal_se_auml.svg"))
-				flags.set('ä', await loadImage("Images/Signal_se_aring.svg"))
-				flags.set('ö', await loadImage("Images/Signal_se_ouml.svg"))
-				flags.set('0', await loadImage("Images/ICS_Pennant_Zero.svg"))
-				flags.set('1', await loadImage("Images/ICS_Pennant_One.svg"))
-				flags.set('2', await loadImage("Images/ICS_Pennant_Two.svg"))
-				flags.set('3', await loadImage("Images/ICS_Pennant_Three.svg"))
-				flags.set('4', await loadImage("Images/ICS_Pennant_Four.svg"))
-				flags.set('5', await loadImage("Images/ICS_Pennant_Five.svg"))
-				flags.set('6', await loadImage("Images/ICS_Pennant_Six.svg"))
-				flags.set('7', await loadImage("Images/ICS_Pennant_Seven.svg"))
-				flags.set('8', await loadImage("Images/ICS_Pennant_Eight.svg"))
-				flags.set('9', await loadImage("Images/ICS_Pennant_Niner.svg"))
+				await Promise.all([
+					flags.set('a', await loadImage("Images/Alfa_flag.svg")),
+					flags.set('b', await loadImage("Images/Bravo_flag.svg")),
+					flags.set('c', await loadImage("Images/Charlie_flag.svg")),
+					flags.set('d', await loadImage("Images/Delta_flag.svg")),
+					flags.set('e', await loadImage("Images/Echo_flag.svg")),
+					flags.set('f', await loadImage("Images/Foxtrot_flag.svg")),
+					flags.set('g', await loadImage("Images/Golf_flag.svg")),
+					flags.set('h', await loadImage("Images/Hotel_flag.svg")),
+					flags.set('i', await loadImage("Images/India_flag.svg")),
+					flags.set('j', await loadImage("Images/Juliett_flag.svg")),
+					flags.set('k', await loadImage("Images/Kilo_flag.svg")),
+					flags.set('l', await loadImage("Images/Lima_flag.svg")),
+					flags.set('m', await loadImage("Images/Mike_flag.svg")),
+					flags.set('n', await loadImage("Images/November_flag.svg")),
+					flags.set('o', await loadImage("Images/Oscar_flag.svg")),
+					flags.set('p', await loadImage("Images/Papa_flag.svg")),
+					flags.set('q', await loadImage("Images/Quebec_flag.svg")),
+					flags.set('r', await loadImage("Images/Romeo_flag.svg")),
+					flags.set('s', await loadImage("Images/Sierra_flag.svg")),
+					flags.set('t', await loadImage("Images/Tango_flag.svg")),
+					flags.set('u', await loadImage("Images/Uniform_flag.svg")),
+					flags.set('v', await loadImage("Images/Victor_flag.svg")),
+					flags.set('w', await loadImage("Images/Whiskey_flag.svg")),
+					flags.set('x', await loadImage("Images/Xray_flag.svg")),
+					flags.set('y', await loadImage("Images/Yankee_flag.svg")),
+					flags.set('z', await loadImage("Images/Zulu_flag.svg")),
+					flags.set('å', await loadImage("Images/Signal_se_auml.svg")),
+					flags.set('ä', await loadImage("Images/Signal_se_aring.svg")),
+					flags.set('ö', await loadImage("Images/Signal_se_ouml.svg")),
+					flags.set('0', await loadImage("Images/ICS_Pennant_Zero.svg")),
+					flags.set('1', await loadImage("Images/ICS_Pennant_One.svg")),
+					flags.set('2', await loadImage("Images/ICS_Pennant_Two.svg")),
+					flags.set('3', await loadImage("Images/ICS_Pennant_Three.svg")),
+					flags.set('4', await loadImage("Images/ICS_Pennant_Four.svg")),
+					flags.set('5', await loadImage("Images/ICS_Pennant_Five.svg")),
+					flags.set('6', await loadImage("Images/ICS_Pennant_Six.svg")),
+					flags.set('7', await loadImage("Images/ICS_Pennant_Seven.svg")),
+					flags.set('8', await loadImage("Images/ICS_Pennant_Eight.svg")),
+					flags.set('9', await loadImage("Images/ICS_Pennant_Niner.svg")),
+				]);
 
 				for (const [key, image] of flags.entries()) {
 					let text = document.createElement("DIV");
@@ -71,6 +73,7 @@
 		</script>
 	</head>
 	<body>
+		<p>Poof of concept to make a text to flag web app</p>
 		<div id="PrintArea"></div>
 	</body>
 </html>

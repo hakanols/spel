@@ -10,6 +10,8 @@
 			const statusField = document.getElementById("StatusField")
 			const codeField = document.getElementById("CodeField")
 
+			let id;
+			const pageId = Date.now();
 			const isNotString = (value) => typeof value == "string";
 
 			window.clearStorage = function() {
@@ -20,19 +22,23 @@
 
 			function initMemory(id,numberOfParts){
 				if (localStorage[id] == undefined){
-					localStorage[id] = JSON.stringify(Array(numberOfParts));
+					const values = {}
+					values.codes = Array(numberOfParts)
+					values.lastEpoc = 0
+					localStorage[id] = JSON.stringify(values);
 				}
 			}
 			
 			function setMemory(id, nr, value){
-				let codes = getMemoryValues(id)
-				codes[nr] = value
-				localStorage[id] = JSON.stringify(codes)
+				let values = getMemoryValues(id)
+				values.codes[nr] = value
+				values.lastEpoc = pageId
+				localStorage[id] = JSON.stringify(values)
 			}
 			
 			function getMemoryKeys(id){
 				let outText = []
-				for (const code of getMemoryValues(id)){
+				for (const code of getMemoryValues(id).codes){
 					outText.push(isNotString(code)?"x":"_")
 				}
 				return "["+outText.join('|')+"]"
@@ -48,6 +54,13 @@
                 const msgOut = nacl.secretbox.open(box, nonce, key);
                 return (new TextDecoder()).decode(msgOut)
 			}
+		
+			window.onstorage = () => {
+				const lastEpoc = getMemoryValues(id).lastEpoc
+				if (lastEpoc > pageId){
+					window.close();
+				}
+			};
 
 			function run(){
 				const queryString = window.location.search;
@@ -61,7 +74,7 @@
 				const number = data[4]
 				const index = data[5]
 				const secretChunk = data.slice(6)
-				const id = misc.toHexString([...msgId, number])
+				id = misc.toHexString([...msgId, number])
 
 				titleField.innerText = "Scan all "+number+" QR codes"
 
@@ -71,7 +84,7 @@
 				setMemory(id, index, misc.toBase64(secretChunk))
 				statusField.innerText = "Last scan "+(index+1)+"\n"+getMemoryKeys(id)
 				
-				const codes = getMemoryValues(id)
+				const codes = getMemoryValues(id).codes
 				if (codes.every(isNotString)){
 					const secretChunks =  codes.map((x) => misc.fromBase64(x))
 					const secret = new Uint8Array(secretChunks.reduce((acc, curr) => [...acc, ...curr], []));
