@@ -1,0 +1,11 @@
+Use pictures of rhymeing swedish words. E.g.
+- Bil & Sil
+- Tand & Land
+- Brygga & Mygga
+- Fjäder & Kläder
+- Nyckel & Cykel
+- Sax & Tax
+- Nötter & Fötter
+- Hatt & Katt
+- Mus & Hus
+- Spis & Gris
