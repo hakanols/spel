@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Pascals triangle</title>
+		<script type="module">
+
+        const outputArea = document.getElementById("OutputArea")
+
+        function printArray(array){
+            outputArea.innerHTML += array;
+        }
+
+        function printNewLine(){
+            outputArea.innerHTML += "\r\n";
+        }
+
+		function init() {
+            const array = [1];
+            printArray(array);
+		}
+
+		init()
+
+		</script>
+	</head>
+	<body>
+		<h2>Pascal</h2>
+		<textarea readonly id="OutputArea" style="width:800px"></textarea>
+	</body>
+</html>
