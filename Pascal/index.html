@@ -6,17 +6,15 @@
 
         const outputArea = document.getElementById("OutputArea")
 
-        function print(array){
-            outputArea.innerHTML += array;
+        function print(hej){
+            outputArea.innerHTML += hej;
         }
 
         function calculateNext(inArray){
             inArray = [0, ...inArray, 0]
             let outArray = []
             for (let i = 1; i < inArray.length; i++) {
-                // Todo Fix me
-                outArray += inArray[i-1]; 
-                outArray += inArray[i];
+                outArray = [...outArray, inArray[i-1]+inArray[i]]; // (inArray[i-1]+inArray[i]) % 2 ? 1 : 0 ]
             }
             return outArray
         }
@@ -25,10 +23,10 @@
             let array = [1];
             print(array);
 
-            for (let i = 0; i < 4; i++) {
+            for (let i = 0; i < 63; i++) {
                 print("\r\n")
                 array = calculateNext(array)
-                print(array);
+                print(array.map((num)=> num % 2 ? 'X' : ' '));
             }
         }
 
@@ -38,6 +36,6 @@
     </head>
     <body>
         <h2>Pascal</h2>
-        <textarea readonly id="OutputArea" style="width:800px; height:400px;"></textarea>
+        <textarea readonly id="OutputArea" style="width:1000px; height:1000px; text-align:center;"></textarea>
     </body>
 </html>
