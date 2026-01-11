@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Pascals triangle</title>
-		<script type="module">
+    <head>
+        <title>Pascals triangle</title>
+        <script type="module">
 
         const outputArea = document.getElementById("OutputArea")
 
@@ -14,17 +14,34 @@
             outputArea.innerHTML += "\r\n";
         }
 
-		function init() {
-            const array = [1];
+        function calculateNext(array){
+            array = [0, ...array, 0]
+            let next = []
+            for (let i = 1; i < array.length; i++) {
+                // Todo Fix me
+                next += array[i-1]; 
+                next += array[i];
+            }
+            return next
+        }
+
+        function init() {
+            let array = [1];
             printArray(array);
-		}
 
-		init()
+            for (let i = 0; i < 4; i++) {
+                printNewLine()
+                array = calculateNext(array)
+                printArray(array);
+            }
+        }
 
-		</script>
-	</head>
-	<body>
-		<h2>Pascal</h2>
-		<textarea readonly id="OutputArea" style="width:800px"></textarea>
-	</body>
+        init()
+
+        </script>
+    </head>
+    <body>
+        <h2>Pascal</h2>
+        <textarea readonly id="OutputArea" style="width:800px; height:400px;"></textarea>
+    </body>
 </html>
