@@ -6,33 +6,29 @@
 
         const outputArea = document.getElementById("OutputArea")
 
-        function printArray(array){
+        function print(array){
             outputArea.innerHTML += array;
         }
 
-        function printNewLine(){
-            outputArea.innerHTML += "\r\n";
-        }
-
-        function calculateNext(array){
-            array = [0, ...array, 0]
-            let next = []
-            for (let i = 1; i < array.length; i++) {
+        function calculateNext(inArray){
+            inArray = [0, ...inArray, 0]
+            let outArray = []
+            for (let i = 1; i < inArray.length; i++) {
                 // Todo Fix me
-                next += array[i-1]; 
-                next += array[i];
+                outArray += inArray[i-1]; 
+                outArray += inArray[i];
             }
-            return next
+            return outArray
         }
 
         function init() {
             let array = [1];
-            printArray(array);
+            print(array);
 
             for (let i = 0; i < 4; i++) {
-                printNewLine()
+                print("\r\n")
                 array = calculateNext(array)
-                printArray(array);
+                print(array);
             }
         }
 
