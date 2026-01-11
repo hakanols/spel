@@ -100,3 +100,7 @@ https://hakanols.github.io/spel/Flags/index.html
 TabClose
 
 https://hakanols.github.io/spel/TabClose/index.html
+
+Pascals triangel
+
+https://hakanols.github.io/spel/Pascal/index.html

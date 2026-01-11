@@ -6,27 +6,31 @@
 
         const outputArea = document.getElementById("OutputArea")
 
-        function print(hej){
-            outputArea.innerHTML += hej;
+        function print(text){
+            outputArea.innerHTML += text;
+        }
+
+        function printArray(array){
+            print(array.map((num)=> num % 2 ? '•' : ' ').join(' '))
         }
 
         function calculateNext(inArray){
             inArray = [0, ...inArray, 0]
             let outArray = []
             for (let i = 1; i < inArray.length; i++) {
-                outArray = [...outArray, inArray[i-1]+inArray[i]]; // (inArray[i-1]+inArray[i]) % 2 ? 1 : 0 ]
+                outArray = [...outArray, inArray[i-1]+inArray[i]];
             }
             return outArray
         }
 
         function init() {
             let array = [1];
-            print(array);
+            printArray(array);
 
-            for (let i = 0; i < 63; i++) {
+            for (let i = 0; i < 31; i++) {
                 print("\r\n")
                 array = calculateNext(array)
-                print(array.map((num)=> num % 2 ? 'X' : ' '));
+                printArray(array);
             }
         }
 
@@ -35,7 +39,7 @@
         </script>
     </head>
     <body>
-        <h2>Pascal</h2>
-        <textarea readonly id="OutputArea" style="width:1000px; height:1000px; text-align:center;"></textarea>
+        <h2>Pascals triangel</h2>
+        <textarea readonly id="OutputArea" style="width:500px; height:500px; text-align:center; font-family:monospace"></textarea>
     </body>
 </html>
