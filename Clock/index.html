@@ -15,6 +15,7 @@
       const canvasDayNigth = document.getElementById("canvas_day_nigth");
       const canvasClock = document.getElementById("canvas_clock");
       const digitalClock = document.getElementById("digital_clock");  
+      const textClock = document.getElementById("text_clock"); 
 
       const sun = await loadImage("images/sun.svg");
       const moon = await loadImage("images/moon.svg");
@@ -136,8 +137,46 @@
           drawDayNigth(newTimeSec/(24*60*60) )
           drawClock(newTimeSec)
           setDigitalClock(newTimeSec)
+          setTextClock(newTimeSec)
           lastTimeSec = newTimeSec
         }
+      }
+
+      function setTextClock(totSeconds) {
+        textClock.innerHTML = timeToText(totSeconds)
+      }
+
+      function timeToText(totSeconds) {
+
+          const hour = myModelus(Math.floor(totSeconds/(60*60)), 12)
+          const nextHour = myModelus((hour+1), 12)
+          const min = Math.floor(totSeconds/60)%60
+
+          switch (true) {
+            case (min == 0):
+              return `${hour}`
+            case (min == 15):
+              return `Kvart över ${hour}`
+            case (min == 30):
+              return `Halv ${nextHour}`
+            case (min == 45):
+              return `Kvart i ${nextHour}`
+            case (min >= 1 && 20 >= min):
+              return `${min} minuter över ${hour}`
+            case (min >= 21 && 29 >= min):
+              return `${30-min} minuter i halv ${nextHour}`
+            case (min >= 31 && 39 >= min):
+              return `${min-30} minuter över halv ${nextHour}`
+            case (min >= 40 && 59 >= min):
+              return `${60-min} minuter i ${nextHour}`
+            default:
+              throw "Whattttt"
+          }
+      }
+
+      function myModelus(number, divider){
+        const modelus = number%divider
+        return modelus == 0 ? divider : modelus
       }
 
       function setDigitalClock(totSeconds) {
@@ -277,6 +316,7 @@
       Sorry, your browser does not support canvas.
     </canvas>
     <div id="digital_clock" style="font-size: 100px; width: 400px; text-align: center; border: 2px solid black; border-radius: 20px;">08:10:45</div>
+    <div id="text_clock" style="font-size: 40px; width: 400px; text-align: center; border: 2px solid black; border-radius: 20px;">tid</div>
     <input name="sourceSelect" type="radio" style="width:40px;height:40px;" onclick="radioChange()" id="real_clock">
     <b style="font-size:50px;">Riktig tid </b> 
     <br>
