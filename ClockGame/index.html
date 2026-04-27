@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<!-- Stolen from  -->
+<!-- https://www.w3schools.com/graphics/tryit.asp?filename=trycanvas_clock_start -->
+<!-- https://codesandbox.io/p/sandbox/css-day-n-night-79mwt-->
+<!-- STAR CRAFT II -->
+<html>
+  <head>
+    <title>Clock</title>
+    <meta name="viewport" content="width=700, initial-scale=1.0">
+	  <script type="module">
+      const difficultyEasyEl = document.getElementById('easy');
+      const difficultyModeratEl = document.getElementById('moderat');
+      const difficultyHardEl = document.getElementById('hard');
+      const difficultyApaEl = document.getElementById('apa');
+
+      const questionEl = document.getElementById('question');
+      const answersEl = document.getElementById('answers');
+      const canvasDayNigth = document.getElementById("canvas_day_nigth");
+
+      const sun = await loadImage("images/sun.svg");
+      const moon = await loadImage("images/moon.svg");
+      const mountains = await loadImage("images/mountains.svg");
+      const mountainsReflexion = await loadImage("images/mountains-reflexion.svg");
+      const gras = await loadImage("images/gras.svg");
+      const grasDark = await loadImage("images/gras-dark.svg");
+      const trees = await loadImage("images/trees.svg");
+      const treesDark = await loadImage("images/trees-dark.svg");
+
+      let lastTimeSec;
+
+      function rgba(red, green, blue, opacity){
+        return `rgba(${red},${green},${blue},${opacity})`
+      }
+
+      function gradSkyAtDay(ctx, opacity, heigth){
+        const grad = ctx.createLinearGradient(0, 0, 0, heigth);
+        grad.addColorStop(0, rgba(30,87,153,opacity));
+        grad.addColorStop(0.52, rgba(41,137,216,opacity));
+        grad.addColorStop(1, rgba(125,185,232,opacity));
+        return grad
+      }
+
+      function gradSkyAtNight(ctx, opacity, heigth){
+        const grad = ctx.createLinearGradient(0, 0, 0, heigth);
+        grad.addColorStop(0, rgba(9,21,45,opacity));
+        grad.addColorStop(0.53, rgba(28,30,147,opacity));
+        grad.addColorStop(1, rgba(83,101,155,opacity));
+        return grad
+      }
+
+      function gradSkyAtDimming(ctx, opacity, heigth){
+        const grad = ctx.createLinearGradient(0, 0, 0, heigth);
+        grad.addColorStop(0, rgba(248,80,50,opacity));
+        grad.addColorStop(0.5, rgba(170,66,167,opacity));
+        grad.addColorStop(0.79, rgba(196,156,76,opacity));
+        grad.addColorStop(1, rgba(16,37,99,opacity));
+        return grad
+      }
+
+      const faderDay = new Map([
+        [0, 0],
+        [0.5, 1],
+        [1, 0]
+      ])
+
+      const faderNight = new Map([
+        [0, 1],
+        [0.5, 0],
+        [1, 1]
+      ])
+
+      const faderSkyAtDimming = new Map([
+        [0, 0],
+        [0.20, 1],
+        [0.25, 0],
+        [0.55, 0],
+        [0.65, 1],
+        [0.75, 0],
+        [1, 0]
+      ])
+
+      const faderReflexion = new Map([
+        [0, 0],
+        [0.15, 0.7],
+        [0.25, 0.1],
+        [0.50, 0],
+        [0.60, 0.7],
+        [0.75, 0.1],
+        [1, 0]
+      ])
+
+      function getOpacity(fader, index){
+        let last;
+        for (let element of fader) {
+          if (element[0] <= index  ){
+            last = element
+            continue
+          }
+          let effekt = (index-last[0])/(element[0]-last[0])
+          return last[1]+(element[1]-last[1])*effekt
+        };
+        throw "Something is wrong"
+      }
+
+      async function loadImage(imgPath){
+        const img = new Image();
+        await new Promise(r => img.onload=r, img.src=imgPath);
+        return img;
+      }
+      
+      function getTimeMin(minInterval){
+        return Math.floor(Math.random() * 24*60/minInterval)*minInterval
+      }
+
+
+      function difficulty(){
+        if (difficultyEasyEl.checked) {
+          return 60
+        }
+        if (difficultyModeratEl.checked) {
+          return 30
+        }
+        if (difficultyHardEl.checked) {
+          return 15
+        }
+        if (difficultyApaEl.checked) {
+          return 1
+        }
+      }
+
+      function createClock(clockType, totSeconds){
+        if (clockType == 0) {
+          return createTextClock(totSeconds)
+        }
+        if (clockType == 1) {
+          return createDigitalClock(totSeconds)
+        }
+        if (clockType == 2) {
+          return createAnalogClock(totSeconds)
+        }
+      }
+
+      function update () {
+        const timeMin = getTimeMin(difficulty())
+        questionEl.innerHTML = ""
+        questionEl.appendChild(createClock(Math.floor(Math.random() * 3), timeMin*60));
+        drawDayNigth(timeMin/(24*60))
+
+        const clockType = Math.floor(Math.random() * 3)
+        answersEl.innerHTML = ""
+        answersEl.appendChild(createClock(clockType, getTimeMin(difficulty())*60));
+        answersEl.appendChild(createClock(clockType, getTimeMin(difficulty())*60));
+        answersEl.appendChild(createClock(clockType, getTimeMin(difficulty())*60));
+      }
+
+      function createTextClock(totSeconds) {
+					const div = document.createElement("div");
+					div.style= "font-size: 40px; width: 400px; text-align: center; border: 2px solid black; border-radius: 20px;"
+          div.innerHTML = timeToText(totSeconds)
+          return div
+      }
+
+      function createDigitalClock(totSeconds) {
+					const div = document.createElement("div");
+					div.style= "font-size: 100px; width: 400px; text-align: center; border: 2px solid black; border-radius: 20px;"
+          const hour = String(Math.floor(totSeconds/(60*60))%24).padStart(2, '0')
+          const min = String(Math.floor(totSeconds/60)%60).padStart(2, '0')
+          const sec = String(totSeconds%60).padStart(2, '0')
+          div.innerHTML = hour + ":" + min +  ":" + sec 
+          return div
+      }
+
+      function createAnalogClock(totSeconds) {
+					const canvas = document.createElement("canvas");
+          canvas.width="400"
+          canvas.height="400"
+					canvas.style="background-color:#333"
+          const ctx = canvas.getContext("2d");
+          const radius = canvas.height / 2;
+          ctx.reset();
+          ctx.resetTransform();
+          ctx.translate(radius, radius);
+          drawFace(ctx, radius*0.9);
+          drawNumbers(ctx, radius*0.9);
+          drawTime(ctx, radius*0.9, totSeconds);
+          return canvas
+      }
+
+      function timeToText(totSeconds) {
+
+          const hour = myModelus(Math.floor(totSeconds/(60*60)), 12)
+          const nextHour = myModelus((hour+1), 12)
+          const min = Math.floor(totSeconds/60)%60
+
+          switch (true) {
+            case (min == 0):
+              return `${hour}`
+            case (min == 15):
+              return `Kvart över ${hour}`
+            case (min == 30):
+              return `Halv ${nextHour}`
+            case (min == 45):
+              return `Kvart i ${nextHour}`
+            case (min >= 1 && 20 >= min):
+              return `${min} minuter över ${hour}`
+            case (min >= 21 && 29 >= min):
+              return `${30-min} minuter i halv ${nextHour}`
+            case (min >= 31 && 39 >= min):
+              return `${min-30} minuter över halv ${nextHour}`
+            case (min >= 40 && 59 >= min):
+              return `${60-min} minuter i ${nextHour}`
+            default:
+              throw "Whattttt"
+          }
+      }
+
+      function myModelus(number, divider){
+        const modelus = number%divider
+        return modelus == 0 ? divider : modelus
+      }
+
+
+      function drawDayNigth(phase) {
+        const ctx = canvasDayNigth.getContext("2d");
+        const height = canvasDayNigth.height;
+        ctx.reset();
+
+        drawSky(ctx, gradSkyAtNight(ctx, 1, height ));
+        let opacity = getOpacity(faderDay, phase)
+        drawSky(ctx, gradSkyAtDay(ctx, opacity, height ));
+        opacity = getOpacity(faderSkyAtDimming, phase)
+        drawSky(ctx, gradSkyAtDimming(ctx, opacity, height ));
+
+        drawCelestial(ctx, sun, phase, 0.5);
+        drawCelestial(ctx, moon, phase, 0);
+        draw(ctx, mountains, 1, 0, 251);
+        opacity = getOpacity(faderReflexion, phase)
+        draw(ctx, mountainsReflexion, opacity, 0, 251);
+        draw(ctx, gras, 1, 0, 316);
+        opacity = getOpacity(faderNight, phase)
+        draw(ctx, grasDark, opacity, 0, 316);
+        draw(ctx, trees, 1, 0, 250);
+        draw(ctx, treesDark, opacity, 0, 250);
+      }
+
+      function drawCelestial(ctx, img, totSeconds, offset){
+        const dayAngle = (totSeconds+offset)*2*Math.PI
+        const x = Math.sin(dayAngle)*200 + 300 - img.width/2
+        const y = -Math.cos(dayAngle)*200 + 275 - img.height/2
+        draw(ctx, img, 1, x, y);
+      }
+
+      function drawSky(ctx, grad){
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, 600, 400);
+      }
+
+      function draw(ctx, img, opacity, x, y){
+        ctx.globalAlpha = opacity;
+        ctx.drawImage(img, x, y);
+      }
+
+      function drawFace(ctx, radius) {
+        const grad = ctx.createRadialGradient(0,0,radius*0.95, 0,0,radius*1.05);
+        grad.addColorStop(0, '#333');
+        grad.addColorStop(0.5, 'white');
+        grad.addColorStop(1, '#333');
+        ctx.beginPath();
+        ctx.arc(0, 0, radius, 0, 2*Math.PI);
+        ctx.fillStyle = 'white';
+        ctx.fill();
+        ctx.strokeStyle = grad;
+        ctx.lineWidth = radius*0.1;
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(0, 0, radius*0.1, 0, 2*Math.PI);
+        ctx.fillStyle = '#333';
+        ctx.fill();
+        for(let num = 1; num <= 60; num++){
+          const ang = num * Math.PI*2 / 60;
+          ctx.beginPath();
+          ctx.lineWidth = radius*0.02;
+          const x = Math.sin(ang)*radius
+          const y = -Math.cos(ang)*radius
+          ctx.moveTo(x*0.85,y*0.85);
+          ctx.lineTo(x*0.90,y*0.90);
+          ctx.stroke();
+        }
+      }
+      
+      function drawNumbers(ctx, radius) {
+        ctx.font = radius*0.15 + "px arial";
+        ctx.textBaseline="middle";
+        ctx.textAlign="center";
+        for(let num = 1; num <= 12; num++){
+          const ang = num * Math.PI*2 / 12;
+          const x = Math.sin(ang)*radius*0.75
+          const y = -Math.cos(ang)*radius*0.75
+          ctx.fillText(num.toString(), x, y);
+        }
+      }
+      
+      function drawTime(ctx, radius, totSeconds){
+        drawHand(ctx, 2*Math.PI*totSeconds/60, radius*0.8, radius*0.02); // Seconds
+        drawHand(ctx, 2*Math.PI*totSeconds/(60*60), radius*0.8, radius*0.07); // Minutes
+        drawHand(ctx, 2*Math.PI*totSeconds/(60*60*12), radius*0.5, radius*0.07);  // Hours
+      }
+      
+      function drawHand(ctx, ang, length, width) {
+        ctx.beginPath();
+        ctx.lineWidth = width;
+        ctx.lineCap = "round";
+        ctx.moveTo(0,0);
+        const x = Math.sin(ang)*length
+        const y = -Math.cos(ang)*length
+        ctx.lineTo(x, y);
+        ctx.stroke();
+      }
+
+      window.radioChange = function() {
+        update()
+      }
+
+      difficultyEasyEl.checked = true
+      update()
+
+    </script>
+  </head>
+  <body>
+    <p>Gissa</p>
+    <input name="difficulty" type="radio" onclick="radioChange()" id="easy">
+    <b>Lätt</b> 
+    <input name="difficulty" type="radio" onclick="radioChange()" id="moderat">
+    <b>Lagom</b> 
+    <input name="difficulty" type="radio" onclick="radioChange()" id="hard">
+    <b>Svårt</b>
+    <input name="difficulty" type="radio" onclick="radioChange()" id="apa">
+    <b>Apa</b> 
+    <br>
+    <div id="result" ></div>
+    <br>
+    <div id="question" ></div>
+    <canvas id="canvas_day_nigth" width="600" height="400"></canvas>
+    <br>
+    <div id="answers" ></div>
+  </body>
+</html>
