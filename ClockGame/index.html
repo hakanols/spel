@@ -15,102 +15,7 @@
 
       const questionEl = document.getElementById('question');
       const answersEl = document.getElementById('answers');
-      const canvasDayNigth = document.getElementById("canvas_day_nigth");
-
-      const sun = await loadImage("images/sun.svg");
-      const moon = await loadImage("images/moon.svg");
-      const mountains = await loadImage("images/mountains.svg");
-      const mountainsReflexion = await loadImage("images/mountains-reflexion.svg");
-      const gras = await loadImage("images/gras.svg");
-      const grasDark = await loadImage("images/gras-dark.svg");
-      const trees = await loadImage("images/trees.svg");
-      const treesDark = await loadImage("images/trees-dark.svg");
-
-      let lastTimeSec;
-
-      function rgba(red, green, blue, opacity){
-        return `rgba(${red},${green},${blue},${opacity})`
-      }
-
-      function gradSkyAtDay(ctx, opacity, heigth){
-        const grad = ctx.createLinearGradient(0, 0, 0, heigth);
-        grad.addColorStop(0, rgba(30,87,153,opacity));
-        grad.addColorStop(0.52, rgba(41,137,216,opacity));
-        grad.addColorStop(1, rgba(125,185,232,opacity));
-        return grad
-      }
-
-      function gradSkyAtNight(ctx, opacity, heigth){
-        const grad = ctx.createLinearGradient(0, 0, 0, heigth);
-        grad.addColorStop(0, rgba(9,21,45,opacity));
-        grad.addColorStop(0.53, rgba(28,30,147,opacity));
-        grad.addColorStop(1, rgba(83,101,155,opacity));
-        return grad
-      }
-
-      function gradSkyAtDimming(ctx, opacity, heigth){
-        const grad = ctx.createLinearGradient(0, 0, 0, heigth);
-        grad.addColorStop(0, rgba(248,80,50,opacity));
-        grad.addColorStop(0.5, rgba(170,66,167,opacity));
-        grad.addColorStop(0.79, rgba(196,156,76,opacity));
-        grad.addColorStop(1, rgba(16,37,99,opacity));
-        return grad
-      }
-
-      const faderDay = new Map([
-        [0, 0],
-        [0.5, 1],
-        [1, 0]
-      ])
-
-      const faderNight = new Map([
-        [0, 1],
-        [0.5, 0],
-        [1, 1]
-      ])
-
-      const faderSkyAtDimming = new Map([
-        [0, 0],
-        [0.20, 1],
-        [0.25, 0],
-        [0.55, 0],
-        [0.65, 1],
-        [0.75, 0],
-        [1, 0]
-      ])
-
-      const faderReflexion = new Map([
-        [0, 0],
-        [0.15, 0.7],
-        [0.25, 0.1],
-        [0.50, 0],
-        [0.60, 0.7],
-        [0.75, 0.1],
-        [1, 0]
-      ])
-
-      function getOpacity(fader, index){
-        let last;
-        for (let element of fader) {
-          if (element[0] <= index  ){
-            last = element
-            continue
-          }
-          let effekt = (index-last[0])/(element[0]-last[0])
-          return last[1]+(element[1]-last[1])*effekt
-        };
-        throw "Something is wrong"
-      }
-
-      async function loadImage(imgPath){
-        const img = new Image();
-        await new Promise(r => img.onload=r, img.src=imgPath);
-        return img;
-      }
-      
-      function getTimeMin(minInterval){
-        return Math.floor(Math.random() * 24*60/minInterval)*minInterval
-      }
+      const resultEl = document.getElementById('result');
 
 
       function difficulty(){
@@ -124,33 +29,62 @@
           return 15
         }
         if (difficultyApaEl.checked) {
-          return 1
+          return 5
         }
       }
 
-      function createClock(clockType, totSeconds){
+      function createClock(clockType, timeMin, checker){
+        let element;
+        const randomExtraMin= Math.floor(Math.random()*2)*12*60
         if (clockType == 0) {
-          return createTextClock(totSeconds)
+          element = createTextClock((timeMin+randomExtraMin)*60)
         }
         if (clockType == 1) {
-          return createDigitalClock(totSeconds)
+          element = createDigitalClock((timeMin+randomExtraMin)*60)
         }
         if (clockType == 2) {
-          return createAnalogClock(totSeconds)
+          element = createAnalogClock(timeMin*60)
         }
+        element.addEventListener("click", () => checker(timeMin));
+        return element
+      }
+
+      function getRandomRange(max, count){
+        const allValues = [...Array(max).keys()]
+        let result = []
+        for (const element of [...Array(count).keys()]) {
+          const randomIndex = Math.floor(Math.random()*allValues.length)
+          result.push(allValues.splice(randomIndex,1));
+        }
+        return result
       }
 
       function update () {
-        const timeMin = getTimeMin(difficulty())
-        questionEl.innerHTML = ""
-        questionEl.appendChild(createClock(Math.floor(Math.random() * 3), timeMin*60));
-        drawDayNigth(timeMin/(24*60))
+        const minutInterval = difficulty()
+        const clockValues = getRandomRange(12*60/minutInterval, 3).map((x) => x*minutInterval)
+        const clockTypes = getRandomRange(3, 2)
 
-        const clockType = Math.floor(Math.random() * 3)
+        const timeMin = clockValues[Math.floor(Math.random()*clockValues.length)]
+        questionEl.innerHTML = ""
+        questionEl.appendChild(createClock(clockTypes[0], timeMin, (x) => {}));
+
         answersEl.innerHTML = ""
-        answersEl.appendChild(createClock(clockType, getTimeMin(difficulty())*60));
-        answersEl.appendChild(createClock(clockType, getTimeMin(difficulty())*60));
-        answersEl.appendChild(createClock(clockType, getTimeMin(difficulty())*60));
+        answersEl.appendChild(createClock(clockTypes[1], clockValues[0], (x) => checker(timeMin, x)));
+        answersEl.appendChild(createClock(clockTypes[1], clockValues[1], (x) => checker(timeMin, x)));
+        answersEl.appendChild(createClock(clockTypes[1], clockValues[2], (x) => checker(timeMin, x)));
+      }
+
+      function checker(real, value){
+        console.log("R: " + real + " V: " + value )
+        if (real == value) {
+          console.log("Correct")
+          resultEl.innerHTML = "Resultat: Rätt"
+        }
+        else {
+          console.log("Wrong")
+          resultEl.innerHTML = "Resultat: Fel"
+        }
+        update()
       }
 
       function createTextClock(totSeconds) {
@@ -219,47 +153,6 @@
         return modelus == 0 ? divider : modelus
       }
 
-
-      function drawDayNigth(phase) {
-        const ctx = canvasDayNigth.getContext("2d");
-        const height = canvasDayNigth.height;
-        ctx.reset();
-
-        drawSky(ctx, gradSkyAtNight(ctx, 1, height ));
-        let opacity = getOpacity(faderDay, phase)
-        drawSky(ctx, gradSkyAtDay(ctx, opacity, height ));
-        opacity = getOpacity(faderSkyAtDimming, phase)
-        drawSky(ctx, gradSkyAtDimming(ctx, opacity, height ));
-
-        drawCelestial(ctx, sun, phase, 0.5);
-        drawCelestial(ctx, moon, phase, 0);
-        draw(ctx, mountains, 1, 0, 251);
-        opacity = getOpacity(faderReflexion, phase)
-        draw(ctx, mountainsReflexion, opacity, 0, 251);
-        draw(ctx, gras, 1, 0, 316);
-        opacity = getOpacity(faderNight, phase)
-        draw(ctx, grasDark, opacity, 0, 316);
-        draw(ctx, trees, 1, 0, 250);
-        draw(ctx, treesDark, opacity, 0, 250);
-      }
-
-      function drawCelestial(ctx, img, totSeconds, offset){
-        const dayAngle = (totSeconds+offset)*2*Math.PI
-        const x = Math.sin(dayAngle)*200 + 300 - img.width/2
-        const y = -Math.cos(dayAngle)*200 + 275 - img.height/2
-        draw(ctx, img, 1, x, y);
-      }
-
-      function drawSky(ctx, grad){
-        ctx.fillStyle = grad;
-        ctx.fillRect(0, 0, 600, 400);
-      }
-
-      function draw(ctx, img, opacity, x, y){
-        ctx.globalAlpha = opacity;
-        ctx.drawImage(img, x, y);
-      }
-
       function drawFace(ctx, radius) {
         const grad = ctx.createRadialGradient(0,0,radius*0.95, 0,0,radius*1.05);
         grad.addColorStop(0, '#333');
@@ -322,6 +215,7 @@
       }
 
       difficultyEasyEl.checked = true
+      resultEl.innerHTML = "Resultat: "
       update()
 
     </script>
@@ -340,7 +234,6 @@
     <div id="result" ></div>
     <br>
     <div id="question" ></div>
-    <canvas id="canvas_day_nigth" width="600" height="400"></canvas>
     <br>
     <div id="answers" ></div>
   </body>

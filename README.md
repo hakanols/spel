@@ -89,6 +89,12 @@ https://hakanols.github.io/spel/Clock/index.html
 
     node browser-quick-start.mjs /Clock/index.html
 
+ClockGame
+
+https://hakanols.github.io/spel/ClockGame/index.html
+
+    node browser-quick-start.mjs /ClockGame/index.html
+
 CountDown
 
 https://hakanols.github.io/spel/CountDown/index.html
