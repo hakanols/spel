@@ -5,7 +5,7 @@
   <head>
     <title>ClockGame</title>
     <meta name="viewport" content="width=700, initial-scale=1.0">
-	  <script type="module">
+    <script type="module">
       const difficultyEasyEl = document.getElementById('easy');
       const difficultyModeratEl = document.getElementById('moderat');
       const difficultyHardEl = document.getElementById('hard');
@@ -17,17 +17,15 @@
 
 
       function difficulty(){
-        if (difficultyEasyEl.checked) {
-          return 60
-        }
-        if (difficultyModeratEl.checked) {
-          return 30
-        }
-        if (difficultyHardEl.checked) {
-          return 15
-        }
-        if (difficultyApaEl.checked) {
-          return 5
+        switch (true) {
+          case (difficultyEasyEl.checked):
+            return 60
+          case (difficultyModeratEl.checked):
+            return 30
+          case (difficultyHardEl.checked):
+            return 15
+          case (difficultyApaEl.checked):
+            return 5
         }
       }
 
@@ -35,13 +33,13 @@
         let element;
         const randomExtraMin= Math.floor(Math.random()*2)*12*60
         if (clockType == 0) {
-          element = createTextClock((timeMin+randomExtraMin)*60)
+          element = createTextClock(timeMin+randomExtraMin)
         }
         if (clockType == 1) {
-          element = createDigitalClock((timeMin+randomExtraMin)*60)
+          element = createDigitalClock(timeMin+randomExtraMin)
         }
         if (clockType == 2) {
-          element = createAnalogClock(timeMin*60)
+          element = createAnalogClock(timeMin)
         }
         element.addEventListener("click", () => checker(timeMin));
         return element
@@ -85,28 +83,27 @@
         update()
       }
 
-      function createTextClock(totSeconds) {
-					const div = document.createElement("div");
-					div.style= "font-size: 40px; width: 400px; text-align: center; border: 2px solid black; border-radius: 20px;"
-          div.innerHTML = timeToText(totSeconds)
+      function createTextClock(timeMin) {
+          const div = document.createElement("div");
+          div.style= "font-size: 40px; width: 400px; text-align: center; border: 2px solid black; border-radius: 20px;"
+          div.innerHTML = timeToText(timeMin)
           return div
       }
 
-      function createDigitalClock(totSeconds) {
-					const div = document.createElement("div");
-					div.style= "font-size: 100px; width: 400px; text-align: center; border: 2px solid black; border-radius: 20px;"
-          const hour = String(Math.floor(totSeconds/(60*60))%24).padStart(2, '0')
-          const min = String(Math.floor(totSeconds/60)%60).padStart(2, '0')
-          const sec = String(totSeconds%60).padStart(2, '0')
-          div.innerHTML = hour + ":" + min +  ":" + sec 
+      function createDigitalClock(timeMin) {
+          const div = document.createElement("div");
+          div.style= "font-size: 100px; width: 400px; text-align: center; border: 2px solid black; border-radius: 20px;"
+          const hour = String(Math.floor(timeMin/60)%24).padStart(2, '0')
+          const min = String(timeMin%60).padStart(2, '0')
+          div.innerHTML = hour + ":" + min
           return div
       }
 
-      function createAnalogClock(totSeconds) {
-					const canvas = document.createElement("canvas");
+      function createAnalogClock(timeMin) {
+          const canvas = document.createElement("canvas");
           canvas.width="400"
           canvas.height="400"
-					canvas.style="background-color:#333"
+          canvas.style="background-color:#333"
           const ctx = canvas.getContext("2d");
           const radius = canvas.height / 2;
           ctx.reset();
@@ -114,15 +111,15 @@
           ctx.translate(radius, radius);
           drawFace(ctx, radius*0.9);
           drawNumbers(ctx, radius*0.9);
-          drawTime(ctx, radius*0.9, totSeconds);
+          drawTime(ctx, radius*0.9, timeMin);
           return canvas
       }
 
-      function timeToText(totSeconds) {
+      function timeToText(timeMin) {
 
-          const hour = myModelus(Math.floor(totSeconds/(60*60)), 12)
+          const hour = myModelus(Math.floor(timeMin/(60)), 12)
           const nextHour = myModelus((hour+1), 12)
-          const min = Math.floor(totSeconds/60)%60
+          const min = timeMin%60
 
           switch (true) {
             case (min == 0):
@@ -191,10 +188,9 @@
         }
       }
       
-      function drawTime(ctx, radius, totSeconds){
-        drawHand(ctx, 2*Math.PI*totSeconds/60, radius*0.8, radius*0.02); // Seconds
-        drawHand(ctx, 2*Math.PI*totSeconds/(60*60), radius*0.8, radius*0.07); // Minutes
-        drawHand(ctx, 2*Math.PI*totSeconds/(60*60*12), radius*0.5, radius*0.07);  // Hours
+      function drawTime(ctx, radius, timeMin){
+        drawHand(ctx, 2*Math.PI*timeMin/60, radius*0.8, radius*0.07); // Minutes
+        drawHand(ctx, 2*Math.PI*timeMin/(60*12), radius*0.5, radius*0.07);  // Hours
       }
       
       function drawHand(ctx, ang, length, width) {
@@ -219,7 +215,6 @@
     </script>
   </head>
   <body style="overscroll-behavior: none;">
-    <p>Gissa</p>
     <input name="difficulty" type="radio" onclick="radioChange()" id="easy">
     <b>Lätt</b> 
     <input name="difficulty" type="radio" onclick="radioChange()" id="moderat">
