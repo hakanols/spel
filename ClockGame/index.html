@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <!-- Stolen from  -->
 <!-- https://www.w3schools.com/graphics/tryit.asp?filename=trycanvas_clock_start -->
@@ -7,43 +6,33 @@
     <title>ClockGame</title>
     <meta name="viewport" content="width=700, initial-scale=1.0">
     <script type="module">
-      const difficultyEasyEl = document.getElementById('easy');
-      const difficultyModeratEl = document.getElementById('moderat');
-      const difficultyHardEl = document.getElementById('hard');
-      const difficultyApaEl = document.getElementById('apa');
+      const minute60El = document.getElementById('minute60');
+      const minute30El = document.getElementById('minute30');
+      const minute15El = document.getElementById('minute15');
+      const minute5El = document.getElementById('minute5');
 
       const questionEl = document.getElementById('question');
       const answersEl = document.getElementById('answers');
       const resultEl = document.getElementById('result');
 
       let correctElement;
+      let canvasRadius;
+      let enableClick = true
+
+      ///////////////////////////////////////////////
+      // Main logic
 
       function difficulty(){
         switch (true) {
-          case (difficultyEasyEl.checked):
+          case (minute60El.checked):
             return 60
-          case (difficultyModeratEl.checked):
+          case (minute30El.checked):
             return 30
-          case (difficultyHardEl.checked):
+          case (minute15El.checked):
             return 15
-          case (difficultyApaEl.checked):
+          case (minute5El.checked):
             return 5
         }
-      }
-
-      function createClock(clockType, timeMin, checker){
-        let element;
-        if (clockType == 0) {
-          element = createTextClock(timeMin)
-        }
-        if (clockType == 1) {
-          element = createDigitalClock(timeMin)
-        }
-        if (clockType == 2) {
-          element = createAnalogClock(timeMin)
-        }
-        element.addEventListener("click", () => checker(element));
-        return element
       }
 
       function getRandomRange(max, count){
@@ -65,7 +54,7 @@
       }
 
       function update () {
-        const numberOfOptions = 3
+        const numberOfOptions = 4
         const clockValues = getGetRandomClocks(difficulty(), numberOfOptions)
         const clockTypes = getRandomRange(3, 2)
 
@@ -74,58 +63,68 @@
         questionEl.appendChild(createClock(clockTypes[0], clockValues[correctIndex], (x) => {}));
 
         const clockElements = [...Array(numberOfOptions).keys().map(x => createClock(clockTypes[1], clockValues[x], checker))]
-        console.log(clockElements)
-
         correctElement = clockElements[correctIndex]
         answersEl.innerHTML = ""
         clockElements.forEach(x => answersEl.appendChild(x));
       }
 
       async function checker(clickedElement){
-        console.log("R: " + correctElement + " V: " + clickedElement )
+        console.log("Clicked")
+
+        if (!enableClick){
+          return;
+        }
+        enableClick = false
+
         if (correctElement == clickedElement) {
           resultEl.innerHTML = resultEl.innerHTML + '|'
           clickedElement.style.borderColor = "green"
-          clickedElement.style.borderWidth = "6px"
-
+          await sleep(1000);
         }
         else {
           resultEl.innerHTML = ""
           clickedElement.style.borderColor = "red"
-          clickedElement.style.borderWidth = "6px"
-
           correctElement.style.borderColor = "yellow"
-          correctElement.style.borderWidth = "6px"
+          await sleep(3000);
         }
-
-        await new Promise(r => setTimeout(r, 2000));
-
         update()
+        enableClick = true
       }
 
-      function createTextClock(timeMin) {
-          const div = document.createElement("span");
-          div.style.fontSize = "40px";
-          div.style.width = "400px"
-          div.style.height = "400px"
-          div.style.alignContent = "center"
-          div.style.textAlign = "center"
-          div.style.border = "2px solid black"
-          div.style.borderRadius = "20px"
-          div.style.display = "inline-block"
-          div.innerHTML = timeToText(timeMin)
-          return div
+      function sleep(ms) {
+          return new Promise(resolve => setTimeout(resolve, ms));
       }
+
+      function createClock(clockType, timeMin, checker){
+        let element;
+        if (clockType == 0) {
+          element = createTextClock(timeMin)
+        }
+        if (clockType == 1) {
+          element = createDigitalClock(timeMin)
+        }
+        if (clockType == 2) {
+          element = createAnalogClock(timeMin)
+        }
+        element.addEventListener("click", () => checker(element));
+        return element
+      }
+
+     ///////////////////////////////////////////////
+     // Create digital clock
 
       function createDigitalClock(timeMin) {
           const div = document.createElement("span");
-          div.style.fontSize = "160px";
-          div.style.width = "400px"
-          div.style.height = "400px"
+          div.style.fontSize = "40px";
+          div.style.width = "42%"
+          div.style.aspectRatio = "1/1";
           div.style.alignContent = "center"
           div.style.textAlign = "center"
-          div.style.border = "2px solid black"
+          div.style.borderWidth = "2px"
+          div.style.borderColor = "black"
+          div.style.borderStyle = "solid"
           div.style.borderRadius = "20px"
+          div.style.margin = "5px"
           div.style.display = "inline-block"
           const hour = String(Math.floor(timeMin/60)%24).padStart(2, '0')
           const min = String(timeMin%60).padStart(2, '0')
@@ -133,21 +132,24 @@
           return div
       }
 
-      function createAnalogClock(timeMin, size=400) {
-          const canvas = document.createElement("canvas");
-          canvas.width=size
-          canvas.height=size
-          canvas.style.border = "2px solid black"
-          canvas.style.borderRadius = "20px"
-          const ctx = canvas.getContext("2d");
-          const radius = canvas.height / 2;
-          ctx.reset();
-          ctx.resetTransform();
-          ctx.translate(radius, radius);
-          drawFace(ctx, radius*0.94);
-          drawNumbers(ctx, radius*0.94);
-          drawTime(ctx, radius*0.94, timeMin);
-          return canvas
+      ///////////////////////////////////////////////
+      // Create text clock
+
+      function createTextClock(timeMin) {
+          const div = document.createElement("span");
+          div.style.fontSize = "30px";
+          div.style.width = "42%"
+          div.style.aspectRatio = "1/1";
+          div.style.alignContent = "center"
+          div.style.textAlign = "center"
+          div.style.borderWidth = "2px"
+          div.style.borderColor = "black"
+          div.style.borderStyle = "solid"
+          div.style.borderRadius = "20px"
+          div.style.margin = "5px"
+          div.style.display = "inline-block"
+          div.innerText = timeToText(timeMin)
+          return div
       }
 
       function timeToText(timeMin) {
@@ -174,7 +176,7 @@
             case (min >= 40 && 59 >= min):
               return `${60-min} minuter i ${nextHour}`
             default:
-              throw "Whattttt"
+              throw "Shall not happen. Time: " + timeMin
           }
       }
 
@@ -182,6 +184,31 @@
         const modelus = number%divider
         return modelus == 0 ? divider : modelus
       }
+
+      ///////////////////////////////////////////////
+      // Create analog clock
+
+      function createAnalogClock(timeMin) {
+          const canvas = document.createElement("canvas");
+          canvas.style.width = "42%"
+          canvas.style.aspectRatio = "1/1";
+          canvas.style.borderWidth = "2px"
+          canvas.style.borderColor = "black"
+          canvas.style.borderStyle = "solid"
+          canvas.style.borderRadius = "20px"
+          canvas.style.margin = "5px"
+          const ctx = canvas.getContext("2d");
+          const radius = canvasRadius / 2;
+          ctx.reset();
+          ctx.resetTransform();
+          ctx.transform(2.2, 0, 0, 1.1, 0, 0);
+          ctx.translate(radius, radius);
+          drawFace(ctx, radius*0.94);
+          drawNumbers(ctx, radius*0.94);
+          drawTime(ctx, radius*0.94, timeMin);
+          return canvas
+      }
+
 
       function drawFace(ctx, radius) {
         const grad = ctx.createRadialGradient(0,0,radius*0.95, 0,0,radius*1.05);
@@ -239,30 +266,39 @@
         ctx.stroke();
       }
 
+      ///////////////////////////////////////////////
+      // Startup
+
       window.radioChange = function() {
+        resultEl.innerHTML = ""
         update()
       }
 
-      difficultyEasyEl.checked = true
+      minute60El.checked = true
       resultEl.innerHTML = ""
+      canvasRadius = resultEl.clientWidth / 2
       update()
 
     </script>
   </head>
-  <body style="overscroll-behavior: none;">
-    <input name="difficulty" type="radio" onclick="radioChange()" id="easy">
-    <b>Lätt</b> 
-    <input name="difficulty" type="radio" onclick="radioChange()" id="moderat">
-    <b>Lagom</b> 
-    <input name="difficulty" type="radio" onclick="radioChange()" id="hard">
-    <b>Svårt</b>
-    <input name="difficulty" type="radio" onclick="radioChange()" id="apa">
-    <b>Apa</b> 
-    <br>
-    <div id="result" ></div>
-    <br>
-    <div id="question" ></div>
-    <br>
-    <div id="answers" ></div>
+  <body style="background: #21455d; overscroll-behavior: none; margin:0px;">
+		<div style="width: 50vh; height: 100vh; 
+		max-width: 100vw; max-height: 200vh; margin: auto;">
+      <div style="width:96%; aspect-ratio:8/1; border-width: 2px; border-color: black; border-style: solid; border-radius: 20px; align-content: center; margin:5px;">
+        <input name="difficulty" type="radio" onclick="radioChange()" id="minute60">
+        <b>Hel</b> 
+        <input name="difficulty" type="radio" onclick="radioChange()" id="minute30">
+        <b>Halv</b> 
+        <input name="difficulty" type="radio" onclick="radioChange()" id="minute15">
+        <b>Kvart</b>
+        <input name="difficulty" type="radio" onclick="radioChange()" id="minute5">
+        <b>5 miuter</b>
+      </div>
+      <div id="result" style="width:96%; aspect-ratio:8/1; font-size: 30px; font-weight: bold; margin:5px;
+        border-width: 2px; border-color: black; border-style: solid; 
+        border-radius: 20px; align-content: center; text-align: center;"></div>
+      <div id="question" style="width:100%; aspect-ratio:2/1; text-align: center;"></div>
+      <div id="answers" style="width:100%; aspect-ratio:1/1; text-align: center;"></div>
+    </div>
   </body>
 </html>
