@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <!-- Stolen from  -->
 <!-- https://www.w3schools.com/graphics/tryit.asp?filename=trycanvas_clock_start -->
@@ -15,6 +16,7 @@
       const answersEl = document.getElementById('answers');
       const resultEl = document.getElementById('result');
 
+      let correctElement;
 
       function difficulty(){
         switch (true) {
@@ -31,17 +33,16 @@
 
       function createClock(clockType, timeMin, checker){
         let element;
-        const randomExtraMin= Math.floor(Math.random()*2)*12*60
         if (clockType == 0) {
-          element = createTextClock(timeMin+randomExtraMin)
+          element = createTextClock(timeMin)
         }
         if (clockType == 1) {
-          element = createDigitalClock(timeMin+randomExtraMin)
+          element = createDigitalClock(timeMin)
         }
         if (clockType == 2) {
           element = createAnalogClock(timeMin)
         }
-        element.addEventListener("click", () => checker(timeMin));
+        element.addEventListener("click", () => checker(element));
         return element
       }
 
@@ -55,63 +56,97 @@
         return result
       }
 
-      function update () {
-        const minutInterval = difficulty()
-        const clockValues = getRandomRange(12*60/minutInterval, 3).map((x) => x*minutInterval)
-        const clockTypes = getRandomRange(3, 2)
-
-        const timeMin = clockValues[Math.floor(Math.random()*clockValues.length)]
-        questionEl.innerHTML = ""
-        questionEl.appendChild(createClock(clockTypes[0], timeMin, (x) => {}));
-
-        answersEl.innerHTML = ""
-        answersEl.appendChild(createClock(clockTypes[1], clockValues[0], (x) => checker(timeMin, x)));
-        answersEl.appendChild(createClock(clockTypes[1], clockValues[1], (x) => checker(timeMin, x)));
-        answersEl.appendChild(createClock(clockTypes[1], clockValues[2], (x) => checker(timeMin, x)));
+      function getGetRandomClocks(minutInterval, count){
+         // To not collide we generate for half a day and the decide if it is morning or evening.
+        const intervalls = 12*60/minutInterval;
+        return getRandomRange(intervalls, count)
+          .map((x) => x*minutInterval)
+          .map(x => x + Math.floor(Math.random()*2)*12*60) // Add 12 hours by random.
       }
 
-      function checker(real, value){
-        console.log("R: " + real + " V: " + value )
-        if (real == value) {
-          console.log("Correct")
-          resultEl.innerHTML = "Resultat: Rätt"
+      function update () {
+        const numberOfOptions = 3
+        const clockValues = getGetRandomClocks(difficulty(), numberOfOptions)
+        const clockTypes = getRandomRange(3, 2)
+
+        const correctIndex = Math.floor(Math.random()*clockValues.length)
+        questionEl.innerHTML = ""
+        questionEl.appendChild(createClock(clockTypes[0], clockValues[correctIndex], (x) => {}));
+
+        const clockElements = [...Array(numberOfOptions).keys().map(x => createClock(clockTypes[1], clockValues[x], checker))]
+        console.log(clockElements)
+
+        correctElement = clockElements[correctIndex]
+        answersEl.innerHTML = ""
+        clockElements.forEach(x => answersEl.appendChild(x));
+      }
+
+      async function checker(clickedElement){
+        console.log("R: " + correctElement + " V: " + clickedElement )
+        if (correctElement == clickedElement) {
+          resultEl.innerHTML = resultEl.innerHTML + '|'
+          clickedElement.style.borderColor = "green"
+          clickedElement.style.borderWidth = "6px"
+
         }
         else {
-          console.log("Wrong")
-          resultEl.innerHTML = "Resultat: Fel"
+          resultEl.innerHTML = ""
+          clickedElement.style.borderColor = "red"
+          clickedElement.style.borderWidth = "6px"
+
+          correctElement.style.borderColor = "yellow"
+          correctElement.style.borderWidth = "6px"
         }
+
+        await new Promise(r => setTimeout(r, 2000));
+
         update()
       }
 
       function createTextClock(timeMin) {
-          const div = document.createElement("div");
-          div.style= "font-size: 40px; width: 400px; text-align: center; border: 2px solid black; border-radius: 20px;"
+          const div = document.createElement("span");
+          div.style.fontSize = "40px";
+          div.style.width = "400px"
+          div.style.height = "400px"
+          div.style.alignContent = "center"
+          div.style.textAlign = "center"
+          div.style.border = "2px solid black"
+          div.style.borderRadius = "20px"
+          div.style.display = "inline-block"
           div.innerHTML = timeToText(timeMin)
           return div
       }
 
       function createDigitalClock(timeMin) {
-          const div = document.createElement("div");
-          div.style= "font-size: 100px; width: 400px; text-align: center; border: 2px solid black; border-radius: 20px;"
+          const div = document.createElement("span");
+          div.style.fontSize = "160px";
+          div.style.width = "400px"
+          div.style.height = "400px"
+          div.style.alignContent = "center"
+          div.style.textAlign = "center"
+          div.style.border = "2px solid black"
+          div.style.borderRadius = "20px"
+          div.style.display = "inline-block"
           const hour = String(Math.floor(timeMin/60)%24).padStart(2, '0')
           const min = String(timeMin%60).padStart(2, '0')
           div.innerHTML = hour + ":" + min
           return div
       }
 
-      function createAnalogClock(timeMin) {
+      function createAnalogClock(timeMin, size=400) {
           const canvas = document.createElement("canvas");
-          canvas.width="400"
-          canvas.height="400"
-          canvas.style="background-color:#333"
+          canvas.width=size
+          canvas.height=size
+          canvas.style.border = "2px solid black"
+          canvas.style.borderRadius = "20px"
           const ctx = canvas.getContext("2d");
           const radius = canvas.height / 2;
           ctx.reset();
           ctx.resetTransform();
           ctx.translate(radius, radius);
-          drawFace(ctx, radius*0.9);
-          drawNumbers(ctx, radius*0.9);
-          drawTime(ctx, radius*0.9, timeMin);
+          drawFace(ctx, radius*0.94);
+          drawNumbers(ctx, radius*0.94);
+          drawTime(ctx, radius*0.94, timeMin);
           return canvas
       }
 
@@ -209,7 +244,7 @@
       }
 
       difficultyEasyEl.checked = true
-      resultEl.innerHTML = "Resultat: "
+      resultEl.innerHTML = ""
       update()
 
     </script>
