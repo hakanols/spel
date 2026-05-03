@@ -120,11 +120,11 @@
           div.style.alignContent = "center"
           div.style.verticalAlign = "middle"
           div.style.textAlign = "center"
-          div.style.borderWidth = "0.2vw"
+          div.style.borderWidth = "0.6vh"
           div.style.borderColor = "black"
           div.style.borderStyle = "solid"
-          div.style.borderRadius = "1vw"
-          div.style.margin = "0.5vw"
+          div.style.borderRadius = "2vh"
+          div.style.margin = "0.5vh"
           div.style.display = "inline-block"
           return div
       }
@@ -135,7 +135,7 @@
       function createDigitalClock(timeMin, parent) {
           const box = createBox()
           const div = document.createElement("span");
-          div.style.fontSize = "3vw"
+          div.style.fontSize = "4vh"
           div.style.width = "100%"
           div.style.height = "100%"
           const hour = String(Math.floor(timeMin/60)%24).padStart(2, '0')
@@ -152,7 +152,7 @@
       function createTextClock(timeMin, parent) {
           const box = createBox()
           const div = document.createElement("span");
-          div.style.fontSize = "2vw";
+          div.style.fontSize = "3vh";
           div.style.width = "100%"
           div.style.height = "100%"
           div.innerText = timeToText(timeMin)
@@ -291,15 +291,15 @@
 
     </script>
     <style>
-      input     {width: 1.5vw; height: 1.5vw;}
-      b         {font-size: 1.5vw;}
-      div.box   {border-width: 0.2vw; border-color: black; border-style: solid; border-radius: 1vw; align-content: center;}
+      input     {width: 2.5vh; height: 2.5vh;}
+      b         {font-size: 2.5vh;}
+      div.box   {border-width: 0.6vh; border-color: black; border-style: solid; border-radius: 2vh; align-content: center;}
     </style>
   </head>
   <body style="background: #21455d; overscroll-behavior: none; margin:0px;">
 		<div style="width: 50vh; height: 100vh; text-align: center; 
-		max-width: 100vw; max-height: 200vh; margin: auto;">
-      <div class="box" style="width:100%; aspect-ratio:8/1; margin: 0.5vw; background: white; text-align: center;">
+		max-width: 100vh; max-height: 200vh; margin: auto;">
+      <div class="box" style="width:100%; aspect-ratio:8/1; margin: 0.5vh; background: white; text-align: center;">
         <input name="difficulty" type="radio" onclick="radioChange()" id="minute60">
         <b>Hel</b> 
         <input name="difficulty" type="radio" onclick="radioChange()" id="minute30">
@@ -309,8 +309,8 @@
         <input name="difficulty" type="radio" onclick="radioChange()" id="minute5">
         <b>5 miuter</b>
       </div>
-      <div class="box" style="width:100%; aspect-ratio:8/1; margin: 0.5vw; background: white; ">
-        <div id="result" style="width:100%; font-size: 1.5vw; font-weight: bold; align-content: center; text-align: center;"></div>
+      <div class="box" style="width:100%; aspect-ratio:8/1; margin: 0.5vh; background: white; ">
+        <div id="result" style="width:100%; font-size: 3vh; font-weight: bold; align-content: center; text-align: center;"></div>
       </div>
       <div id="question" style="width:100%; text-align: center;"></div>
       <div id="answers" style="width:100%; text-align: center; align-content: center;" display: inline-block;"></div>
