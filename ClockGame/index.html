@@ -137,7 +137,7 @@
       function createDigitalClock(timeMin, parent) {
           const box = createBox()
           const div = document.createElement("span");
-          div.style.fontSize = "4vh"
+          div.style.fontSize = "6vh"
           div.style.width = "100%"
           div.style.height = "100%"
           const hour = String(Math.floor(timeMin/60)%24).padStart(2, '0')
@@ -154,9 +154,10 @@
       function createTextClock(timeMin, parent) {
           const box = createBox()
           const div = document.createElement("span");
-          div.style.fontSize = "3vh";
+          div.style.fontSize = "4vh";
           div.style.width = "100%"
           div.style.height = "100%"
+          div.style.padding = "0.5vh"
           div.innerText = timeToText(timeMin)
           box.appendChild(div)
           parent.appendChild(box)
@@ -205,6 +206,7 @@
           const canvas = document.createElement("canvas");
           canvas.style.width = "100%"
           canvas.style.height = "100%"
+          canvas.style.verticalAlign = "middle"
           box.appendChild(canvas)
           parent.appendChild(box)
           const ctx = canvas.getContext("2d");
@@ -315,7 +317,7 @@
         <div id="result" style="width:100%; font-size: 3vh; font-weight: bold; align-content: center; text-align: center;"></div>
       </div>
       <div id="question" style="width:100%; text-align: center;"></div>
-      <div id="answers" style="width:100%; text-align: center; align-content: center;" display: inline-block;"></div>
+      <div id="answers" style="width:100%; text-align: center; align-content: center; display: inline-block;"></div>
     </div>
   </body>
 </html>
