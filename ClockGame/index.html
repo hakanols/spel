@@ -4,7 +4,9 @@
 <html style="overscroll-behavior: none;">
   <head>
     <title>ClockGame</title>
-    <meta name="viewport" content="width=700, initial-scale=1.0">
+    <!-- Prevent mobile auto-scaling -->
+    <meta name="viewport" content="width=device-width, height=device-height,
+          initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <script type="module">
       const minute60El = document.getElementById('minute60');
       const minute30El = document.getElementById('minute30');
