@@ -3,15 +3,10 @@
 	<head>
 		<title>TabClose</title>
 		<script type="module">
-			document.querySelector('#button').addEventListener('click', function (event) {
-				event.preventDefault();
-				window.close();
-			}, false);
-			document.querySelector('#button').click();
+			setTimeout(window.close, 300)
 		</script>
 	</head>
 	<body>
-		<p>If the page stops. Please press the button below to continue.</p>
-		<input id="button" name="button" type="submit" value="Close">
+		<p>Shall close quick after opening.</p>
 	</body>
 </html>
