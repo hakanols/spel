@@ -3,18 +3,11 @@
 	<head>
 		<title>TabClose</title>
 		<script type="module">
-			const ua = window.navigator.userAgent;
-
-			if (ua.indexOf('iPhone ') > 0) { 
-				document.querySelector('#button').addEventListener('click', function (event) {
+			document.querySelector('#button').addEventListener('click', function (event) {
 				event.preventDefault();
 				window.close();
-				}, false);
-
-				document.querySelector('#button').click();
-			} else {
-				window.close();
-			}
+			}, false);
+			document.querySelector('#button').click();
 		</script>
 	</head>
 	<body>
