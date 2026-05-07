@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>TabClose</title>
+		<script type="module">
+			const ua = window.navigator.userAgent;
+
+			if (ua.indexOf('iPhone ') > 0) { 
+				document.querySelector('#button').addEventListener('click', function (event) {
+				event.preventDefault();
+				window.close();
+				}, false);
+
+				document.querySelector('#button').click();
+			} else {
+				window.close();
+			}
+		</script>
+	</head>
+	<body>
+		<p>If the page stops. Please press the button below to continue.</p>
+		<input id="button" name="button" type="submit" value="Close">
+	</body>
+</html>
