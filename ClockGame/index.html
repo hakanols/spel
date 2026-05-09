@@ -12,6 +12,12 @@
       const minute30El = document.getElementById('minute30');
       const minute15El = document.getElementById('minute15');
       const minute5El = document.getElementById('minute5');
+      
+      const diff0ResultEl = document.getElementById('diff0');
+      const diff1ResultEl = document.getElementById('diff1');
+      const diff2ResultEl = document.getElementById('diff2');
+      const diff3ResultEl = document.getElementById('diff3');
+      const diffResultElements = [diff0ResultEl, diff1ResultEl, diff2ResultEl, diff3ResultEl]
 
       const questionEl = document.getElementById('question');
       const answersEl = document.getElementById('answers');
@@ -19,7 +25,6 @@
 
       let correctElement;
       let enableClick = true
-      let points = 0
 
       ///////////////////////////////////////////////
       // Main logic
@@ -27,13 +32,13 @@
       function difficulty(){
         switch (true) {
           case (minute60El.checked):
-            return 60
+            return 0
           case (minute30El.checked):
-            return 30
+            return 1
           case (minute15El.checked):
-            return 15
+            return 2
           case (minute5El.checked):
-            return 5
+            return 3
         }
       }
 
@@ -47,8 +52,9 @@
         return result
       }
 
-      function getGetRandomClocks(minutInterval, count){
-         // To not collide we generate for half a day and the decide if it is morning or evening.
+      function getGetRandomClocks(difficulty, count){
+        const minutInterval = [60, 30, 15, 5][difficulty]
+        // To not collide we generate for half a day and the decide if it is morning or evening.
         const intervalls = 12*60/minutInterval;
         return getRandomRange(intervalls, count)
           .map((x) => x*minutInterval)
@@ -67,8 +73,6 @@
         answersEl.innerHTML = ""
         const clockElements = [...Array(numberOfOptions).keys().map(x => createClock(clockTypes[1], clockValues[x], answersEl, checker))]
         correctElement = clockElements[correctIndex]
-
-        resultEl.innerHTML = points
       }
 
       async function checker(clickedElement){
@@ -80,12 +84,12 @@
         enableClick = false
 
         if (correctElement == clickedElement) {
-          points += 1
+          incrimentScore(difficulty())
           clickedElement.style.borderColor = "green"
           await sleep(1000);
         }
         else {
-          points = 0 
+          setScore(difficulty(), 0)
           clickedElement.style.borderColor = "red"
           correctElement.style.borderColor = "yellow"
           await sleep(3000);
@@ -283,39 +287,95 @@
       }
 
       ///////////////////////////////////////////////
+      // Points
+
+      const startScores = [0, 0, 0, 0]
+      let scores = startScores
+
+      function incrimentScore(difficulty){
+        setScore(difficulty, scores[difficulty] + 1)
+      }
+
+      function setScore(difficulty, score){
+        scores[difficulty] = score
+        updateHighScores(scores)
+        drawScores()
+      }
+
+      function updateHighScores(){
+        let highScores = getHighScores()
+        for (let i = 0; i < highScores.length; i++) {
+          highScores[i] = Math.max(highScores[i], scores[i])
+        }
+        window.localStorage.highScores = JSON.stringify(highScores)
+      }
+
+      function getHighScores(){
+        try {
+          const highScores = JSON.parse(window.localStorage.highScores)
+          if (Array.isArray(highScores) && highScores.length == scores.length && highScores.every((x)=>Number.isInteger(x))){  
+            return highScores
+          }
+        } catch (e) {}
+        return startScores
+      }
+
+      function drawScores(){
+        let scoreText = "   "
+        const highScores = getHighScores()
+        for (let i = 0; i < highScores.length; i++) {
+          diffResultElements[i].innerText = scores[i]+" ("+highScores[i]+")"
+        }
+      }
+
+      ///////////////////////////////////////////////
       // Startup
 
       window.radioChange = function() {
-        points = 0 
         update()
       }
 
       minute60El.checked = true
+      drawScores()
       update()
 
     </script>
     <style>
       input     {width: 2.5vh; height: 2.5vh;}
-      b         {font-size: 2.5vh;}
-      div.box   {border-width: 0.6vh; border-color: black; border-style: solid; border-radius: 2vh; align-content: center;}
+      b         {font-size: 2.2vh;}
+      div.box   {border-width: 0.6vh; border-color: black; border-style: solid; border-radius: 2vh;
+                 align-content: center; margin: 0.5vh; background: white; text-align: center;
+                 display: inline-block; padding-top: 0.5vh; padding-bottom: 0.5vh; }
     </style>
   </head>
   <body style="background: #21455d; overscroll-behavior: none; margin:0px;">
 		<div style="width: 50vh; height: 100vh; text-align: center; 
 		max-width: 100vh; max-height: 200vh; margin: auto;">
-      <div class="box" style="width:100%; aspect-ratio:8/1; margin: 0.5vh; background: white; text-align: center;">
+      <div class="box" style="width:20%; aspect-ratio:8/1;">
         <input name="difficulty" type="radio" onclick="radioChange()" id="minute60">
-        <b>Hel</b> 
+        <b>Hel</b>
+        <br>
+        <b  id="diff0"></b>
+      </div>
+      <div class="box" style="width:20%; aspect-ratio:8/1;">
         <input name="difficulty" type="radio" onclick="radioChange()" id="minute30">
-        <b>Halv</b> 
+        <b>Halv</b>
+        <br>
+        <b id="diff1"></b>
+      </div>
+      <div class="box" style="width:20%; aspect-ratio:8/1;">
         <input name="difficulty" type="radio" onclick="radioChange()" id="minute15">
         <b>Kvart</b>
+        <br>
+        <b id="diff2"></b>
+      </div>
+      <div class="box" style="width:20%; aspect-ratio:8/1;">
         <input name="difficulty" type="radio" onclick="radioChange()" id="minute5">
-        <b>5 miuter</b>
+        <b>5 Min</b>
+        <br>
+        <b id="diff3"></b>
       </div>
-      <div class="box" style="width:100%; aspect-ratio:8/1; margin: 0.5vh; background: white; ">
-        <div id="result" style="width:100%; font-size: 3vh; font-weight: bold; align-content: center; text-align: center;"></div>
-      </div>
+
       <div id="question" style="width:100%; text-align: center;"></div>
       <div id="answers" style="width:100%; text-align: center; align-content: center; display: inline-block;"></div>
     </div>
