@@ -8,11 +8,6 @@
     <meta name="viewport" content="width=device-width, height=device-height,
           initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <script type="module">
-      const minute60El = document.getElementById('minute60');
-      const minute30El = document.getElementById('minute30');
-      const minute15El = document.getElementById('minute15');
-      const minute5El = document.getElementById('minute5');
-      
       const diff0ResultEl = document.getElementById('diff0');
       const diff1ResultEl = document.getElementById('diff1');
       const diff2ResultEl = document.getElementById('diff2');
@@ -24,23 +19,11 @@
       const resultEl = document.getElementById('result');
 
       let correctElement;
+      let difficulty
       let enableClick = true
 
       ///////////////////////////////////////////////
       // Main logic
-
-      function difficulty(){
-        switch (true) {
-          case (minute60El.checked):
-            return 0
-          case (minute30El.checked):
-            return 1
-          case (minute15El.checked):
-            return 2
-          case (minute5El.checked):
-            return 3
-        }
-      }
 
       function getRandomRange(max, count){
         const allValues = [...Array(max).keys()]
@@ -63,7 +46,7 @@
 
       function update () {
         const numberOfOptions = 4
-        const clockValues = getGetRandomClocks(difficulty(), numberOfOptions)
+        const clockValues = getGetRandomClocks(difficulty, numberOfOptions)
         const clockTypes = getRandomRange(3, 2)
 
         const correctIndex = Math.floor(Math.random()*clockValues.length)
@@ -84,12 +67,12 @@
         enableClick = false
 
         if (correctElement == clickedElement) {
-          incrimentScore(difficulty())
+          incrimentScore(difficulty)
           clickedElement.style.borderColor = "green"
           await sleep(1000);
         }
         else {
-          setScore(difficulty(), 0)
+          setScore(difficulty, 0)
           clickedElement.style.borderColor = "red"
           correctElement.style.borderColor = "yellow"
           await sleep(3000);
@@ -310,6 +293,10 @@
         window.localStorage.highScores = JSON.stringify(highScores)
       }
 
+      function clearHighScores(){
+        window.localStorage.removeItem("highScores")
+      }
+
       function getHighScores(){
         try {
           const highScores = JSON.parse(window.localStorage.highScores)
@@ -317,6 +304,7 @@
             return highScores
           }
         } catch (e) {}
+        clearHighScores()
         return startScores
       }
 
@@ -331,12 +319,22 @@
       ///////////////////////////////////////////////
       // Startup
 
-      window.radioChange = function() {
-        update()
+      window.radioChange = function(newDifficulty) {
+        if (difficulty != newDifficulty){ // To prevent reloads
+          difficulty = newDifficulty
+          update()
+        }
       }
 
-      minute60El.checked = true
+      window.madeOfClick = function() {
+         if (confirm("Rensa high score")) {
+          clearHighScores()
+          drawScores()
+        } 
+      }
+
       drawScores()
+      document.getElementById('startRadio').click()
       update()
 
     </script>
@@ -352,25 +350,25 @@
 		<div style="width: 50vh; height: 100vh; text-align: center; 
 		max-width: 100vh; max-height: 200vh; margin: auto;">
       <div class="box" style="width:20%; aspect-ratio:8/1;">
-        <input name="difficulty" type="radio" onclick="radioChange()" id="minute60">
+        <input name="difficulty" type="radio" onclick="radioChange(0)" id="startRadio">
         <b>Hel</b>
         <br>
         <b  id="diff0"></b>
       </div>
       <div class="box" style="width:20%; aspect-ratio:8/1;">
-        <input name="difficulty" type="radio" onclick="radioChange()" id="minute30">
+        <input name="difficulty" type="radio" onclick="radioChange(1)">
         <b>Halv</b>
         <br>
         <b id="diff1"></b>
       </div>
       <div class="box" style="width:20%; aspect-ratio:8/1;">
-        <input name="difficulty" type="radio" onclick="radioChange()" id="minute15">
+        <input name="difficulty" type="radio" onclick="radioChange(2)">
         <b>Kvart</b>
         <br>
         <b id="diff2"></b>
       </div>
       <div class="box" style="width:20%; aspect-ratio:8/1;">
-        <input name="difficulty" type="radio" onclick="radioChange()" id="minute5">
+        <input name="difficulty" type="radio" onclick="radioChange(3)">
         <b>5 Min</b>
         <br>
         <b id="diff3"></b>
@@ -378,6 +376,8 @@
 
       <div id="question" style="width:100%; text-align: center;"></div>
       <div id="answers" style="width:100%; text-align: center; align-content: center; display: inline-block;"></div>
+      <br><br>
+      <b onclick="madeOfClick()">Av Håkan och Hjalmar</b>
     </div>
   </body>
 </html>
