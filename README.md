@@ -110,3 +110,7 @@ https://hakanols.github.io/spel/TabClose/index.html
 Pascals triangel
 
 https://hakanols.github.io/spel/Pascal/index.html
+
+Lingo Bingo
+
+https://hakanols.github.io/spel/LingoBingo/index.html
