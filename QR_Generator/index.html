@@ -1,7 +1,10 @@
-<html>
+<!DOCTYPE html>
+<html style="overscroll-behavior: none;">
 	<head>
 		<title>QR Generator</title>
-		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<!-- Prevent mobile auto-scaling -->
+		<meta name="viewport" content="width=device-width, height=device-height,
+			initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 		<script type="module">
 			import QRCode from './qrcode.js'
 
@@ -132,12 +135,16 @@
 				border-radius: 4em;
 				background: white;
 			}
-			td, p, input, option, select {
-				font-size: 2rem;
+			table, p {
+				font-size: 4em;
+			}
+			input, select {
+				font-size: 1em;
 			}
 		</style>
 	</head>
-	<body style="background-image: url('agave.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-size: cover; background-position: center center;">
+	<body style="background-image: url('agave.jpg'); background-repeat: no-repeat; background-attachment: fixed;
+		background-size: cover; background-position: center center; ; overscroll-behavior: none;">
 		<div class="wrapper">
 			<h1 style="text-align: center; font-size: 6em;">QR Generator</h1>
 
@@ -145,7 +152,7 @@
 				<tbody>
 					<tr>
 						<td valign="top">
-							<input id="radioWifi" style="height: 2rem; width: 2rem;" name="qrType" checked="checked" onclick="update();" type="radio">
+							<input id="radioWifi" style="height: 1em; width: 1em;" name="qrType" checked="checked" onclick="update();" type="radio">
 						</td> <td rowspan="1" colspan="2" width="100%" valign="top">
 							WiFi login
 						</td>
@@ -167,7 +174,7 @@
 						<td valign="top"><br></td>
 					</tr> <tr>
 						<td valign="top">
-							<input id="radioSms" style="height: 2rem; width: 2rem;" name="qrType" onclick="update();" type="radio">
+							<input id="radioSms" style="height: 1em; width: 1em;" name="qrType" onclick="update();" type="radio">
 						</td> <td rowspan="1" colspan="2" width="100%" valign="top">
 							SMS
 						</td>
@@ -189,7 +196,7 @@
 						<td valign="top"><br></td>
 							</tr> <tr>
 						<td valign="top">
-							<input id="radioEmail" style="height: 2rem; width: 2rem;" name="qrType" onclick="update();" type="radio">
+							<input id="radioEmail" style="height: 1em; width: 1em;" name="qrType" onclick="update();" type="radio">
 						</td> <td rowspan="1" colspan="2" width="100%" valign="top">
 							Email
 						</td>
@@ -218,7 +225,7 @@
 						<td valign="top"><br></td>
 					</tr> <tr>
 						<td valign="top">
-							<input id="radioUrl" style="height: 2rem; width: 2rem;" name="qrType" onclick="update();" type="radio">
+							<input id="radioUrl" style="height: 1em; width: 1em;" name="qrType" onclick="update();" type="radio">
 						</td> <td rowspan="1" colspan="2" valign="top">
 							Url or free text: (<label id="dataType"></label>)
 						</td>
@@ -231,7 +238,7 @@
 						<td valign="top"><br></td>
 					</tr> <tr>
 						<td valign="top">
-							<input id="radioSwish" style="height: 2rem; width: 2rem;" name="qrType" onclick="update();" type="radio">
+							<input id="radioSwish" style="height: 1em; width: 1em;" name="qrType" onclick="update();" type="radio">
 						</td> <td rowspan="1" colspan="2" valign="top">
 							Swish
 						</td>
@@ -251,7 +258,7 @@
 						</td><td width="100%" valign="top">
 							<input style="width:100%" id="swishAmount" oninput="update()" type="number">
 						</td><td valign="top">
-							<input id="swishAmountOk" style="height: 2rem; width: 2rem;" oninput="update()" type="checkbox">
+							<input id="swishAmountOk" style="height: 1em; width: 1em;" oninput="update()" type="checkbox">
 						</td>
 					</tr><tr>
 						<td valign="top"><br></td>
@@ -260,7 +267,7 @@
 						</td><td width="100%" valign="top">
 							<input style="width:100%" id="swishMsg" oninput="update()" type="text">
 						</td><td valign="top">
-							<input id="swishMsgOk" style="height: 2rem; width: 2rem;" oninput="update()" type="checkbox">
+							<input id="swishMsgOk" style="height: 1em; width: 1em;" oninput="update()" type="checkbox">
 						</td>
 					</tr>
 				</tbody>
