@@ -1,116 +1,98 @@
 # spel
-Cheat sheet for a beer game
-
+### Cheat sheet for a beer game
 https://hakanols.github.io/spel/Beer/beer.html
 
-5 x 5 (Counting game)
-
+### 5 x 5 (Counting game)
 https://hakanols.github.io/spel/Count/count.html
 
-Taurus Labyrint (Memory)
-
+### Taurus Labyrint (Memory)
 https://hakanols.github.io/spel/Memory/memory.html
 
-Sommarskuggan
-
+### Sommarskuggan
 https://hakanols.github.io/spel/Skuggan/index.html
 
-QR Generator
-
+### QR Generator
 https://hakanols.github.io/spel/QR_Generator/index.html
 
     node browser-quick-start.mjs /QR_Generator/index.html
 
-Scan QR
-
+### Scan QR
 https://hakanols.github.io/spel/QR_Scan/index.html
 
     node browser-quick-start.mjs /QR_Scan/index.html
 
-Wake Lock Test
-
+### Wake Lock Test
 https://hakanols.github.io/spel/Wake/index.html
 
     node browser-quick-start.mjs /Wake/index.html
 
-Web Worker
-
+### Web Worker
 https://hakanols.github.io/spel/Web_Worker/index.html
 
     node browser-quick-start.mjs /Web_Worker/index.html
 
-Maze
-
+### Maze
 https://hakanols.github.io/spel/Maze/index.html
 
-Morse
-
+### Morse
 https://hakanols.github.io/spel/Morse/index.html
 
-Puzzel
-
+### Puzzel
 https://hakanols.github.io/spel/Puzzel/generator.html
 
     node browser-quick-start.mjs /Puzzel/generator.html
 
-Orienteering
-
+### Orienteering
 https://hakanols.github.io/spel/Orient/generator.html
 
     node browser-quick-start.mjs /Orient/generator.html
 
-PDF Generator
-
+### PDF Generator
 https://hakanols.github.io/spel/PDF/index.html
 
     node browser-quick-start.mjs /PDF/index.html
 
-Inline SVG favicon
-
+### Inline SVG favicon
 https://hakanols.github.io/spel/Favicon/index.html
 
-HTML JS Runner
-
+### HTML JS Runner
 https://hakanols.github.io/spel/JS_Runner/runJs.html?file=test.js  
 
     node browser-quick-start.mjs /JS_Runner/runJs.html?file=test.js
 
-AwaitTopLevel
-
+### AwaitTopLevel
 https://hakanols.github.io/spel/AwaitTopLevel/index.html
 
     node browser-quick-start.mjs /AwaitTopLevel/index.html
 
     node AwaitTopLevel/test.js
 
-Clock
-
+### Clock
 https://hakanols.github.io/spel/Clock/index.html
 
     node browser-quick-start.mjs /Clock/index.html
 
-ClockGame
-
+### ClockGame
 https://hakanols.github.io/spel/ClockGame/index.html
 
     node browser-quick-start.mjs /ClockGame/index.html
 
-CountDown
-
+### CountDown
 https://hakanols.github.io/spel/CountDown/index.html
 
-Nautical Flags
-
+### Nautical Flags
 https://hakanols.github.io/spel/Flags/index.html
 
-TabClose
-
+### TabClose
 https://hakanols.github.io/spel/TabClose/index.html
 
-Pascals triangel
-
+### Pascals triangel
 https://hakanols.github.io/spel/Pascal/index.html
 
-Lingo Bingo
-
+### Lingo Bingo
 https://hakanols.github.io/spel/LingoBingo/index.html
+
+### Web scaling
+- https://hakanols.github.io/spel/WebScaling/squarebox.html
+- https://hakanols.github.io/spel/WebScaling/ratiobox.html
+- https://hakanols.github.io/spel/WebScaling/scrollbox.html

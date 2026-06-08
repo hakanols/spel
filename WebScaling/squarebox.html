@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html style="overscroll-behavior: none;">
+  <head>
+    <title>Square Box</title>
+    <!-- Prevent mobile auto-scaling -->
+    <meta name="viewport" content="width=device-width, height=device-height,
+          initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <style>
+      html, body {
+        margin: 0;
+        height: 100%;
+      }
+      .wrapper {
+        width: 100dvmin;
+        height: 100dvmin;
+
+        font-size: calc(100dvmin / 100); /* This will proppegate to children with em*/
+
+        margin: auto;
+
+        background: steelblue;
+        box-sizing: border-box;
+        border: 1em solid black;
+      }
+    </style>
+  </head>
+  <body style="overscroll-behavior: none;">
+    <div class="wrapper">
+        <p style="font-size: 6em;">Grisar kan flyga</p>
+    </div>
+  </body>
+</html>

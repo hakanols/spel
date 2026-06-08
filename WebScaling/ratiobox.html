@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html style="overscroll-behavior: none;">
+  <head>
+    <title>Ratio Box</title>
+    <!-- Prevent mobile auto-scaling -->
+    <meta name="viewport" content="width=device-width, height=device-height,
+          initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <style>
+      html, body {
+        margin: 0;
+        height: 100%;
+      }
+      .wrapper {
+        width: 100vw;
+        height: 100dvh;
+
+        --ratio: (16/9);
+        max-width: calc(100dvh * var(--ratio));
+        max-height: calc(100vw / var(--ratio));
+
+        --viewsize: min(100vw, calc(100dvh * var(--ratio)));
+        font-size: calc(var(--viewsize) / 100); /* This will proppegate to children with em*/
+
+        margin: auto;
+
+        background: steelblue;
+        box-sizing: border-box;
+        border: 1em solid black;
+      }
+    </style>
+  </head>
+  <body style="overscroll-behavior: none;">
+    <div class="wrapper">
+      <div>
+        <p style="font-size: 6em;">Grisar kan flyga</p>
+      </div>
+    </div>
+  </body>
+</html>
