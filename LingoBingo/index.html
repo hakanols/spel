@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html style="overscroll-behavior: none;">
   <head>
-    <title>ClockGame</title>
+    <title>Lingo Bingo</title>
     <!-- Prevent mobile auto-scaling -->
     <meta name="viewport" content="width=device-width, height=device-height,
           initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -57,41 +57,28 @@
           .map((x) => words[x])
       }
 
-      function createBox(){
-          const div = document.createElement("div");
-          div.style.width = "20%"
-          div.style.aspectRatio = "1/1";
-          div.style.background = "white";
-          div.style.alignContent = "center"
-          div.style.verticalAlign = "middle"
-          div.style.textAlign = "center"
-          div.style.borderWidth = "0.6vh"
-          div.style.borderColor = "black"
-          div.style.borderStyle = "solid"
-          div.style.borderRadius = "2vh"
-          div.style.margin = "0.5vh"
-          div.style.display = "inline-block"
-          return div
-      }
-
-      function addWord(word, parent) {
-          const box = createBox()
-          const div = document.createElement("span");
-          div.style.fontSize = "1.8vh";
-          div.style.width = "100%"
-          div.style.height = "100%"
-          div.style.padding = "0.5vh"
-          div.innerText = word
-          box.appendChild(div)
-          parent.appendChild(box)
+      function createBox(inner) {
+          const box = document.createElement("div");
+          box.className = "box"
+          box.style.height = "100%"
           box.addEventListener("click", () => box.style.background = box.style.background == "grey" ? "white" : "grey");
-          return box
+          box.appendChild(inner)
+          const outer = document.createElement("div");
+          outer.style.width = "25%"
+          outer.style.aspectRatio = "1/1";
+          outer.style.display = "inline-block"
+          outer.style.padding = "1em"  
+          outer.appendChild(box)
+          return outer
       }
 
       function update () {
         const selectedWords = selectRandomWords(officeWords, 16)
         for (const selectedWord of selectedWords) {
-          addWord(selectedWord, resultEl)
+          const inner = document.createElement("div");
+          inner.style.fontSize = "4em";
+          inner.innerText = selectedWord
+          resultEl.appendChild(createBox(inner))
         }
       }
 
@@ -102,14 +89,45 @@
 
     </script>
     <style>
-      div.box   {border-width: 0.6vh; border-color: black; border-style: solid; border-radius: 2vh; align-content: center; text-align: center;}
+      * {
+        box-sizing: border-box;
+      }
+      html, body {
+        margin: 0;
+        height: 100%;
+      }
+      .wrapper {
+        width: 100vw;
+        height: 100dvh;
+
+        --ratio: (12/14);
+        max-width: calc(100dvh * var(--ratio));
+        max-height: calc(100vw / var(--ratio));
+
+        --viewsize: min(100vw, calc(100dvh * var(--ratio)));
+        font-size: calc(var(--viewsize) / 100); /* This will proppegate to children with em*/
+
+        margin: auto;
+      }
+      .box {
+        border-width: 1em;
+        border-color: black;
+        border-style: solid;
+        border-radius: 4em;
+        align-content: center;
+        text-align: center;
+        background: white;
+      }
     </style>
   </head>
-  <body style="background: #21455d; overscroll-behavior: none; margin:0px;">
-		<div style="width: 50vh; height: 100vh; text-align: center; 
-		max-width: 100vh; max-height: 200vh; margin: auto;">
-      <div class="box" style="width:95%; aspect-ratio:8/1; margin: 0.5vh; background: white; font-size: 7vh; text-align: center;">Lingo Bingo</div>
-      <div id="result" style="width:100%; font-size: 3vh; font-weight: bold; align-content: center; text-align: center;"></div>
+  <body style="background: #21455d; overscroll-behavior: none;">
+    <div class="wrapper">
+      <div style="width:100%; padding:1em">
+        <div class="box">
+          <div style="font-size: 7em;">Lingo Bingo</div>
+        </div>
+      </div>
+      <div id="result" style="width:100%; align-content: center; text-align: center;"></div>
     </div>
   </body>
 </html>

@@ -67,13 +67,13 @@
 
         if (correctElement == clickedElement) {
           incrimentScore(difficulty)
-          clickedElement.style.borderColor = "green"
+          clickedElement.children[0].style.borderColor = "green"
           await sleep(1000);
         }
         else {
           setScore(difficulty, 0)
-          clickedElement.style.borderColor = "red"
-          correctElement.style.borderColor = "yellow"
+          clickedElement.children[0].style.borderColor = "red"
+          correctElement.children[0].style.borderColor = "yellow"
           await sleep(3000);
         }
         update()
@@ -99,37 +99,31 @@
         return element
       }
 
-
-      function createBox(){
-          const div = document.createElement("div");
-          div.style.width = "40%"
-          div.style.aspectRatio = "1/1";
-          div.style.background = "white";
-          div.style.alignContent = "center"
-          div.style.verticalAlign = "middle"
-          div.style.textAlign = "center"
-          div.style.borderWidth = "0.6vh"
-          div.style.borderColor = "black"
-          div.style.borderStyle = "solid"
-          div.style.borderRadius = "2vh"
-          div.style.margin = "0.5vh"
-          div.style.display = "inline-block"
-          return div
+      function createBox(inner) {
+          const box = document.createElement("div");
+          box.className = "box"
+          box.style.height = "100%"
+          box.appendChild(inner)
+          const outer = document.createElement("div");
+          outer.style.width = "50%"
+          outer.style.aspectRatio = "1/1";
+          outer.style.display = "inline-block"
+          outer.style.padding = "1em"
+          outer.style.verticalAlign = "middle" 
+          outer.appendChild(box)
+          return outer
       }
 
      ///////////////////////////////////////////////
      // Create digital clock
 
       function createDigitalClock(timeMin, parent) {
-          const box = createBox()
-          const div = document.createElement("span");
-          div.style.fontSize = "6vh"
-          div.style.width = "100%"
-          div.style.height = "100%"
           const hour = String(Math.floor(timeMin/60)%24).padStart(2, '0')
           const min = String(timeMin%60).padStart(2, '0')
-          div.innerText = hour + ":" + min
-          box.appendChild(div)
+          const inner = document.createElement("div");
+          inner.style.fontSize = "12em"
+          inner.innerText = hour + ":" + min
+          const box = createBox(inner)
           parent.appendChild(box)
           return box
       }
@@ -138,16 +132,17 @@
       // Create text clock
 
       function createTextClock(timeMin, parent) {
-          const box = createBox()
-          const div = document.createElement("span");
-          div.style.fontSize = "4vh";
-          div.style.width = "100%"
-          div.style.height = "100%"
-          div.style.padding = "0.5vh"
-          div.innerText = timeToText(timeMin)
-          box.appendChild(div)
+          const inner = document.createElement("div");
+          inner.style.fontSize = "6em"
+          inner.style.padding = "0.5em"
+          inner.style.width = "100%"
+          inner.style.height = "100%"
+          inner.style.alignContent = "center"
+          inner.style.verticalAlign = "middle"
+          inner.style.textAlign = "center"
+          inner.innerText = timeToText(timeMin)
+          const box = createBox(inner)
           parent.appendChild(box)
-
           return box
       }
 
@@ -188,12 +183,11 @@
       // Create analog clock
 
       function createAnalogClock(timeMin, parent) {
-          const box = createBox()
           const canvas = document.createElement("canvas");
-          canvas.style.width = "95%"
-          canvas.style.height = "95%"
+          canvas.style.width = "100%"
+          canvas.style.height = "100%"
           canvas.style.verticalAlign = "middle"
-          box.appendChild(canvas)
+          const box = createBox(canvas)
           parent.appendChild(box)
           const ctx = canvas.getContext("2d");
           const radius = canvas.getBoundingClientRect().width / 2;
@@ -338,41 +332,81 @@
 
     </script>
     <style>
-      input     {width: 2.5vh; height: 2.5vh;}
-      b         {font-size: 2.2vh;}
-      div.box   {border-width: 0.6vh; border-color: black; border-style: solid; border-radius: 2vh;
-                 align-content: center; margin: 0.5vh; background: white; text-align: center;
-                 display: inline-block; padding-top: 0.5vh; padding-bottom: 0.5vh; }
+
+      * {
+        box-sizing: border-box;
+      }
+      html, body {
+        margin: 0;
+        height: 100%;
+      }
+      .wrapper {
+        width: 100vw;
+        height: 100dvh;
+
+        --ratio: (4/7);
+        max-width: calc(100dvh * var(--ratio));
+        max-height: calc(100vw / var(--ratio));
+
+        --viewsize: min(100vw, calc(100dvh * var(--ratio)));
+        font-size: calc(var(--viewsize) / 100); /* This will proppegate to children with em*/
+
+        margin: auto;
+      }
+      .box {
+        border-width: 1em;
+        border-color: black;
+        border-style: solid;
+        border-radius: 4em;
+        align-content: center;
+        text-align: center;
+        background: white;
+      }
+      input {
+        width: 2.2em;
+        height: 2.2em;
+      }
+      b {
+        font-size: 4.5em;
+      }
     </style>
   </head>
-  <body style="background: #21455d; overscroll-behavior: none; margin:0px;">
-		<div style="width: 50vh; height: 100vh; text-align: center; 
-		max-width: 100vh; max-height: 200vh; margin: auto;">
-      <div class="box" style="width:20%; aspect-ratio:8/1;">
-        <input name="difficulty" type="radio" onclick="radioChange(0)" id="startRadio">
-        <b>Hel</b>
-        <br>
-        <b  id="diff0"></b>
+  <body style="background: #21455d; overscroll-behavior: none;">
+    <div class="wrapper">
+      <div>
+        <div style="width:24%; aspect-ratio:8/1; display: inline-block; padding:1em">
+          <div class="box">
+            <input name="difficulty" type="radio" onclick="radioChange(0)" id="startRadio">
+            <b>Hel</b>
+            <br>
+            <b id="diff0"></b>
+          </div>
+        </div>
+        <div style="width:25%; aspect-ratio:8/1; display: inline-block; padding:1em">
+          <div class="box">
+            <input name="difficulty" type="radio" onclick="radioChange(1)">
+            <b>Halv</b>
+            <br>
+            <b id="diff1"></b>
+          </div>
+        </div>
+        <div style="width:25%; aspect-ratio:8/1; display: inline-block; padding:1em">
+          <div class="box">
+            <input name="difficulty" type="radio" onclick="radioChange(2)">
+            <b>Kvart</b>
+            <br>
+            <b id="diff2"></b>
+          </div>
+        </div>
+        <div style="width:25%; aspect-ratio:8/1; display: inline-block; padding:1em">
+          <div class="box">
+            <input name="difficulty" type="radio" onclick="radioChange(3)">
+            <b>5 Min</b>
+            <br>
+            <b id="diff3"></b>
+          </div>
+        </div>
       </div>
-      <div class="box" style="width:20%; aspect-ratio:8/1;">
-        <input name="difficulty" type="radio" onclick="radioChange(1)">
-        <b>Halv</b>
-        <br>
-        <b id="diff1"></b>
-      </div>
-      <div class="box" style="width:20%; aspect-ratio:8/1;">
-        <input name="difficulty" type="radio" onclick="radioChange(2)">
-        <b>Kvart</b>
-        <br>
-        <b id="diff2"></b>
-      </div>
-      <div class="box" style="width:20%; aspect-ratio:8/1;">
-        <input name="difficulty" type="radio" onclick="radioChange(3)">
-        <b>5 Min</b>
-        <br>
-        <b id="diff3"></b>
-      </div>
-
       <div id="question" style="width:100%; text-align: center;"></div>
       <div id="answers" style="width:100%; text-align: center; align-content: center; display: inline-block;"></div>
       <br><br>

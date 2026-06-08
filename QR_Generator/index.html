@@ -115,27 +115,36 @@
 		</script>
 		<style>
 			input:invalid{background-color: #ffdddd;}
-			div.ruta{
-				padding:10px; 
-				background-color: white;
-				border:5px solid gray;
-				margin:10px;
-				border-radius: 10px 10px 10px 10px;
-				box-shadow: 4px 4px 2px 2px black;
-				font-family: Noteworthy;
+			html, body {
+				margin: 0;
+				height: 100%;
+			}
+			.wrapper {
+				width: min(100vw, 100dvh);
+				font-size: calc(min(100vw, 100dvh) / 100); /* This will proppegate to children with em*/
+
+				margin: auto;
+
+				border-width: 1em;
+				border-color: black;
+				border-style: solid;
+				border-radius: 4em;
+				background: white;
+			}
+			td, p, input, option, select {
+				font-size: 2rem;
 			}
 		</style>
 	</head>
 	<body style="background-image: url('agave.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-size: cover; background-position: center center;">
-		<div class="ruta" style="width:400px;margin-right:auto;margin-left:auto;">
-
-			<h1 style="text-align: center">QR Generator</h1>
+		<div class="wrapper">
+			<h1 style="text-align: center; font-size: 6em;">QR Generator</h1>
 
 			<table>
 				<tbody>
 					<tr>
 						<td valign="top">
-							<input id="radioWifi" name="qrType" checked="checked" onclick="update();" type="radio">
+							<input id="radioWifi" style="height: 2rem; width: 2rem;" name="qrType" checked="checked" onclick="update();" type="radio">
 						</td> <td rowspan="1" colspan="2" width="100%" valign="top">
 							WiFi login
 						</td>
@@ -157,7 +166,7 @@
 						<td valign="top"><br></td>
 					</tr> <tr>
 						<td valign="top">
-							<input id="radioSms" name="qrType" onclick="update();" type="radio">
+							<input id="radioSms" style="height: 2rem; width: 2rem;" name="qrType" onclick="update();" type="radio">
 						</td> <td rowspan="1" colspan="2" width="100%" valign="top">
 							SMS
 						</td>
@@ -179,7 +188,7 @@
 						<td valign="top"><br></td>
 							</tr> <tr>
 						<td valign="top">
-							<input id="radioEmail" name="qrType" onclick="update();" type="radio">
+							<input id="radioEmail" style="height: 2rem; width: 2rem;" name="qrType" onclick="update();" type="radio">
 						</td> <td rowspan="1" colspan="2" width="100%" valign="top">
 							Email
 						</td>
@@ -208,7 +217,7 @@
 						<td valign="top"><br></td>
 					</tr> <tr>
 						<td valign="top">
-							<input id="radioUrl" name="qrType" onclick="update();" type="radio">
+							<input id="radioUrl" style="height: 2rem; width: 2rem;" name="qrType" onclick="update();" type="radio">
 						</td> <td rowspan="1" colspan="2" valign="top">
 							Url or free text: (<label id="dataType"></label>)
 						</td>
@@ -221,7 +230,7 @@
 						<td valign="top"><br></td>
 					</tr> <tr>
 						<td valign="top">
-							<input id="radioSwish" name="qrType" onclick="update();" type="radio">
+							<input id="radioSwish" style="height: 2rem; width: 2rem;" name="qrType" onclick="update();" type="radio">
 						</td> <td rowspan="1" colspan="2" valign="top">
 							Swish
 						</td>
@@ -241,7 +250,7 @@
 						</td><td width="100%" valign="top">
 							<input style="width:100%" id="swishAmount" oninput="update()" type="number">
 						</td><td valign="top">
-							<input id="swishAmountOk" oninput="update()" type="checkbox">
+							<input id="swishAmountOk" style="height: 2rem; width: 2rem;" oninput="update()" type="checkbox">
 						</td>
 					</tr><tr>
 						<td valign="top"><br></td>
@@ -250,20 +259,21 @@
 						</td><td width="100%" valign="top">
 							<input style="width:100%" id="swishMsg" oninput="update()" type="text">
 						</td><td valign="top">
-							<input id="swishMsgOk" oninput="update()" type="checkbox">
+							<input id="swishMsgOk" style="height: 2rem; width: 2rem;" oninput="update()" type="checkbox">
 						</td>
 					</tr>
 				</tbody>
 			</table>
 
-			<p>Correction level:
+			<p style="text-align: center;">Correction level:
 				<select id="correctionLevel" onchange="update();">
 					<option value="L">Low</option>
 					<option value="M" selected="selected">Medium</option>
 					<option value="H">High</option>
 				</select>
 			</p>
-			<img id="outputArea" style="display: block;	margin-left: auto; margin-right: auto; width: 66%;"></img>
+			<img id="outputArea" style="display: block;	margin: auto; width: 66%; aspect-ratio: 1/1;"></img>
+			<br>
 		</div>
 	</body>
 </html>
