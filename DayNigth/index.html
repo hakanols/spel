@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <!-- Stolen from  -->
-<!-- https://www.w3schools.com/graphics/tryit.asp?filename=trycanvas_clock_start -->
 <!-- https://codesandbox.io/p/sandbox/css-day-n-night-79mwt-->
-<!-- STAR CRAFT II -->
-<html>
+<html style="overscroll-behavior: none;">
   <head>
-    <title>Clock</title>
+    <title>DayNight</title>
+		<meta name="viewport" content="width=device-width, height=device-height,
+			initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="viewport" content="width=700, initial-scale=1.0">
 	  <script type="module">
       const realClockEl = document.getElementById('real_clock');
@@ -13,9 +13,6 @@
       const customClockEl = document.getElementById('custom_clock');
       const customTimeEl = document.getElementById('custom_time');
       const canvasDayNigth = document.getElementById("canvas_day_nigth");
-      const canvasClock = document.getElementById("canvas_clock");
-      const digitalClock = document.getElementById("digital_clock");  
-      const textClock = document.getElementById("text_clock"); 
 
       const sun = await loadImage("images/sun.svg");
       const moon = await loadImage("images/moon.svg");
@@ -135,59 +132,11 @@
         const newTimeSec = getTimeSecFromSource()
         if (lastTimeSec != newTimeSec){
           drawDayNigth(newTimeSec/(24*60*60) )
-          drawClock(newTimeSec)
-          setDigitalClock(newTimeSec)
-          setTextClock(newTimeSec)
           lastTimeSec = newTimeSec
         }
       }
 
-      function setTextClock(totSeconds) {
-        textClock.innerHTML = timeToText(totSeconds)
-      }
-
-      function timeToText(totSeconds) {
-
-          const hour = myModelus(Math.floor(totSeconds/(60*60)), 12)
-          const nextHour = myModelus((hour+1), 12)
-          const min = Math.floor(totSeconds/60)%60
-
-          switch (true) {
-            case (min == 0):
-              return `${hour}`
-            case (min == 15):
-              return `Kvart över ${hour}`
-            case (min == 30):
-              return `Halv ${nextHour}`
-            case (min == 45):
-              return `Kvart i ${nextHour}`
-            case (min >= 1 && 20 >= min):
-              return `${min} minuter över ${hour}`
-            case (min >= 21 && 29 >= min):
-              return `${30-min} minuter i halv ${nextHour}`
-            case (min >= 31 && 39 >= min):
-              return `${min-30} minuter över halv ${nextHour}`
-            case (min >= 40 && 59 >= min):
-              return `${60-min} minuter i ${nextHour}`
-            default:
-              throw "Whattttt"
-          }
-      }
-
-      function myModelus(number, divider){
-        const modelus = number%divider
-        return modelus == 0 ? divider : modelus
-      }
-
-      function setDigitalClock(totSeconds) {
-        const hour = String(Math.floor(totSeconds/(60*60))%24).padStart(2, '0')
-        const min = String(Math.floor(totSeconds/60)%60).padStart(2, '0')
-        const sec = String(totSeconds%60).padStart(2, '0')
-
-        digitalClock.innerHTML = hour + ":" + min +  ":" + sec 
-      }
-
-      function drawDayNigth(phase) {
+       function drawDayNigth(phase) {
         const ctx = canvasDayNigth.getContext("2d");
         const height = canvasDayNigth.height;
         ctx.reset();
@@ -227,73 +176,6 @@
         ctx.drawImage(img, x, y);
       }
 
-      function drawClock(totSeconds) {
-        const ctx = canvasClock.getContext("2d");
-        const radius = canvasClock.height / 2;
-        ctx.reset();
-        ctx.resetTransform();
-        ctx.translate(radius, radius);
-        drawFace(ctx, radius*0.9);
-        drawNumbers(ctx, radius*0.9);
-        drawTime(ctx, radius*0.9, totSeconds);
-      }
-
-      function drawFace(ctx, radius) {
-        const grad = ctx.createRadialGradient(0,0,radius*0.95, 0,0,radius*1.05);
-        grad.addColorStop(0, '#333');
-        grad.addColorStop(0.5, 'white');
-        grad.addColorStop(1, '#333');
-        ctx.beginPath();
-        ctx.arc(0, 0, radius, 0, 2*Math.PI);
-        ctx.fillStyle = 'white';
-        ctx.fill();
-        ctx.strokeStyle = grad;
-        ctx.lineWidth = radius*0.1;
-        ctx.stroke();
-        ctx.beginPath();
-        ctx.arc(0, 0, radius*0.1, 0, 2*Math.PI);
-        ctx.fillStyle = '#333';
-        ctx.fill();
-        for(let num = 1; num <= 60; num++){
-          const ang = num * Math.PI*2 / 60;
-          ctx.beginPath();
-          ctx.lineWidth = radius*0.02;
-          const x = Math.sin(ang)*radius
-          const y = -Math.cos(ang)*radius
-          ctx.moveTo(x*0.85,y*0.85);
-          ctx.lineTo(x*0.90,y*0.90);
-          ctx.stroke();
-        }
-      }
-      
-      function drawNumbers(ctx, radius) {
-        ctx.font = radius*0.15 + "px arial";
-        ctx.textBaseline="middle";
-        ctx.textAlign="center";
-        for(let num = 1; num <= 12; num++){
-          const ang = num * Math.PI*2 / 12;
-          const x = Math.sin(ang)*radius*0.75
-          const y = -Math.cos(ang)*radius*0.75
-          ctx.fillText(num.toString(), x, y);
-        }
-      }
-      
-      function drawTime(ctx, radius, totSeconds){
-        drawHand(ctx, 2*Math.PI*totSeconds/60, radius*0.8, radius*0.02); // Seconds
-        drawHand(ctx, 2*Math.PI*totSeconds/(60*60), radius*0.8, radius*0.07); // Minutes
-        drawHand(ctx, 2*Math.PI*totSeconds/(60*60*12), radius*0.5, radius*0.07);  // Hours
-      }
-      
-      function drawHand(ctx, ang, length, width) {
-        ctx.beginPath();
-        ctx.lineWidth = width;
-        ctx.lineCap = "round";
-        ctx.moveTo(0,0);
-        const x = Math.sin(ang)*length
-        const y = -Math.cos(ang)*length
-        ctx.lineTo(x, y);
-        ctx.stroke();
-      }
 
       window.setCustomSource = function() {
         customClockEl.checked="checked"
@@ -308,27 +190,52 @@
       realClockEl.checked = true
       setInterval(update, 100);
       update()
-
     </script>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      html, body {
+        margin: 0;
+        height: 100%;
+      }
+      .wrapper {
+        width: 100vw;
+        height: 100dvh;
+
+        --ratio: (12/9);
+        max-width: calc(100dvh * var(--ratio));
+        max-height: calc(100vw / var(--ratio));
+
+        --viewsize: min(100vw, calc(100dvh * var(--ratio)));
+        font-size: calc(var(--viewsize) / 100); /* This will proppegate to children with em*/
+
+        margin: auto;
+
+        border-width: 1em;
+        border-color: black;
+        border-style: solid;
+        border-radius: 4em;
+        background: white;
+        box-sizing: border-box;
+      }
+		</style>
   </head>
-  <body>
-    <canvas id="canvas_clock" width="400" height="400" style="background-color:#333">
-      Sorry, your browser does not support canvas.
-    </canvas>
-    <div id="digital_clock" style="font-size: 100px; width: 400px; text-align: center; border: 2px solid black; border-radius: 20px;">08:10:45</div>
-    <div id="text_clock" style="font-size: 40px; width: 400px; text-align: center; border: 2px solid black; border-radius: 20px;">tid</div>
-    <input name="sourceSelect" type="radio" style="width:40px;height:40px;" onclick="radioChange()" id="real_clock">
-    <b style="font-size:50px;">Riktig tid </b> 
-    <br>
-    <input name="sourceSelect" type="radio" style="width:40px;height:40px;" onclick="radioChange()" id="speed_clock">
-    <b style="font-size:50px;">Snabb dygn</b> 
-    <br>
-    <input name="sourceSelect" type="radio" style="width:40px;height:40px;" onclick="radioChange()" id="custom_clock">
-    <b style="font-size:50px;">Vald tid:</b> 
-    <input type="time" id="custom_time" style="font-size:40px;" oninput="setCustomSource()">
-    <br>
-    <canvas id="canvas_day_nigth" width="600" height="400">
-      Sorry, your browser does not support canvas.
-    </canvas>
+	<body style="background: #21455d; overscroll-behavior: none;">
+		<div class="wrapper" style="padding: 4em">
+      <div>
+        <input name="sourceSelect" type="radio" style="width:2em; height:2em;" onclick="radioChange()" id="real_clock">
+        <b style="font-size:2em;">Riktig tid </b> 
+        <input name="sourceSelect" type="radio" style="width:2em; height:2em;" onclick="radioChange()" id="speed_clock">
+        <b style="font-size:2em;">Snabb dygn</b> 
+        <input name="sourceSelect" type="radio" style="width:2em; height:2em;" onclick="radioChange()" id="custom_clock">
+        <b style="font-size:2em;">Vald tid:</b> 
+        <input type="time" id="custom_time" style="font-size:2em;" oninput="setCustomSource()">
+      </div>
+      <br>
+      <canvas id="canvas_day_nigth" width="600" height="400">
+        Sorry, your browser does not support canvas.
+      </canvas>
+    </div>
   </body>
 </html>

@@ -67,10 +67,10 @@ https://hakanols.github.io/spel/AwaitTopLevel/index.html
 
     node AwaitTopLevel/test.js
 
-### Clock
-https://hakanols.github.io/spel/Clock/index.html
+### DayNigth
+https://hakanols.github.io/spel/DayNigth/index.html
 
-    node browser-quick-start.mjs /Clock/index.html
+    node browser-quick-start.mjs /DayNigth/index.html
 
 ### ClockGame
 https://hakanols.github.io/spel/ClockGame/index.html

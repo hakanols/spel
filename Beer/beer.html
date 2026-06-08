@@ -1,7 +1,10 @@
 <!DOCTYPE html>
-<html>
-	<head>
+<html style="overscroll-behavior: none;">
+  	<head>
 		<title>Ölspelet</title>
+		<!-- Prevent mobile auto-scaling -->
+		<meta name="viewport" content="width=device-width, height=device-height,
+			initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 		<script type="module">
 		/* Hej!
 		Om du ser detta så gömmer det sig nog en tekniker i dig.
@@ -44,19 +47,47 @@
 		init()
 
 		</script>
+		<style>
+		html, body {
+			margin: 0;
+			height: 100%;
+		}
+		.wrapper {
+			width: 100vw;
+			height: 100dvh;
+
+			--ratio: (5/9);
+			max-width: calc(100dvh * var(--ratio));
+			max-height: calc(100vw / var(--ratio));
+
+			--viewsize: min(100vw, calc(100dvh * var(--ratio)));
+			font-size: calc(var(--viewsize) / 100); /* This will proppegate to children with em*/
+
+			margin: auto;
+
+			border-width: 1em;
+			border-color: black;
+			border-style: solid;
+			border-radius: 4em;
+			background: white;
+        	box-sizing: border-box;
+		}
+		</style>
 	</head>
-	<body>
-		<h2>Ölspelet</h2>
-		<table>
-			<tr><td>Ess</td>	<td>Rimord</td></tr>
-			<tr><td id="A"></td><td>Ta själv</td></tr>
-			<tr><td id="B"></td><td>Ge bort</td></tr>
-			<tr><td>8</td>		<td>Tumkort</td></tr>
-			<tr><td>9</td>		<td>Kings cup</td></tr>
-			<tr><td>10</td>		<td>Regel</td></tr>
-			<tr><td>Knekt</td>	<td>Hej knekt</td></tr>
-			<tr><td>Dam</td>	<td>Kategori</td></tr>
-			<tr><td>Kung</td>	<td>Vattenfall</td></tr>
-		</table>
+	<body style="background: #21455d; overscroll-behavior: none;">
+		<div class="wrapper" style="padding: 4em">
+			<h2 style="font-size: 12em;">Ölspelet</h2>
+			<table style="font-size: 10em;">
+				<tr><td>Ess</td>	<td>Rimord</td></tr>
+				<tr><td id="A"></td><td>Ta själv</td></tr>
+				<tr><td id="B"></td><td>Ge bort</td></tr>
+				<tr><td>8</td>		<td>Tumkort</td></tr>
+				<tr><td>9</td>		<td>Kings cup</td></tr>
+				<tr><td>10</td>		<td>Regel</td></tr>
+				<tr><td>Knekt</td>	<td>Hej knekt</td></tr>
+				<tr><td>Dam</td>	<td>Kategori</td></tr>
+				<tr><td>Kung</td>	<td>Vattenfall</td></tr>
+			</table>
+		<div>
 	</body>
 </html>
