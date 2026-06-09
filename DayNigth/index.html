@@ -200,37 +200,30 @@
         height: 100%;
       }
       .wrapper {
-        width: 100vw;
-        height: 100dvh;
-
-        --ratio: (12/9);
-        max-width: calc(100dvh * var(--ratio));
-        max-height: calc(100vw / var(--ratio));
-
-        --viewsize: min(100vw, calc(100dvh * var(--ratio)));
-        font-size: calc(var(--viewsize) / 100); /* This will proppegate to children with em*/
-
-        margin: auto;
-
-        border-width: 1em;
+        width: 700px;
+        height: auto;
+        border-width: 5px;
         border-color: black;
         border-style: solid;
-        border-radius: 4em;
+        border-radius: 20px;
         background: white;
         box-sizing: border-box;
+        text-align: center;
+
+        margin: auto;
       }
 		</style>
   </head>
 	<body style="background: #21455d; overscroll-behavior: none;">
-		<div class="wrapper" style="padding: 4em">
+		<div class="wrapper" style="padding: 30px">
       <div>
-        <input name="sourceSelect" type="radio" style="width:2em; height:2em;" onclick="radioChange()" id="real_clock">
-        <b style="font-size:2em;">Riktig tid </b> 
-        <input name="sourceSelect" type="radio" style="width:2em; height:2em;" onclick="radioChange()" id="speed_clock">
-        <b style="font-size:2em;">Snabb dygn</b> 
-        <input name="sourceSelect" type="radio" style="width:2em; height:2em;" onclick="radioChange()" id="custom_clock">
-        <b style="font-size:2em;">Vald tid:</b> 
-        <input type="time" id="custom_time" style="font-size:2em;" oninput="setCustomSource()">
+        <input name="sourceSelect" type="radio" style="width:25px; height:25px;" onclick="radioChange()" id="real_clock">
+        <b style="font-size:25px;">Riktig tid </b> 
+        <input name="sourceSelect" type="radio" style="width:25px; height:25px;" onclick="radioChange()" id="speed_clock">
+        <b style="font-size:25px;">Snabb dygn</b> 
+        <input name="sourceSelect" type="radio" style="width:25px; height:25px;" onclick="radioChange()" id="custom_clock">
+        <b style="font-size:25px;">Vald tid:</b> 
+        <input type="time" id="custom_time" style="font-size:25px;" oninput="setCustomSource()">
       </div>
       <br>
       <canvas id="canvas_day_nigth" width="600" height="400">

@@ -67,15 +67,13 @@ https://hakanols.github.io/spel/AwaitTopLevel/index.html
 
     node AwaitTopLevel/test.js
 
+### ClockGame
+https://hakanols.github.io/spel/ClockGame/index.html
+
 ### DayNigth
 https://hakanols.github.io/spel/DayNigth/index.html
 
     node browser-quick-start.mjs /DayNigth/index.html
-
-### ClockGame
-https://hakanols.github.io/spel/ClockGame/index.html
-
-    node browser-quick-start.mjs /ClockGame/index.html
 
 ### CountDown
 https://hakanols.github.io/spel/CountDown/index.html
