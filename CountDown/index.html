@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html>
+<html style="overscroll-behavior: none;">
 	<head>
 		<title>Count Down</title>
-		<meta name="viewport" content="width=700, initial-scale=1.0">
+		<meta name="viewport" content="width=device-width, height=device-height,
+			initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 		<style>
 			div.ruta
 			{
@@ -159,20 +160,51 @@
 			init()
 
 		</script>
+		<style>
+		html, body {
+			margin: 0;
+			height: 100%;
+		}
+		.wrapper {
+			width: 100vw;
+			height: 100dvh;
+
+			--ratio: (11/4);
+			max-width: calc(100dvh * var(--ratio));
+			max-height: calc(100vw / var(--ratio));
+
+			--viewsize: min(100vw, calc(100dvh * var(--ratio)));
+			font-size: calc(var(--viewsize) / 100); /* This will proppegate to children with em*/
+
+			margin: auto;
+
+			border-width: 1em;
+			border-color: black;
+			border-style: solid;
+			border-radius: 4em;
+			background: white;
+        	box-sizing: border-box;
+
+			padding: 2em;
+		}
+		</style>
 	</head>
-	<body style="background-image: url('MeltingClocks.jpg'); background-repeat: no-repeat; background-attachment: fixed; background-size: cover; background-position: center center;">
-		<div class="ruta" id="InputDiv" style="width:550px;margin-right:auto;margin-left:auto;text-align:center;">
-			<input id="TextPostInput" type="text" style="font-size:40px;"/>
-			<br>
-			<input id="TextPreInput" type="text" style="font-size:40px;"/>
-			<br>
-			<input id="DateTime" type="datetime-local" style="font-size:40px;">
-			<br>
-			<button id="SubmitButton" onclick="submit()" style="font-size:40px;">Set</button>
-		</div>
-		<div class="ruta" id="DisplayDiv" style="width:550px;margin-right:auto;margin-left:auto;text-align:center;">
-			<div id="ClockDisplay" style="font-size:40px;"></div>
-			<div id="TextDisplay" style="font-size:40px;"></div>
+	<body style="background-image: url('MeltingClocks.jpg'); background-repeat: no-repeat; background-attachment: fixed;
+		background-size: cover; background-position: center center;">
+		<div class="wrapper">
+			<div id="InputDiv" style="text-align:center;">
+				<input id="TextPostInput" type="text" style="font-size:6em; width: 100%;"/>
+				<br>
+				<input id="TextPreInput" type="text" style="font-size:6em; width: 100%;"/>
+				<br>
+				<input id="DateTime" type="datetime-local" style="font-size:6em; width: 100%;">
+				<br>
+				<button id="SubmitButton" onclick="submit()" style="font-size:6em; width: 100%;">Set</button>
+			</div>
+			<div id="DisplayDiv" style="text-align:center;">
+				<div id="ClockDisplay" style="font-size:6em; width: 100%;"></div>
+				<div id="TextDisplay" style="font-size:6em; width: 100%;"></div>
+			</div>
 		</div>
 	</body>
 </html>
