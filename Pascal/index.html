@@ -1,7 +1,10 @@
 <!DOCTYPE html>
-<html>
+
+<html style="overscroll-behavior: none;">
     <head>
         <title>Pascals triangle</title>
+        <meta name="viewport" content="width=device-width, height=device-height,
+            initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <script type="module">
 
         const outputArea = document.getElementById("OutputArea")
@@ -37,9 +40,25 @@
         init()
 
         </script>
+        <style>
+            html, body {
+                margin: 0;
+                height: 100%;
+            }
+            .wrapper {
+                width: 100dvmin;
+                height: 100dvmin;
+
+                font-size: calc(100dvmin / 100); /* This will proppegate to children with em*/
+
+                margin: auto;
+            }
+        </style>
     </head>
-    <body>
-        <h2>Pascals triangel</h2>
-        <textarea readonly id="OutputArea" style="width:500px; height:500px; text-align:center; font-family:monospace"></textarea>
+    <body style="overscroll-behavior: none;">
+        <div class="wrapper">
+            <h2 style="font-size: 3em; margin: 0;">Pascals triangel</h2>
+            <textarea readonly id="OutputArea" style="width:90%; height:90%; resize: none; text-align:center; font-family:monospace; font-size: 2.2em;"></textarea>
+        </div>
     </body>
 </html>
