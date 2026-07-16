@@ -157,9 +157,31 @@
 			await init()
 			
 		</script>
+		<style>
+			* {
+				box-sizing: border-box;
+			}
+			html, body {
+				margin: 0;
+				height: 100%;
+			}
+			.wrapper {
+				width: 100vw;
+				height: 100dvh;
+
+				--ratio: (4/6);
+				max-width: calc(100dvh * var(--ratio));
+				max-height: calc(100vw / var(--ratio));
+
+				--viewsize: min(100vw, calc(100dvh * var(--ratio)));
+				font-size: calc(var(--viewsize) / 100); /* This will proppegate to children with em*/
+
+				margin: auto;
+			}
+		</style>
 	</head>
-	<body style="background: #21455d; overscroll-behavior: none; margin:0;">
-		<div style="width: 100vw; height: 150vw; max-height: 100vh; max-width: 66vh; margin: auto;">
+	<body style="background: #21455d; overscroll-behavior: none;">
+    	<div class="wrapper">
 			<svg style="width:100%; aspect-ratio:6/1;" viewBox="0 0 120 15">
 				<text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle">Taurus Labyrint</text>
 			</svg>
