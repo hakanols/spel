@@ -1,9 +1,11 @@
 <!DOCTYPE html>
-<html>
-	<head>
+<html style="overscroll-behavior: none;">
+    <head>
 		<title>Generate Orienteering QRs</title>
-		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
-        <meta name="viewport" content="width=700, initial-scale=1.0">
+        <!-- Prevent mobile auto-scaling -->
+        <meta name="viewport" content="width=device-width, height=device-height,
+            initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
 		<script type="module">
             import QRCode from './qrcode.js'
             import nacl from './nacl-fast-es.js';
@@ -51,18 +53,35 @@
                     const content = newUrl +'?D='+misc.toBase64URL(g)
                     console.log(content)
                     let qrCode = new QRCode({ content: content, join: true, ecl: "L" });
-                    outputArea.appendChild(qrCode.htmlImg());
+                    let img = qrCode.htmlImg();
+                    img.style.width = "32%"
+   
+                    outputArea.appendChild(img);
                 }
 			}
 
 			update()
 		</script>
+        <style>
+            html, body {
+                margin: 0;
+                height: 100%;
+            }
+            .wrapper {
+                width: min(100vw, 100dvh);
+                font-size: calc(min(100vw, 100dvh) / 100); /* This will proppegate to children with em*/
+
+                margin: auto;
+            }
+        </style>
 	</head>
-	<body>
-        <h3>Generate Orienteering QRs</h3>
-        <input id="NumberItems" oninput="update()" type="number" value="3" min="1" max="100">
-        <input id="SecretText" oninput="update()" type="text" value="Hello">
-        <br>
-		<div id="OutputArea" style="width:800px"\>
+    <body style="overscroll-behavior: none;">
+        <div class="wrapper">
+            <h3 style="font-size:5em">Generate Orienteering QRs</h3>
+            <input id="NumberItems" oninput="update()" style="height:1em; width:10%; font-size:3em" type="number" value="3" min="1" max="100">
+            <input id="SecretText" oninput="update()" style="height:1em; width:85%; font-size:3em" type="text" value="Hello">
+            <br>
+            <div id="OutputArea" style="width:100%"\>
+        </div>
 	</body>
 </html>

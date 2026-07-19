@@ -1,7 +1,10 @@
 <!DOCTYPE html>
-<html>
-	<head>
+<html style="overscroll-behavior: none;">
+  	<head>
 		<title>Morse</title>
+		<!-- Prevent mobile auto-scaling -->
+		<meta name="viewport" content="width=device-width, height=device-height,
+			initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 		<script type="module">
 			const morseText = document.getElementById("MorseText")
 			const submitButton = document.getElementById("SubmitButton")
@@ -118,12 +121,34 @@
 			init()
 
 		</script>
+		<style>
+		html, body {
+			margin: 0;
+			height: 100%;
+		}
+		.wrapper {
+			width: 100vw;
+			height: 100dvh;
+
+			--ratio: (2/3);
+			max-width: calc(100dvh * var(--ratio));
+			max-height: calc(100vw / var(--ratio));
+
+			--viewsize: min(100vw, calc(100dvh * var(--ratio)));
+			font-size: calc(var(--viewsize) / 100); /* This will proppegate to children with em*/
+
+			margin: auto;
+		}
+		</style>
 	</head>
-	<body>
-		<input id="MorseText" type="text" onkeypress="return validate(event)"/>
-		<button id="SubmitButton" onclick="submit()">Set morse code</button>
-		<button id="PlayButton" style="height:40px;width:300px">Play morse code</button>
-		<br><br>
-		<img src="International_Morse_Code.svg" style="width:300px">
+	<body>  <body style="overscroll-behavior: none;">
+		<div class="wrapper">
+			<br><br>
+			<input id="MorseText" type="text" style="height:1.7em; width:50%; font-size:6em" onkeypress="return validate(event)"/>
+			<button id="SubmitButton" style="height:2em; width:45%; font-size:6em"  onclick="submit()">Set morse code</button>
+			<button id="PlayButton" style="height:2em; width:100%; font-size:6em">Play morse code</button>
+			<br><br>
+			<img src="International_Morse_Code.svg" style="width:100%">
+		</div>
 	</body>
 </html>

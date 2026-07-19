@@ -7,8 +7,7 @@
 			import * as misc from './misc.js';
 
 			const titleField = document.getElementById("TitleField")
-			const statusField = document.getElementById("StatusField")
-			const codeField = document.getElementById("CodeField")
+			const outputField = document.getElementById("OutputField")
 
 			let id;
 			const pageId = Date.now();
@@ -66,7 +65,7 @@
 				const queryString = window.location.search;
 				const urlParams = new URLSearchParams(queryString)
 				if (!urlParams.has('D')){
-					statusField.innerText = "Missing param D";
+					outputField.innerText = "Missing param D";
 					return;
 				}
 				const data = misc.fromBase64URL(urlParams.get('D'))
@@ -82,33 +81,41 @@
         
 				initMemory(id, number)
 				setMemory(id, index, misc.toBase64(secretChunk))
-				statusField.innerText = "Last scan "+(index+1)+"\n"+getMemoryKeys(id)
+				outputField.innerText = "Last scan "+(index+1)+"\n"+getMemoryKeys(id)
 				
 				const codes = getMemoryValues(id).codes
 				if (codes.every(isNotString)){
 					const secretChunks =  codes.map((x) => misc.fromBase64(x))
 					const secret = new Uint8Array(secretChunks.reduce((acc, curr) => [...acc, ...curr], []));
 					const text = getSecret(secret)
-					codeField.innerText = text
+					outputField.innerText = "Secret message:\n"+text
 				}
 			}
 
 			run()
 		
 		</script>
-	</head>
-	<body>
-		<h1 id="TitleField">Scan all QR codes</h1>
-		<div id="StatusField"></div>
-		<p id="CodeField" style="
-			text-align: center; 
-			width:600px; 
-			margin-right:auto;
-			margin-left:auto;
-			font-size:50px; 
-			background-color: grey; 
-			color: black;"></p>
+    <style>
+      html, body {
+        margin: 0;
+        height: 100%;
+      }
+      .wrapper {
+        width: 100dvmin;
+        height: 100dvmin;
+
+        font-size: calc(100dvmin / 100); /* This will proppegate to children with em*/
+
+        margin: auto;
+		text-align: center;
+      }
+    </style>
+  </head>
+  <body style="overscroll-behavior: none;">
+    <div class="wrapper">
+		<h1 id="TitleField" style="font-size:5em">Scan all QR codes</h1>
+		<div id="OutputField" style="font-size:5em"></div>
 		<br>
-		<button onclick="clearStorage()">Clear</button>
+		<button onclick="clearStorage()" style="font-size:3em;"">Clear</button>
 	</body>
 </html>
